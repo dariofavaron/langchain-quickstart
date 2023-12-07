@@ -1,4 +1,4 @@
-def visualize_notion_db_properties_v2(db_response):
+def visualize_notion_db_properties(db_response):
     """
     Improved version of the function to visualize Notion database properties.
     This version includes handling for 'status' and 'rollup' property types.
