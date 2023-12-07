@@ -52,7 +52,7 @@ with st.sidebar:
 #- Notion API - Get Tasks, Project, Areas, and Knowledge DB
 
 # Get Areas
-if st.button("Get Tasks"):
+if st.button("Get Areas"):
     # Validate inputs
     if not notion_api_key.strip():
         st.error(f"Please provide the missing fields.")
@@ -67,13 +67,13 @@ if st.button("Get Tasks"):
                   "Notion-Version": "2022-02-22",
               }
               database_id = 'c5fd05abfaca44f99b4e90358c3ed701'
-              area_db_content = requests.get(
+              db_content = requests.get(
                    f"https://api.notion.com/v1/databases/{database_id}",
                     headers=headers
               )
-              st.json(area_db_content.json(), expanded=False)
+              st.json(db_content.json(), expanded=False)
 
-              df_properties = visualize_notion_db_properties(area_db_content.json())
+              df_properties = visualize_notion_db_properties(db_content.json())
               st.dataframe(df_properties)
 
         except Exception as e:
@@ -81,7 +81,7 @@ if st.button("Get Tasks"):
 
 
 # Get Areas
-if st.button("Get Tasks"):
+if st.button("Get Projects"):
     # Validate inputs
     if not notion_api_key.strip():
         st.error(f"Please provide the missing fields.")
@@ -96,13 +96,13 @@ if st.button("Get Tasks"):
                   "Notion-Version": "2022-02-22",
               }
               database_id = 'c20d87c181634f18bcd14c2649ba6e06'
-              area_db_content = requests.get(
+              db_content = requests.get(
                    f"https://api.notion.com/v1/databases/{database_id}",
                     headers=headers
               )
-              st.json(area_db_content.json(), expanded=False)
+              st.json(db_content.json(), expanded=False)
 
-              df_properties = visualize_notion_db_properties(area_db_content.json())
+              df_properties = visualize_notion_db_properties(db_content.json())
               st.dataframe(df_properties)
 
         except Exception as e:
