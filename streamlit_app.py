@@ -95,6 +95,6 @@ if st.button("Get Tasks"):
               # get all pages we have access to with the integration
               pages = get_all_pages(headers)
 
-              st.success(pages, height=200)
+              st.json(pages, expanded=False)
         except Exception as e:
             st.exception(f"An error occurred: {e}")
