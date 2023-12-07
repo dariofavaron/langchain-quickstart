@@ -80,3 +80,30 @@ if st.button("Get Tasks"):
             st.exception(f"An error occurred: {e}")
 
 
+# Get Areas
+if st.button("Get Tasks"):
+    # Validate inputs
+    if not notion_api_key.strip():
+        st.error(f"Please provide the missing fields.")
+    else:
+        try:
+            with st.spinner('Please wait...'):
+              
+              # set the headers
+              headers = {
+                  "Authorization": f"Bearer {notion_api_key}",
+                  "Content-Type": "application/json",
+                  "Notion-Version": "2022-02-22",
+              }
+              database_id = 'c20d87c181634f18bcd14c2649ba6e06'
+              area_db_content = requests.get(
+                   f"https://api.notion.com/v1/databases/{database_id}",
+                    headers=headers
+              )
+              st.json(area_db_content.json(), expanded=False)
+
+              df_properties = visualize_notion_db_properties(area_db_content.json())
+              st.dataframe(df_properties)
+
+        except Exception as e:
+            st.exception(f"An error occurred: {e}")
