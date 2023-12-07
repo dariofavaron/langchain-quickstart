@@ -97,26 +97,25 @@ if st.button("Get Tasks"):
 
               st.json(pages, expanded=False)
 
-
-              if st.button("Get Page content"):
-
-                  # loop through all available pages
-                  for page in pages:
-                      for i in page["results"]:
-                          # get page from Notion
-                          page = get_page(i["id"], headers)
-                          
-                          # extract page content
-                          page_content = get_page_content(page)
-                          
-                          # check for empty page
-                          if page_content == "" or page_content == " ":
-                              # move on nothing to do here
-                              continue
-                          
-                          
-                          # create documents from page content
-                          st.success(page_content)
+              visualizer = ""
+              
+              # loop through all available pages
+              for page in pages:
+                  for i in page["results"]:
+                      # get page from Notion
+                      page = get_page(i["id"], headers)
+                      
+                      # extract page content
+                      page_content = get_page_content(page)
+                      
+                      # check for empty page
+                      if page_content == "" or page_content == " ":
+                          # move on nothing to do here
+                          continue
+                      
+                      visualizer += page_content
+                      
+              st.success(visualizer)
 
         except Exception as e:
             st.exception(f"An error occurred: {e}")
