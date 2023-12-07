@@ -3,7 +3,8 @@ from langchain.text_splitter import CharacterTextSplitter
 from langchain.docstore.document import Document
 from langchain.llms.openai import OpenAI
 from langchain.chains.summarize import load_summarize_chain
-
+# import helper files to scrape Notion API
+from helper_files import get_all_pages, get_page, get_page_content
 
 # Initialize session state variables
 if 'openai_api_key' not in st.session_state:
@@ -16,20 +17,8 @@ if 'pinecone_index' not in st.session_state:
 	st.session_state.pinecone_index = ""
 if 'notion_api_key' not in st.session_state:
 	st.session_state.notion_api_key = ""
-	
-st.set_page_config(page_title="Home", page_icon="🦜️🔗")
-st.title('🦜🔗 Quickstart App')
-
-st.markdown(
-    """
-    This is the beginning of MVP for LangChain.    
-
-    """
-)
-
 
 #get secret keys
-
 with st.sidebar:
     # Get API keys
     openai_api_key = st.text_input("OpenAI API Key", value=st.session_state.openai_api_key, type="password")
@@ -42,6 +31,18 @@ with st.sidebar:
     # Get Notion keys
     notion_api_key = st.text_input("Notion API Key", value=st.session_state.notion_api_key, type="password")
     st.caption("*Required*")
+
+
+
+st.set_page_config(page_title="Home", page_icon="🦜️🔗")
+st.title('🦜🔗 Quickstart App')
+
+st.markdown(
+    """
+    This is the beginning of MVP for LangChain.    
+
+    """
+)
 
 
 ## JUST TO SEE IF IT WORKS
@@ -74,3 +75,27 @@ if st.button("Summarize"):
 
 
 
+#- Streamlit UI - click button 1
+#- Notion API - Get Tasks, Project, Areas, and Knowledge DB
+
+if st.button("Get Tasks"):
+    # Validate inputs
+    if not notion_api_key.strip():
+        st.error(f"Please provide the missing fields.")
+    else:
+        try:
+            with st.spinner('Please wait...'):
+              
+              # set the headers
+              headers = {
+                  "Authorization": f"Bearer {notion_api_key}",
+                  "Content-Type": "application/json",
+                  "Notion-Version": "2022-02-22",
+              }
+
+              # get all pages we have access to with the integration
+              pages = get_all_pages(headers)
+
+              st.success(pages)
+        except Exception as e:
+            st.exception(f"An error occurred: {e}")
