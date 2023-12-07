@@ -97,8 +97,8 @@ if st.button("Get Tasks"):
 
               st.json(pages, expanded=False)
 
-              visualizer = ""
-              
+              page_visualizer = 'ciao'
+
               # loop through all available pages
               for page in pages:
                   for i in page["results"]:
@@ -113,9 +113,9 @@ if st.button("Get Tasks"):
                           # move on nothing to do here
                           continue
                       
-                      visualizer += page_content
+                      page_visualizer += page_content
                       
-              st.success(visualizer)
+              st.success(page_visualizer)
 
         except Exception as e:
             st.exception(f"An error occurred: {e}")
