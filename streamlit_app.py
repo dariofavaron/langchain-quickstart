@@ -98,7 +98,7 @@ if st.button("Get Tasks"):
               st.json(pages, expanded=False)
 
 
-              if st.button("Get Page content")
+              if st.button("Get Page content"):
 
                   # loop through all available pages
                   for page in pages:
