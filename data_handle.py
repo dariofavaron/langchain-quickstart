@@ -14,14 +14,20 @@ def visualize_notion_db_properties(db_response):
             options = ""
             related_db_id = ""
 
-            # For 'select' and 'status' types, extract options
-            if prop_type in ["select", "status"]:
+            # For 'select' types, extract options
+            if prop_type == "select":
                 if 'options' in prop_details.get(prop_type, {}):
                     options = " - ".join([f"{opt['name']}, {opt['color']}"
                                           for opt in prop_details[prop_type]["options"]])
-
+                    
+            # For 'status' types, extract options
+            if prop_type == "status":
+                if 'options' in prop_details.get(prop_type, {}):
+                    options = " - ".join([f"{opt['name']}, {opt['color']}"
+                                          for opt in prop_details[prop_type]["options"]])
+            
             # For 'relation' and 'rollup' types, extract related database ID
-            if prop_type in ["relation", "rollup"]:
+            if prop_type in ["relation"]:
                 related_db_id = prop_details[prop_type]["database_id"]
 
             # Additional property type handling can be added here if needed
