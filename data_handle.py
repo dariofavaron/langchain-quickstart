@@ -1,3 +1,5 @@
+import pandas as pd
+
 def visualize_notion_db_properties(db_response):
     """
     Improved version of the function to visualize Notion database properties.
