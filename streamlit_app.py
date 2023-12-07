@@ -1,6 +1,4 @@
 import streamlit as st
-
-#import os, streamlit as st
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.docstore.document import Document
 from langchain.llms.openai import OpenAI
@@ -21,12 +19,24 @@ st.markdown(
     """
 )
 
+
+#get secret keys
+
 with st.sidebar:
     # Get API keys
     openai_api_key = st.text_input("OpenAI API Key", value=st.session_state.openai_api_key, type="password")
-    st.caption("*Required for all apps; get it [here](https://platform.openai.com/account/api-keys).*")
+    st.caption("*Required*")
+    # Get PINECONE keys
+    pinecone_api_key = st.text_input("Pinecone API Key", value=st.session_state.pinecone_api_key, type="password")
+    pinecone_env = st.text_input("Pinecone Enviroment", value=st.session_state.pinecone_env, type="password")
+    pinecone_index = st.text_input("Pinecone Index Name", value=st.session_state.pinecone_index, type="password")
+    st.caption("*Required*")
+    # Get Notion keys
+    notion_api_key = st.text_input("Notion API Key", value=st.session_state.notion_api_key, type="password")
+    st.caption("*Required*")
 
 
+## JUST TO SEE IF IT WORKS
 
 source_text = st.text_area("Source Text", label_visibility="collapsed", height=200)
 
@@ -53,3 +63,6 @@ if st.button("Summarize"):
               st.success(summary)
         except Exception as e:
             st.exception(f"An error occurred: {e}")
+
+
+
