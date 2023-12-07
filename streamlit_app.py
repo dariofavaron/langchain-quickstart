@@ -98,3 +98,61 @@ if st.button("Get Tasks"):
               st.json(pages, expanded=False)
         except Exception as e:
             st.exception(f"An error occurred: {e}")
+
+
+
+
+
+if st.button("Embed all pages"):
+    # Validate inputs
+    if not notion_api_key.strip() or not pinecone_api_key.strip() or not pinecone_env.strip() or not pinecone_index.strip():
+        st.error(f"Please provide the missing fields.")
+    else:
+        try:
+            with st.spinner('Please wait...'):
+              
+              # loop through all available pages
+              for page in pages:
+                  for i in page["results"]:
+                      # get page from Notion
+                      page = get_page(i["id"], headers)
+                      
+                      # extract page content
+                      page_content = get_page_content(page)
+                      
+                      # check for empty page
+                      if page_content == "" or page_content == " ":
+                          # move on nothing to do here
+                          continue
+                      
+                      
+                      # create documents from page content
+                      st.success(page_content)
+
+                      continue
+                  
+                      texts = text_splitter.create_documents([page_content])
+                      
+                      # embed documents
+                      vectors = seaplane_embeddings.embed_documents(
+                          [page.page_content for page in texts]
+                      )
+                      
+                      # create vectors with data component
+                      vectors = [
+                          Vector(
+                              id=str(uuid.uuid4()),
+                              vector=vector,
+                              metadata={
+                                  "page_content": texts[idx].page_content,
+                                  "metadata": texts[idx].metadata,
+                              },
+                          )
+                          for idx, vector in enumerate(vectors)
+                      ]
+                      
+                      # insert into vector store
+                      vector_store.insert("notion-search", vectors)
+
+        except Exception as e:
+            st.exception(f"An error occurred: {e}")
