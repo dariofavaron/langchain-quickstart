@@ -7,6 +7,7 @@ import requests
 import json
 # import helper files to scrape Notion API
 from helper_files import get_all_pages, get_page, get_page_content
+from data_handle import visualize_notion_db_properties
 
 # Initialize session state variables
 if 'openai_api_key' not in st.session_state:
@@ -46,35 +47,6 @@ with st.sidebar:
     notion_api_key = st.text_input("Notion API Key", value=st.session_state.notion_api_key, type="password")
     st.caption("*Required*")
 
-## JUST TO SEE IF IT WORKS
-
-source_text = st.text_area("Source Text", label_visibility="collapsed", height=200)
-
-# If the 'Summarize' button is clicked
-if st.button("Summarize"):
-    # Validate inputs
-    if not openai_api_key.strip() or not source_text.strip():
-        st.error(f"Please provide the missing fields.")
-    else:
-        try:
-            with st.spinner('Please wait...'):
-              # Split the source text
-              text_splitter = CharacterTextSplitter()
-              texts = text_splitter.split_text(source_text)
-
-              # Create Document objects for the texts (max 3 pages)
-              docs = [Document(page_content=t) for t in texts[:3]]
-
-              # Initialize the OpenAI module, load and run the summarize chain
-              llm = OpenAI(temperature=0, openai_api_key=openai_api_key)
-              chain = load_summarize_chain(llm, chain_type="map_reduce")
-              summary = chain.run(docs)
-
-              st.success(summary)
-        except Exception as e:
-            st.exception(f"An error occurred: {e}")
-
-
 
 #- Streamlit UI - click button 1
 #- Notion API - Get Tasks, Project, Areas, and Knowledge DB
@@ -94,13 +66,15 @@ if st.button("Get Tasks"):
                   "Content-Type": "application/json",
                   "Notion-Version": "2022-02-22",
               }
-
               database_id = 'c5fd05abfaca44f99b4e90358c3ed701'
-              area_db_conent = requests.get(
+              area_db_content = requests.get(
                    f"https://api.notion.com/v1/databases/{database_id}",
                     headers=headers
               )
-              st.json(area_db_conent.json(), expanded=False)
+              st.json(area_db_content.json(), expanded=False)
+
+              df_properties = visualize_notion_db_properties(area_db_content)
+              st.dataframe(df_properties)
 
         except Exception as e:
             st.exception(f"An error occurred: {e}")
