@@ -19,3 +19,7 @@ st.markdown(
 
     """
 )
+
+with st.sidebar:
+    openai_api_key_Test = st.text_input("OpenAI API key", value="", type="password")
+    st.caption("*If you don't have an OpenAI API key, get it [here](https://platform.openai.com/account/api-keys).*")
