@@ -3,25 +3,27 @@ import pandas as pd
 def visualize_notion_db_properties(db_response):
     """
     Takes the JSON response from a Notion API query for a database,
-    and formats the relevant details into a DataFrame for visualization.
+    and formats the relevant details into a DataFrame for visualization,
+    including properties like 'relation', 'rollup', 'status', and 'date'.
     """
     properties = db_response["properties"]
     data = []
 
     for prop_name, prop_details in properties.items():
         prop_type = prop_details["type"]
-        
-        # For 'select' type, extract options
-        if prop_type == "select":
-            options = ", ".join([f"{opt['name']}, {opt['color']}" for opt in prop_details["select"]["options"]])
-        else:
-            options = ""
+        options = ""
+        related_db_id = ""
 
-        # For 'relation' type, extract related database ID
-        if prop_type == "relation":
-            related_db_id = prop_details["relation"]["database_id"]
-        else:
-            related_db_id = ""
+        # For 'select' and 'status' types, extract options
+        if prop_type in ["select", "status"]:
+            if 'options' in prop_details[prop_type]:
+                options = " - ".join([f"{opt['name']}, {opt['color']}" for opt in prop_details[prop_type]["options"]])
+
+        # For 'relation' and 'rollup' types, extract related database ID
+        if prop_type in ["relation", "rollup"]:
+            related_db_id = prop_details[prop_type]["database_id"]
+
+        # Additional property type handling can be added here if needed
 
         data.append([prop_name, prop_type, options, related_db_id])
 
