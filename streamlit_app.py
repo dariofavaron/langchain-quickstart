@@ -8,6 +8,14 @@ from langchain.chains.summarize import load_summarize_chain
 # Initialize session state variables
 if 'openai_api_key' not in st.session_state:
 	st.session_state.openai_api_key = ""
+if 'pinecone_api_key' not in st.session_state:
+	st.session_state.pinecone_api_key = ""
+if 'pinecone_env' not in st.session_state:
+	st.session_state.pinecone_env = ""
+if 'pinecone_index' not in st.session_state:
+	st.session_state.pinecone_index = ""
+if 'notion_api_key' not in st.session_state:
+	st.session_state.notion_api_key = ""
 	
 st.set_page_config(page_title="Home", page_icon="🦜️🔗")
 st.title('🦜🔗 Quickstart App')
