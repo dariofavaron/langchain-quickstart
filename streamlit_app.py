@@ -1,6 +1,10 @@
 import streamlit as st
 from langchain.llms import OpenAI
-st.set_page_config(page_title="🦜🔗 Quickstart App")
+
+st.set_page_config(page_title="Home", page_icon="🦜️🔗")
+
+st.header("Welcome to LangChain! 👋")
+
 st.title('🦜🔗 Quickstart App')
 
 st.markdown(
