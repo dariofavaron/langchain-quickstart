@@ -100,7 +100,7 @@ if st.button("Get Tasks"):
                    f"https://api.notion.com/v1/databases/{database_id}",
                     headers=headers
               )
-              st.json(area_db_conent, expanded=False)
+              st.json(area_db_conent.json(), expanded=False)
 
         except Exception as e:
             st.exception(f"An error occurred: {e}")
