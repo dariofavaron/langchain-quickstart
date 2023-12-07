@@ -3,6 +3,8 @@ from langchain.text_splitter import CharacterTextSplitter
 from langchain.docstore.document import Document
 from langchain.llms.openai import OpenAI
 from langchain.chains.summarize import load_summarize_chain
+import requests
+import json
 # import helper files to scrape Notion API
 from helper_files import get_all_pages, get_page, get_page_content
 
@@ -77,6 +79,7 @@ if st.button("Summarize"):
 #- Streamlit UI - click button 1
 #- Notion API - Get Tasks, Project, Areas, and Knowledge DB
 
+# Get Areas
 if st.button("Get Tasks"):
     # Validate inputs
     if not notion_api_key.strip():
@@ -92,88 +95,15 @@ if st.button("Get Tasks"):
                   "Notion-Version": "2022-02-22",
               }
 
-              # get all pages we have access to with the integration
-              pages = get_all_pages(headers)
-
-              st.json(pages, expanded=False)
-
-              page_visualizer = 'ciao'
-
-              # loop through all available pages
-              for page in pages:
-                  for i in page["results"]:
-                      # get page from Notion
-                      page = get_page(i["id"], headers)
-                      
-                      # extract page content
-                      page_content = get_page_content(page)
-                      
-                      # check for empty page
-                      if page_content == "" or page_content == " ":
-                          # move on nothing to do here
-                          continue
-                      
-                      page_visualizer += page_content
-                      
-              st.success(page_visualizer)
+              database_id = 'c5fd05abfaca44f99b4e90358c3ed701'
+              area_db_conent = requests.get(
+                   f"https://api.notion.com/v1/databases/{database_id}",
+                    headers=headers,
+                    data={}
+              )
+              st.json(area_db_conent, expanded=False)
 
         except Exception as e:
             st.exception(f"An error occurred: {e}")
 
 
-
-
-
-if st.button("Embed all pages"):
-    # Validate inputs
-    if not notion_api_key.strip() or not pinecone_api_key.strip() or not pinecone_env.strip() or not pinecone_index.strip():
-        st.error(f"Please provide the missing fields.")
-    else:
-        try:
-            with st.spinner('Please wait...'):
-              
-              # loop through all available pages
-              for page in pages:
-                  for i in page["results"]:
-                      # get page from Notion
-                      page = get_page(i["id"], headers)
-                      
-                      # extract page content
-                      page_content = get_page_content(page)
-                      
-                      # check for empty page
-                      if page_content == "" or page_content == " ":
-                          # move on nothing to do here
-                          continue
-                      
-                      
-                      # create documents from page content
-                      st.success(page_content)
-
-                      continue
-                  
-                      texts = text_splitter.create_documents([page_content])
-                      
-                      # embed documents
-                      vectors = seaplane_embeddings.embed_documents(
-                          [page.page_content for page in texts]
-                      )
-                      
-                      # create vectors with data component
-                      vectors = [
-                          Vector(
-                              id=str(uuid.uuid4()),
-                              vector=vector,
-                              metadata={
-                                  "page_content": texts[idx].page_content,
-                                  "metadata": texts[idx].metadata,
-                              },
-                          )
-                          for idx, vector in enumerate(vectors)
-                      ]
-                      
-                      # insert into vector store
-                      vector_store.insert("notion-search", vectors)
-
-        except Exception as e:
-            st.exception(f"An error occurred: {e}")
