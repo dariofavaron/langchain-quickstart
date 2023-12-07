@@ -3,9 +3,6 @@ import streamlit as st
 # Initialize session state variables
 if 'openai_api_key' not in st.session_state:
 	st.session_state.openai_api_key = ""
-
-if 'serper_api_key' not in st.session_state:
-	st.session_state.serper_api_key = ""
 	
 st.set_page_config(page_title="Home", page_icon="🦜️🔗")
 
@@ -21,5 +18,6 @@ st.markdown(
 )
 
 with st.sidebar:
-    openai_api_key_Test = st.text_input("OpenAI API key", value="", type="password")
-    st.caption("*If you don't have an OpenAI API key, get it [here](https://platform.openai.com/account/api-keys).*")
+    # Get API keys
+    openai_api_key = st.text_input("OpenAI API Key", value=st.session_state.openai_api_key, type="password")
+    st.caption("*Required for all apps; get it [here](https://platform.openai.com/account/api-keys).*")
