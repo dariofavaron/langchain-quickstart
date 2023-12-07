@@ -98,8 +98,7 @@ if st.button("Get Tasks"):
               database_id = 'c5fd05abfaca44f99b4e90358c3ed701'
               area_db_conent = requests.get(
                    f"https://api.notion.com/v1/databases/{database_id}",
-                    headers=headers,
-                    data={}
+                    headers=headers
               )
               st.json(area_db_conent, expanded=False)
 
