@@ -18,6 +18,18 @@ if 'pinecone_index' not in st.session_state:
 if 'notion_api_key' not in st.session_state:
 	st.session_state.notion_api_key = ""
 
+
+
+st.set_page_config(page_title="Home", page_icon="🦜️🔗")
+st.title('🦜🔗 Quickstart App')
+
+st.markdown(
+    """
+    This is the beginning of MVP for LangChain.    
+
+    """
+)
+
 #get secret keys
 with st.sidebar:
     # Get API keys
@@ -31,19 +43,6 @@ with st.sidebar:
     # Get Notion keys
     notion_api_key = st.text_input("Notion API Key", value=st.session_state.notion_api_key, type="password")
     st.caption("*Required*")
-
-
-
-st.set_page_config(page_title="Home", page_icon="🦜️🔗")
-st.title('🦜🔗 Quickstart App')
-
-st.markdown(
-    """
-    This is the beginning of MVP for LangChain.    
-
-    """
-)
-
 
 ## JUST TO SEE IF IT WORKS
 
