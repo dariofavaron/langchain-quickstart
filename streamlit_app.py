@@ -73,7 +73,7 @@ if st.button("Get Tasks"):
               )
               st.json(area_db_content.json(), expanded=False)
 
-              df_properties = visualize_notion_db_properties(area_db_content)
+              df_properties = visualize_notion_db_properties(area_db_content.json())
               st.dataframe(df_properties)
 
         except Exception as e:
