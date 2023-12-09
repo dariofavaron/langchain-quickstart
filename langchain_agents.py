@@ -8,7 +8,7 @@ from API.PineconeAPI import PineconeAPI  # Replace 'your_pinecone_api_module' wi
 # LangChain agent for Notion Query Tool
 class NotionQueryAgent(BaseLLM):
     def __init__(self, api_key, db_id):
-        self.notion_api = api_key
+        self.api_key = api_key
         self.db_id = db_id
 
     def complete(self, prompt):
@@ -18,7 +18,7 @@ class NotionQueryAgent(BaseLLM):
 
     def _generate(prompt, max_tokens=50):
         # Add your code here to generate text based on the prompt
-        response = self.notion_api.query_database(self.db_id, {"page_size": 10})  # Modify the query as needed
+        response = self.api_key.query_database(self.db_id, {"page_size": 10})  # Modify the query as needed
         
         # Extract relevant information from the response and generate text
         generated_text = "Generated text goes here"  # Replace with your actual generated text
