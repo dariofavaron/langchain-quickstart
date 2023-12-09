@@ -115,6 +115,9 @@ if st.button("Button 1 - Get Data from Notion"):
         
                 areas_vectors.append(embedded_row)
 
+            # log all the vectors
+            st.write("Areas vectors:")
+            st.json(areas_vectors, expanded=False)
             st.write(f"Number of rows embedded for areas: {len(areas_vectors)}")
 
 
