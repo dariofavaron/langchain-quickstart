@@ -107,7 +107,8 @@ def create_task_vector_with_extracted_data(json_obj, embeddingClass):
         "Projects": [relation["id"] for relation in json_obj["properties"]["Projects"]["relation"]] if "relation" in json_obj["properties"]["Projects"] else [],
         "Knowledge": [relation["id"] for relation in json_obj["properties"]["Knowledge"]["relation"]] if "relation" in json_obj["properties"]["Knowledge"] else [],
         "Status": json_obj["properties"]["Status"]["status"]["name"] if "status" in json_obj["properties"]["Status"] else None,
-        "Description": json_obj["properties"]["Description"]["rich_text"][0]["text"]["content"] if "rich_text" in json_obj["properties"]["Description"] else None
+        "Description": json_obj["properties"]["Description"]["rich_text"][0]["text"]["content"] if "rich_text" in json_obj["properties"]["Description"] and json_obj["properties"]["Description"]["rich_text"] else None
+
     }
     content = {
         "id": json_obj["id"],
@@ -115,7 +116,7 @@ def create_task_vector_with_extracted_data(json_obj, embeddingClass):
         "Projects": [relation["id"] for relation in json_obj["properties"]["Projects"]["relation"]] if "relation" in json_obj["properties"]["Projects"] else [],
         "Knowledge": [relation["id"] for relation in json_obj["properties"]["Knowledge"]["relation"]] if "relation" in json_obj["properties"]["Knowledge"] else [],
         "Status": json_obj["properties"]["Status"]["status"]["name"] if "status" in json_obj["properties"]["Status"] else None,
-        "Description": json_obj["properties"]["Description"]["rich_text"][0]["text"]["content"] if "rich_text" in json_obj["properties"]["Description"] else None
+        "Description": json_obj["properties"]["Description"]["rich_text"][0]["text"]["content"] if "rich_text" in json_obj["properties"]["Description"] and json_obj["properties"]["Description"]["rich_text"] else None
     }
 
     # Creating vector
