@@ -51,7 +51,7 @@ with st.sidebar:
     # Get Notion keys
     notion_api_key = st.text_input("Notion API Key", value=st.session_state.notion_api_key, type="password")
 
-    st.button("initialize pinecone")
+    if st.button("initialize pinecone")
         # Initialize Pinecone API if API key is provided
         if st.session_state.pinecone_api_key:
             try:
