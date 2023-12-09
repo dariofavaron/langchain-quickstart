@@ -29,28 +29,27 @@ class PineconeAPI:
         self.api_key = api_key
         self.project_id = project_id
         self.environment = environment
-
-        self.list_indexes_and_create_if_not_exists(api_key, namespaces)
-
         self.headers = {"Api-Key": api_key}
-        try:
-            self.create_index('example-index', dimension=1536)
-        except Exception as e:
-            raise ("Index already exists or encountered an error:", e)
+
+        updated_indexes = self.list_indexes_and_create_if_not_exists(api_key, namespaces)
+
+        if updated_indexes != namespaces:
+            raise ValueError("Indexes were not created correctly")
+        
+        return updated_indexes
+
 
     def validate_api_key(self, api_key):
         if not api_key:
             raise ValueError("Pinecone API key is missing or invalid")
 
     def list_indexes_and_create_if_not_exists(self, api_key, namespaces):
-        try:
-            indexes = self.list_indexes()
-            st.text(f"Indexes: {indexes}")
-            for namespace in namespaces:
-                if namespace not in indexes:
-                    self.create_index(namespace, dimension=1536)
-        except Exception as e:
-            raise ValueError("An error occurred: {e}")
+        indexes = self.list_indexes()
+        for namespace in namespaces:
+            if namespace not in indexes:
+                self.create_index(namespace, dimension=1536)
+        return self.list_indexes()
+
 
     def list_indexes(self):
         """

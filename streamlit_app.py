@@ -122,6 +122,7 @@ if st.button("Button 1 - START"):
         st.subheader("Pinecone API - Store it in a Pinecone DB")
         with st.spinner('inizializing Storing data in Pinecone...'):
             pineconeClass = PineconeAPI(pinecone_api_key, pinecone_index, pinecone_env, ["areas", "projects", "tasks"])
+            st.text(f"Indexes: {indexes}")
 
         with st.spinner('Areas'):
             response = pineconeClass.upsert(pinecone_index, areas_vectors, "areas")
