@@ -18,7 +18,7 @@ class NotionAPI:
 
     def __init__(self, api_key):
         if not api_key:
-            raise ValueError("API key is required")
+            raise ValueError("Notion API key is required")
         self.headers = {
             "Authorization": f"Bearer {api_key}",
             "Content-Type": "application/json",
@@ -35,10 +35,14 @@ class NotionAPI:
         Returns:
             Response: The response object containing the database structure.
         """
-        return requests.get(
-            f"https://api.notion.com/v1/databases/{database_id}",
-            headers=self.headers
-        )
+        try:
+            response = requests.get(
+                f"https://api.notion.com/v1/databases/{database_id}",
+                headers=self.headers
+            )
+            return response.json()
+        except Exception as e:
+            raise ValueError("An error occurred: {e}")
 
     def query_database(self, database_id, filter=None, sort=None):
         """
@@ -52,9 +56,13 @@ class NotionAPI:
         Returns:
             Response: The response object containing the query results.
         """
-        body = {"filter": filter or {}, "sorts": sort or []}
-        return requests.post(
-            f"https://api.notion.com/v1/databases/{database_id}/query",
-            headers=self.headers,
-            json=body
-        )
+        try:
+            body = {"filter": filter or {}, "sorts": sort or []}
+            response = requests.post(
+                f"https://api.notion.com/v1/databases/{database_id}/query",
+                headers=self.headers,
+                json=body
+            )
+            return response.json()
+        except Exception as e:
+            raise ValueError("An error occurred: {e}")

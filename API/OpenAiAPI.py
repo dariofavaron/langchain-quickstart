@@ -37,7 +37,7 @@ class OpenAIEmbeddingsAPI:
 
     def validate_api_key(self, api_key):
         if not api_key:
-            raise ValueError("API key is missing or invalid")
+            raise ValueError("Open API key is missing or invalid")
 
     def count_tokens(self, text: str, encoding_name: str = "cl100k_base") -> int:
         """
@@ -57,6 +57,8 @@ class OpenAIEmbeddingsAPI:
         Generates an embedding for a given text using a specified OpenAI embedding model.
         Checks if the text is within the token limit before generating the embedding.
         """
+        #add exceptions management
+        
         if self.is_within_token_limit(text):
             payload = {
                 "input": text,
@@ -77,7 +79,7 @@ class OpenAITextCompletionAPI:
 
     def validate_api_key(self, api_key):
         if not api_key:
-            raise ValueError("API key is missing or invalid")
+            raise ValueError("Open API key is missing or invalid")
 
     def generate_text_completion(self, model: str, prompt: str, max_tokens: int = 150, temperature: float = 0.7):
         """
