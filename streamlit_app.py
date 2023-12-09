@@ -69,7 +69,7 @@ def extract_metadata_and_content_area(json_obj):
         "id": json_obj["id"],
         "created_time": json_obj["created_time"],
         "last_edited_time": json_obj["last_edited_time"],
-        "created_by": json_obj["created_by"]["idcannot import name 'extract_metadata_and_content_area"],
+        "created_by": json_obj["created_by"]["id"],
         "last_edited_by": json_obj["last_edited_by"]["id"],
         "archived": json_obj["archived"]
     }
