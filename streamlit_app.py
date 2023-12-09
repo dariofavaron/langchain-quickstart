@@ -71,11 +71,13 @@ if st.button("Test embeddings"):
     db_id_projects = "c20d87c181634f18bcd14c2649ba6e06"
     db_id_tasks = "72c034d6343f4d1e926048b7dcbcbc2b"
 
-    #agent = NotionQueryAgent(notion_api_key, db_id_areas)
-
-    embeddingClass = OpenAIEmbeddingsAPI(openai_api_key)
-
-    prompt = "What are the areas?"
-    result = embeddingClass.generate_embedding(prompt)
-    st.success(result)
+    try:
+        embeddingClass = OpenAIEmbeddingsAPI(openai_api_key)
+        prompt = "What are the areas?"
+        result = embeddingClass.generate_embedding(prompt)
+        st.success(result)
+    except ValueError as e:  # Catching invalid or missing API key error
+        st.error(f"Error: {e}")
+    except Exception as e:  # Catching other potential errors (e.g., network issues, API errors)
+        st.error(f"An unexpected error occurred: {e}")
 

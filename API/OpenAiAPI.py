@@ -68,13 +68,6 @@ class OpenAIEmbeddingsAPI:
         else:
             raise ValueError("Text exceeds the maximum token limit.")
 
-# Example usage
-# openai_embeddings_api = OpenAIEmbeddingsAPI(api_key="your_openai_key")
-# if openai_embeddings_api.is_within_token_limit("Your text string goes here"):
-#     embedding = openai_embeddings_api.generate_embedding("Your text string goes here")
-# else:
-#     print("Text is too long for embedding.")
-
 
 class OpenAITextCompletionAPI:
     def __init__(self, api_key: str):
