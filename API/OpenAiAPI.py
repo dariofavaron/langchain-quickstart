@@ -58,6 +58,7 @@ class OpenAIEmbeddingsAPI:
                 "model": model
             }
             response = requests.post("https://api.openai.com/v1/embeddings", headers=self.headers, json=payload)
+            print(response.json())
             return response.json()['data'][0]['embedding']
         else:
             raise ValueError("Text exceeds the maximum token limit.")
