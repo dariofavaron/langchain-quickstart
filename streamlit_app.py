@@ -88,17 +88,23 @@ if st.button("Button 1 - Get Data from Notion"):
             st.write("areas:")
             areas_vectors = []
             for result in areas_content["results"]:
+                st.write("result: ")
                 st.json(result, expanded=False)
                 vector = create_area_vector_with_extracted_data(result, embeddingClass)
                 areas_vectors.append(vector)
+                st.write("vector: ")
+                st.json(vector, expanded=False)
             st.write(f"Number of rows embedded for areas: {len(areas_vectors)}")
 
             st.write("projects:")
             projects_vectors = []
             for result in projects_content["results"]:
+                st.write("result: ")
                 st.json(result, expanded=False)
                 vector = create_project_vector_with_extracted_data(result, embeddingClass)
                 projects_vectors.append(vector)
+                st.write("vector: ")
+                st.json(vector, expanded=False)
             st.write(f"Number of rows embedded for projects: {len(projects_vectors)}")
 
 
