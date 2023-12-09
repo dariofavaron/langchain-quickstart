@@ -110,13 +110,12 @@ if st.button("Button 1 - Get Data from Notion"):
     try:
         #Notion API - Get Areas DB content
         with st.spinner('Fetching data from Notion...'):
+            st.write("Fetching data from Notion...")
             notionClass = NotionAPI(notion_api_key)
 
             areas_content = notionClass.query_database(db_id_areas)
 
-            # log the first 3 rows content
-            st.write("First 3 rows of areas content:")
-            st.json(areas_content, expanded=False)
+            st.write(f"Number of rows retrieved for areas: {len(areas_content['results'])}")
 
         # Open API - embed each row with OpenAI embeddings
         with st.spinner('creating vector and Embedding data with OpenAI...'):
@@ -127,6 +126,7 @@ if st.button("Button 1 - Get Data from Notion"):
             for result in areas_content["results"]:
                 vector = create_area_vector(result)
                 areas_vectors.append(vector)
+
             st.write(f"Number of rows embedded for areas: {len(areas_vectors)}")
 
 
