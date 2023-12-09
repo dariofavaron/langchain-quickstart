@@ -92,6 +92,7 @@ only_areas = st.checkbox("Only Areas")
 
 
 if st.button("Button 1 - START"):
+    st.write("Button 1 - pressed")
     try:
         # Notion API - Get Areas DB content
         st.subheader("Retrieve data from Notion:")
