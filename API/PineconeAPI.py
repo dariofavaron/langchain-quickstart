@@ -24,12 +24,52 @@ class PineconeAPI:
             Each vector should contain an 'id', 'values', and optional 'metadata'.
     """
 
-    def __init__(self, api_key: str, project_id: str, environment: str):
+    def __init__(self, api_key: str, project_id: str, environment: str, namespaces: list = []):
+        self.validate_api_key(api_key)
         self.api_key = api_key
         self.project_id = project_id
         self.environment = environment
-        self.headers = {"Api-Key": api_key}
 
+        self.list_indexes_and_create_if_not_exists(api_key, namespaces)
+
+        self.headers = {"Api-Key": api_key}
+        try:
+            self.create_index('example-index', dimension=1536)
+        except Exception as e:
+            raise ("Index already exists or encountered an error:", e)
+
+    def validate_api_key(self, api_key):
+        if not api_key:
+            raise ValueError("Pinecone API key is missing or invalid")
+
+    def list_indexes_and_create_if_not_exists(self, api_key, namespaces):
+        try:
+            indexes = self.list_indexes()
+            st.text(f"Indexes: {indexes}")
+            for namespace in namespaces:
+                if namespace not in indexes:
+                    self.create_index(namespace, dimension=1536)
+        except Exception as e:
+            raise ValueError("An error occurred: {e}")
+
+    def list_indexes(self):
+        """
+        Lists the indexes in the Pinecone project.
+        list_indexes
+        GET
+        https://controller.us-east1-gcp.pinecone.io/databases
+        This operation returns a list of your Pinecone indexes.
+        Returns:
+            list: The list of indexes.
+        """
+        url = f"https://{index_name}-{self.project_id}.svc.{self.environment}.pinecone.io/databases"
+        response = requests.get(url, headers=self.headers)
+        indexes = []
+        for index in response.json():
+            indexes.append(index["name"])
+            
+        return indexes
+    
     def query(self, index_name: str, query_vector: list, topK: int, namespace: str, include_metadata: bool = False):
         """
         Queries the Pinecone database using a query vector and retrieves similar item ids along with their scores.
@@ -76,5 +116,3 @@ class PineconeAPI:
         }
         response = requests.post(url, headers=self.headers, json=payload)
         return response.json()
-
-
