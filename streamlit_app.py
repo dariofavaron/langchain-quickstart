@@ -64,23 +64,51 @@ Main fucntion: Get Data from Notion
 - Pinecone API - Store it in a Pinecone DB
 '''
 
+
+
 def extract_metadata_and_content_area(json_obj):
     metadata = {
+        "object": json_obj["object"],
         "id": json_obj["id"],
         "created_time": json_obj["created_time"],
         "last_edited_time": json_obj["last_edited_time"],
         "created_by": json_obj["created_by"]["id"],
         "last_edited_by": json_obj["last_edited_by"]["id"],
-        "archived": json_obj["archived"]
+        "archived": json_obj["archived"],
+        "cover": json_obj["cover"],
+        "icon": json_obj["icon"],
+        "parent": json_obj["parent"]["database_id"],
+        "archived": json_obj["archived"],
+        "url": json_obj["url"],
+        "public_url": json_obj["public_url"],
+        "properties": json_obj["properties"]
     }
-    content = json_obj["properties"]["Name"]["title"][0]["text"]["content"]
-    return metadata, content
+    #content is the string that will be embedded in the vector, including all the useful priorities
+    content = {
+        "Name": json_obj["properties"]["Name"]["title"][0]["text"]["content"],
+        "Type": json_obj["properties"]["Type"]["select"]["name"] if "select" in json_obj["properties"]["Type"] else None,
+        "Projects": json_obj["properties"]["Projects"]["relation"][0]["id"] if "relation" in json_obj["properties"]["Projects"] else None
+    }
+    #id is just the name of the area and his unique id
+    id = json_obj["properties"]["Name"]["title"][0]["text"]["content"]
+    return id, metadata, content
+
+#create vector
+def create_area_vector(json_obj):
+    id, metadata, content = extract_metadata_and_content_area(json_obj)
+    embedded_content = embeddingClass.generate_embedding(content) #str(result))
+    vector = {
+        'id':id, 
+        'values':embedded_content, 
+        'metadata':metadata,
+    }
+    return vector
 
 
 if st.button("Button 1 - Get Data from Notion"):
     try:
         
-        #Notion API - Get Tasks, Project, Areas, and Knowledge DB content
+        #Notion API - Get Areas DB content
         with st.spinner('Fetching data from Notion...'):
             notionClass = NotionAPI(notion_api_key)
 
@@ -91,29 +119,19 @@ if st.button("Button 1 - Get Data from Notion"):
             st.json(areas_content, expanded=False)
 
         # Open API - embed each row with OpenAI embeddings
-        with st.spinner('Embedding data with OpenAI...'):
-            st.write("Embedding areas content:")
+        with st.spinner('creating vector and Embedding data with OpenAI...'):
+            st.write("creating vector and Embedding areas content:")
             embeddingClass = OpenAIEmbeddingsAPI(openai_api_key)
 
             areas_vectors = []
             for result in areas_content["results"]:
                 st.json(result, expanded=False)
-                metadata, content = extract_metadata_and_content_area(result)
-
-                embedded_content = embeddingClass.generate_embedding(content) #str(result))
-
 
                 #create vector
-                embedded_row = {
-                    "id": result["id"],
-                    "values": embedded_content,
-                    "sparseValues": {
-                        "metadata": metadata,
-                        "namespace": "areas"
-                    }
-                }
-        
-                areas_vectors.append(embedded_row)
+                vector = create_area_vector(result)
+                st.json(vector, expanded=False)
+
+                areas_vectors.append(vector)
 
             # log all the vectors
             st.write("Areas vectors:")
