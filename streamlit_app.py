@@ -96,7 +96,7 @@ if st.button("Button 1 - START"):
         # Notion API - Get Areas DB content
         st.subheader("Retrieve data from Notion:")
         with st.spinner('Initializing notion connection...'):
-            notionClass = NotionAPI(notion_api_key)
+            notionClass = NotionAPI(st.session_state.openai_api_key)
 
 
 
@@ -117,7 +117,7 @@ if st.button("Button 1 - START"):
         # Open AI API - Embed each row with OpenAI embeddings
         st.subheader("Open API - embed each row with OpenAI embeddings")
         with st.spinner('Initializing Embedding data with OpenAI...'):
-            embeddingClass = OpenAIEmbeddingsAPI(openai_api_key)
+            embeddingClass = OpenAIEmbeddingsAPI(st.session_state.openai_api_key)
 
         with st.spinner('Areas'):
             areas_vectors = []
