@@ -43,24 +43,27 @@ class NotionAPI:
         except Exception as e:
             raise ValueError("An error occurred: {e}")
 
-def query_database(self, database_id, filter={}, sort={}):
+def query_database(self, database_id, filter=None, sort=None):
     """
     Queries a Notion database with optional filter and sort parameters.
 
     Args:
         database_id (str): The ID of the database.
-        filter (dict, optional): The filter parameters for the query. Defaults to {}.
-        sort (list, optional): The sort parameters for the query. Defaults to {}.
+        filter (dict, optional): The filter parameters for the query. Defaults to None.
+        sort (list, optional): The sort parameters for the query. Defaults to None.
 
     Returns:
         Response: The response object containing the query results.
     """
     try:
         body = {
-            "page_size": 4,
-            "filter": filter,
-            "sorts": sort
+            "page_size": 4
         }
+        if filter is not None:
+            body["filter"] = filter
+        if sort is not None:
+            body["sorts"] = sort
+
         response = requests.post(
             f"https://api.notion.com/v1/databases/{database_id}/query",
             headers=self.headers,
