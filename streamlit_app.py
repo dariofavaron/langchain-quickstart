@@ -66,39 +66,46 @@ Main fucntion: Get Data from Notion
 
 if st.button("Button 1 - Get Data from Notion"):
     try:
+        
         #Notion API - Get Tasks, Project, Areas, and Knowledge DB content
-        notionClass = NotionAPI(notion_api_key)
+        with st.spinner('Fetching data from Notion...'):
+            notionClass = NotionAPI(notion_api_key)
 
-        areas_content = notionClass.query_database(db_id_areas)
-        project_content = notionClass.query_database(db_id_projects)
-        tasks_content = notionClass.query_database(db_id_tasks)
+            areas_content = notionClass.query_database(db_id_areas)
+            #project_content = notionClass.query_database(db_id_projects)
+            #tasks_content = notionClass.query_database(db_id_tasks)
 
+            # log the first 3 rows content
+            st.write("First 3 rows of areas content:")
+            st.write(areas_content["results"][0:3])
+            
         # Open API - embed each row with OpenAI embeddings
-        embeddingClass = OpenAIEmbeddingsAPI(openai_api_key)
+        with st.spinner('Embedding data with OpenAI...'):
 
-        areas_embedded = []
-        for result in areas_content["results"]:
-            embedded_row = embeddingClass.generate_embedding(result)
-            areas_embedded.append(embedded_row)
+            embeddingClass = OpenAIEmbeddingsAPI(openai_api_key)
 
-        # log the first 3 rows content
-        st.write("First 3 rows of areas content:")
-        st.write(areas_content["results"][0:3])
+            areas_embedded = []
+            for result in areas_content["results"]:
+                embedded_row = embeddingClass.generate_embedding(result)
+                areas_embedded.append(embedded_row)
 
-        project_embedded = []
-        for row in project_content:
-            embedded_row = embeddingClass.generate_embedding(row)
-            project_embedded.append(embedded_row)
+            st.write(f"Number of rows embedded for areas: {len(areas_embedded)}")
+        
 
-        tasks_embedded = []
-        for row in tasks_content:
-            embedded_row = embeddingClass.generate_embedding(row)
-            tasks_embedded.append(embedded_row)
+
+        # project_embedded = []
+        # for row in project_content:
+        #     embedded_row = embeddingClass.generate_embedding(row)
+        #     project_embedded.append(embedded_row)
+
+        # tasks_embedded = []
+        # for row in tasks_content:
+        #     embedded_row = embeddingClass.generate_embedding(row)
+        #     tasks_embedded.append(embedded_row)
 
         # Log the number of rows embedded
-        st.write(f"Number of rows embedded for areas: {len(areas_embedded)}")
-        st.write(f"Number of rows embedded for projects: {len(project_embedded)}")
-        st.write(f"Number of rows embedded for tasks: {len(tasks_embedded)}")
+        #st.write(f"Number of rows embedded for projects: {len(project_embedded)}")
+        #st.write(f"Number of rows embedded for tasks: {len(tasks_embedded)}")
 
         #vizualize in streamlit the content of the first row per table
         # st.write("First row of areas content:")
