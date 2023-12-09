@@ -60,7 +60,7 @@ if st.button("initialize pinecone"):
         try:
             st.subheader("Pinecone API - Store it in a Pinecone DB")
             with st.spinner('inizializing index in Pinecone...'):
-                pineconeClass = PineconeAPI(st.session_state.pinecone_api_key, st.session_state.pinecone_index, st.session_state.pinecone.project_id, st.session_state.pinecone_env)
+                pineconeClass = PineconeAPI(st.session_state.pinecone_api_key, st.session_state.pinecone_index, st.session_state.pinecone_project_id, st.session_state.pinecone_env)
                 index_stats = pineconeClass.DescribeIndexStats()
                 st.write("Pinecone Index Stats:")
                 st.json(index_stats)
