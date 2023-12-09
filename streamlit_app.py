@@ -90,7 +90,9 @@ def extract_metadata_and_content_area(json_obj):
         "Projects": json_obj["properties"]["Projects"]["relation"][0]["id"] if "relation" in json_obj["properties"]["Projects"] else None
     }
     #id is just the name of the area and his unique id
-    id = json_obj["properties"]["Name"]["title"][0]["text"]["content"]
+    id = {
+		json_obj["properties"]["Name"]["title"][0]["text"]["content"]
+    }
     return id, metadata, content
 
 #create vector
