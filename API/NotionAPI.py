@@ -57,7 +57,7 @@ class NotionAPI:
             Response: The response object containing the query results.
         """
         try:
-            body = {"filter": filter or {}, "sorts": sort or []}
+            body = {}
             response = requests.post(
                 f"https://api.notion.com/v1/databases/{database_id}/query",
                 headers=self.headers,
