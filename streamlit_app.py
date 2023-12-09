@@ -10,7 +10,6 @@ import json
 # import helper files to scrape Notion API
 from helper_files import get_all_pages, get_page, get_page_content
 from notion_functions import fetch_and_display_notion_structure
-from GeneralFunctions.vector_management import extract_metadata_and_content_area
 
 # Assume NotionAPI class is defined elsewhere and imported here
 from API.NotionAPI import NotionAPI  # Replace 'your_notion_api_module' with the actual module name
@@ -64,6 +63,19 @@ Main fucntion: Get Data from Notion
 - Open API - embed each row with OpenAI embeddings
 - Pinecone API - Store it in a Pinecone DB
 '''
+
+def extract_metadata_and_content_ares(json_obj):
+    metadata = {
+        "id": json_obj["id"],
+        "created_time": json_obj["created_time"],
+        "last_edited_time": json_obj["last_edited_time"],
+        "created_by": json_obj["created_by"]["idcannot import name 'extract_metadata_and_content_area"],
+        "last_edited_by": json_obj["last_edited_by"]["id"],
+        "archived": json_obj["archived"]
+    }
+    content = json_obj["properties"]["Name"]["title"][0]["text"]["content"]
+    return metadata, content
+
 
 if st.button("Button 1 - Get Data from Notion"):
     try:
