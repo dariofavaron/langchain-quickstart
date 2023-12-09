@@ -97,7 +97,7 @@ if st.button("Button 1 - START"):
         # Notion API - Get Areas DB content
         st.subheader("Retrieve data from Notion:")
         with st.spinner('Initializing notion connection...'):
-            notionClass = NotionAPI(st.session_state.openai_api_key)
+            notionClass = NotionAPI(st.session_state.notion_api_key)
             st.write("initialized")
 
         st.write("start areas")
