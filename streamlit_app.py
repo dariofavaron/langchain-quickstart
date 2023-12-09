@@ -100,7 +100,8 @@ def extract_metadata_and_content_area(json_obj):
 def create_area_vector(json_obj):
     st.write("test 1")
     id, metadata, content = extract_metadata_and_content_area(json_obj)
-    st.write("test 2")
+    st.write("CONTENT:")
+    st.json(content, expanded=False)
     embedded_content = embeddingClass.generate_embedding(str(content)) 
     st.write("test 3")
     vector = {
