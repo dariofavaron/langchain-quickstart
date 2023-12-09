@@ -145,9 +145,9 @@ if st.button("Button 1 - START"):
         else:
             st.warning("Pinecone API key not provided. Please enter the API key to check index stats.")
 
-        st.json(areas_vectors)
+        st.json(areas_vectors, expanded=False)
         with st.spinner('Areas'):
-            vectors_upserted = pineconeClass.upsert(areas_vectors[0], "areas")
+            vectors_upserted = pineconeClass.upsert(areas_vectors, "areas")
 
             st.text(f"- Number of rows upserted for areas: {len(vectors_upserted)}")
 
