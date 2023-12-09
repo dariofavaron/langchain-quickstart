@@ -53,6 +53,23 @@ with st.sidebar:
     notion_api_key = st.text_input("Notion API Key", value=st.session_state.notion_api_key, type="password")
 
 
+
+    # Initialize Pinecone API if API key is provided
+    if st.session_state.pinecone_api_key:
+        try:
+            pineconeClass = PineconeAPI(st.session_state.pinecone_api_key, st.session_state.pinecone_index, st.session_state.pinecone_env)
+            index_stats = pineconeClass.DescribeIndexStats()
+            st.write("Pinecone Index Stats:")
+            st.json(index_stats)
+
+        except Exception as e:
+            st.error(f"Failed to retrieve Pinecone index stats: {e}")
+    else:
+        st.warning("Pinecone API key not provided. Please enter the API key to check index stats.")
+
+
+
+
 db_id_areas = "c5fd05abfaca44f99b4e90358c3ed701"
 db_id_projects = "c20d87c181634f18bcd14c2649ba6e06"
 db_id_tasks = "72c034d6343f4d1e926048b7dcbcbc2b"
@@ -66,6 +83,9 @@ Main function: Get Data from Notion
 '''
 # Toggle for "Only Areas"
 only_areas = st.checkbox("Only Areas")
+
+
+
 
 if st.button("Button 1 - START"):
     try:

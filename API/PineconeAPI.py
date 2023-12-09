@@ -1,4 +1,4 @@
-import requests
+import requests, pinecone
 
 class PineconeAPI:
     """
@@ -24,52 +24,30 @@ class PineconeAPI:
             Each vector should contain an 'id', 'values', and optional 'metadata'.
     """
 
-    def __init__(self, api_key: str, project_id: str, environment: str, namespaces: list = []):
+    def __init__(self, api_key: str, index_name:str, project_id: str, environment: str):
         self.validate_api_key(api_key)
         self.api_key = api_key
+        self.index_name = index_name
         self.project_id = project_id
         self.environment = environment
         self.headers = {"Api-Key": api_key}
-
-        updated_indexes = self.list_indexes_and_create_if_not_exists(api_key, namespaces)
-
-        if updated_indexes != namespaces:
-            raise ValueError("Indexes were not created correctly")
-        
-        return updated_indexes
 
 
     def validate_api_key(self, api_key):
         if not api_key:
             raise ValueError("Pinecone API key is missing or invalid")
 
-    def list_indexes_and_create_if_not_exists(self, api_key, namespaces):
-        indexes = self.list_indexes()
-        for namespace in namespaces:
-            if namespace not in indexes:
-                self.create_index(namespace, dimension=1536)
-        return self.list_indexes()
 
-
-    def list_indexes(self):
+    def DescribeIndexStats(self):
         """
-        Lists the indexes in the Pinecone project.
-        list_indexes
-        GET
-        https://controller.us-east1-gcp.pinecone.io/databases
-        This operation returns a list of your Pinecone indexes.
-        Returns:
-            list: The list of indexes.
+        Returns the statistics of the index.
         """
-        url = f"https://{index_name}-{self.project_id}.svc.{self.environment}.pinecone.io/databases"
+        url = f"https://{self.index_name}-{self.project_id}.svc.{self.environment}.pinecone.io/describe_index_stats"
         response = requests.get(url, headers=self.headers)
-        indexes = []
-        for index in response.json():
-            indexes.append(index["name"])
-            
-        return indexes
+        return response.json()
+
     
-    def query(self, index_name: str, query_vector: list, topK: int, namespace: str, include_metadata: bool = False):
+    def query(self, query_vector: list, topK: int, namespace: str, include_metadata: bool = False):
         """
         Queries the Pinecone database using a query vector and retrieves similar item ids along with their scores.
 
@@ -83,7 +61,7 @@ class PineconeAPI:
         Returns:
             dict: The response JSON containing similar item ids and scores.
         """
-        url = f"https://{index_name}-{self.project_id}.svc.{self.environment}.pinecone.io/query"
+        url = f"https://{self.index_name}-{self.project_id}.svc.{self.environment}.pinecone.io/query"
         payload = {
             "namespace": namespace,
             "topK": topK,
@@ -95,7 +73,7 @@ class PineconeAPI:
         response = requests.post(url, headers=self.headers, json=payload)
         return response.json()
 
-    def upsert(self, index_name: str, vectors: list, namespace: str):
+    def upsert(self, vectors: list, namespace: str):
         """
         Upserts vectors into the Pinecone database in the specified namespace.
         Each vector should contain an 'id', 'values', and optional 'metadata'.
@@ -108,7 +86,7 @@ class PineconeAPI:
         Returns:
             dict: The response JSON containing the upsert result.
         """
-        url = f"https://{index_name}-{self.project_id}.svc.{self.environment}.pinecone.io/vectors/upsert"
+        url = f"https://{self.index_name}-{self.project_id}.svc.{self.environment}.pinecone.io/vectors/upsert"
         payload = {
             "vectors": vectors,
             "namespace": namespace
