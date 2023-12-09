@@ -86,7 +86,8 @@ if st.button("Button 1 - Get Data from Notion"):
 
             areas_embedded = []
             for result in areas_content["results"]:
-                embedded_row = embeddingClass.generate_embedding(result)
+                st.json(result, expanded=False)
+                embedded_row = embeddingClass.generate_embedding(result.str())
                 areas_embedded.append(embedded_row)
 
             st.write(f"Number of rows embedded for areas: {len(areas_embedded)}")
@@ -128,7 +129,6 @@ if st.button("Button 1 - Get Data from Notion"):
 
     except Exception as e:
         # Handle other exceptions, possibly API related
-        st.error("Failed to retrieve data from Notion.")
         st.error(f"Error details: {e}")
 
 if st.button("Get Areas structure"):
