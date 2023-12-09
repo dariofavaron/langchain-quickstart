@@ -103,10 +103,11 @@ if st.button("Button 1 - START"):
         st.write("start areas")
 
         with st.spinner('Areas'):
-
-            areas_content = notionClass.query_database(db_id_areas)
-            st.text(f"- Number of rows retrieved for areas: {len(areas_content['results'])}")
-
+            try:
+                areas_content = notionClass.query_database(db_id_areas)
+                st.text(f"- Number of rows retrieved for areas: {len(areas_content['results'])}")
+            except Exception as e:
+                st.error (f"Area ready query notion: {e}")
         # Skip projects and tasks if "Only Areas" is checked
         if not only_areas:
             with st.spinner('Projects'):
