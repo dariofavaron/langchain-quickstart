@@ -44,7 +44,7 @@ class NotionAPI:
         except Exception as e:
             raise ValueError("An error occurred: {e}")
 
-    def query_database(self, database_id, filter=None, sort=None):
+    def query_database(self, database_id, filter= {}, sort={}):
         """
         Queries a Notion database with optional filter and sort parameters.
 
