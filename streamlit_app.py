@@ -54,23 +54,6 @@ with st.sidebar:
     # Get Notion keys
     st.session_state.notion_api_key = st.text_input("Notion API Key", value=st.session_state.notion_api_key, type="password")
 
-if st.button("initialize pinecone"):
-    # Initialize Pinecone API if API key is provided
-    if st.session_state.pinecone_api_key:
-        try:
-            st.subheader("Pinecone API - Store it in a Pinecone DB")
-            with st.spinner('inizializing index in Pinecone...'):
-                pineconeClass = PineconeAPI(st.session_state.pinecone_api_key, st.session_state.pinecone_index, st.session_state.pinecone_project_id, st.session_state.pinecone_env)
-                index_stats = pineconeClass.DescribeIndexStats()
-                st.write("Pinecone Index Stats:")
-                st.json(index_stats)
-        
-
-        except Exception as e:
-            st.error(f"Failed to retrieve Pinecone index stats: {e}")
-    else:
-        st.warning("Pinecone API key not provided. Please enter the API key to check index stats.")
-
 
 
 
@@ -98,14 +81,10 @@ if st.button("Button 1 - START"):
         st.subheader("Retrieve data from Notion:")
         with st.spinner('Initializing notion connection...'):
             notionClass = NotionAPI(st.session_state.notion_api_key)
-            st.write("initialized")
-
-        st.write("start areas")
 
         with st.spinner('Areas'):
             try:
                 areas_content = notionClass.query_database(db_id_areas)
-                st.json(areas_content)
 
                 st.text(f"- Number of rows retrieved for areas: {len(areas_content['results'])}")
             except Exception as e:
@@ -150,6 +129,22 @@ if st.button("Button 1 - START"):
 
         # Pinecone API - Store it in a Pinecone DB
         st.subheader("Pinecone API - Store it in a Pinecone DB")
+        
+        # Initialize Pinecone API if API key is provided
+        if st.session_state.pinecone_api_key:
+            try:
+                st.subheader("Pinecone API - Store it in a Pinecone DB")
+                with st.spinner('inizializing index in Pinecone...'):
+                    pineconeClass = PineconeAPI(st.session_state.pinecone_api_key, st.session_state.pinecone_index, st.session_state.pinecone_project_id, st.session_state.pinecone_env)
+                    index_stats = pineconeClass.DescribeIndexStats()
+                    st.write("Pinecone Index Stats:")
+                    st.json(index_stats)
+            
+
+            except Exception as e:
+                st.error(f"Failed to retrieve Pinecone index stats: {e}")
+        else:
+            st.warning("Pinecone API key not provided. Please enter the API key to check index stats.")
 
         with st.spinner('Areas'):
             response = pineconeClass.upsert(areas_vectors, "areas")
