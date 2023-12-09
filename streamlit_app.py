@@ -64,6 +64,9 @@ Main function: Get Data from Notion
 - Open API - embed each row with OpenAI embeddings
 - Pinecone API - Store it in a Pinecone DB
 '''
+# Toggle for "Only Areas"
+only_areas = st.checkbox("Only Areas")
+
 if st.button("Button 1 - START"):
     try:
         # Notion API - Get Areas DB content
@@ -71,8 +74,7 @@ if st.button("Button 1 - START"):
         with st.spinner('Initializing notion connection...'):
             notionClass = NotionAPI(notion_api_key)
 
-        # Toggle for "Only Areas"
-        only_areas = st.checkbox("Only Areas")
+
 
         with st.spinner('Areas'):
             areas_content = notionClass.query_database(db_id_areas)
@@ -127,7 +129,7 @@ if st.button("Button 1 - START"):
 
         # ADD CODE HERE TO STORE PROJECTS AND TASKS
 
-        
+
         st.success("Data from Notion, OpenAI, and Pinecone successfully retrieved and stored.")
 
     except ValueError as e:
@@ -136,6 +138,12 @@ if st.button("Button 1 - START"):
     except Exception as e:
         # Handle other exceptions, possibly API related
         st.error(f"Error details: {e}")
+
+# add space in the UI
+st.text("")
+st.text("")
+st.text("")
+
 
 if st.button("Get Areas structure"):
     fetch_and_display_notion_structure(notion_api_key, db_id_areas)
