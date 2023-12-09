@@ -147,7 +147,7 @@ if st.button("Button 1 - START"):
 
         st.json(areas_vectors)
         with st.spinner('Areas'):
-            vectors_upserted = pineconeClass.upsert(areas_vectors, "areas")
+            vectors_upserted = pineconeClass.upsert(areas_vectors[0], "areas")
 
             st.text(f"- Number of rows upserted for areas: {len(vectors_upserted)}")
 
