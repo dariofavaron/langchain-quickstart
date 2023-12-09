@@ -44,33 +44,85 @@ st.markdown(
 with st.sidebar:
     # Get API keys
     openai_api_key = st.text_input("OpenAI API Key", value=st.session_state.openai_api_key, type="password")
-    st.caption("*Required*")
     # Get PINECONE keys
     pinecone_api_key = st.text_input("Pinecone API Key", value=st.session_state.pinecone_api_key, type="password")
     pinecone_env = st.text_input("Pinecone Enviroment", value=st.session_state.pinecone_env, type="password")
     pinecone_index = st.text_input("Pinecone Index Name", value=st.session_state.pinecone_index, type="password")
-    st.caption("*Required*")
     # Get Notion keys
     notion_api_key = st.text_input("Notion API Key", value=st.session_state.notion_api_key, type="password")
-    st.caption("*Required*")
 
 
+db_id_areas = "c5fd05abfaca44f99b4e90358c3ed701"
+db_id_projects = "c20d87c181634f18bcd14c2649ba6e06"
+db_id_tasks = "72c034d6343f4d1e926048b7dcbcbc2b"
+
+'''
+Main fucntion: Get Data from Notion
+- Streamlit UI - click button 1
+- Notion API - Get Tasks, Project, Areas, and Knowledge DB content
+- Open API - embed each row with OpenAI embeddings
+- Pinecone API - Store it in a Pinecone DB
+'''
+
+if st.button("Button 1 - Get Data from Notion"):
+    try:
+        #Notion API - Get Tasks, Project, Areas, and Knowledge DB content
+        notionClass = NotionAPI(notion_api_key)
+
+        areas_content = notionClass.query_database(db_id_areas, {"page_size": 10})
+        project_content = notionClass.query_database(db_id_projects, {"page_size": 10})
+        tasks_content = notionClass.query_database(db_id_tasks, {"page_size": 10})
+
+        # Open API - embed each row with OpenAI embeddings
+        embeddingClass = OpenAIEmbeddingsAPI(openai_api_key)
+
+        areas_embedded = []
+        for row in areas_content:
+            embedded_row = embeddingClass.generate_embedding(row)
+            areas_embedded.append(embedded_row)
+
+        project_embedded = []
+        for row in project_content:
+            embedded_row = embeddingClass.generate_embedding(row)
+            project_embedded.append(embedded_row)
+
+        tasks_embedded = []
+        for row in tasks_content:
+            embedded_row = embeddingClass.generate_embedding(row)
+            tasks_embedded.append(embedded_row)
+
+        # Log the number of rows embedded
+        st.write(f"Number of rows embedded for areas: {len(areas_embedded)}")
+        st.write(f"Number of rows embedded for projects: {len(project_embedded)}")
+        st.write(f"Number of rows embedded for tasks: {len(tasks_embedded)}")
+
+        #Pinecone API - Store it in a Pinecone DB
+        #pineconeClass = PineconeAPI(pinecone_api_key, "your_project_id", pinecone_env)
+        #pineconeClass.upsert(pinecone_index, areas_embedded, "areas")
+        #pineconeClass.upsert(pinecone_index, project_embedded, "projects")
+        #pineconeClass.upsert(pinecone_index, tasks_embedded, "tasks")
+
+        st.success("Data from Notion, OpenAI, and Pinecone successfully retrieved and stored.")
+
+    except ValueError as e:
+        st.error(f"Error: {e}")
+
+    except Exception as e:
+        # Handle other exceptions, possibly API related
+        st.error("Failed to retrieve data from Notion.")
+        st.error(f"Error details: {e}")
 
 if st.button("Get Areas structure"):
-    fetch_and_display_notion_structure(notion_api_key, 'c5fd05abfaca44f99b4e90358c3ed701')
+    fetch_and_display_notion_structure(notion_api_key, db_id_areas)
 
 if st.button("Get Projects structure"):
-    fetch_and_display_notion_structure(notion_api_key, 'c20d87c181634f18bcd14c2649ba6e06')
+    fetch_and_display_notion_structure(notion_api_key, db_id_projects)
 
 if st.button("Get Tasks structure"):
-    fetch_and_display_notion_structure(notion_api_key, '72c034d6343f4d1e926048b7dcbcbc2b')
+    fetch_and_display_notion_structure(notion_api_key, db_id_tasks)
 
 
 if st.button("Test embeddings"):
-    db_id_areas = "c5fd05abfaca44f99b4e90358c3ed701"
-    db_id_projects = "c20d87c181634f18bcd14c2649ba6e06"
-    db_id_tasks = "72c034d6343f4d1e926048b7dcbcbc2b"
-
     try:
         embeddingClass = OpenAIEmbeddingsAPI(openai_api_key)
         prompt = "What are the areas?"

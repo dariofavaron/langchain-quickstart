@@ -17,6 +17,8 @@ class NotionAPI:
     """
 
     def __init__(self, api_key):
+        if not api_key:
+            raise ValueError("API key is required")
         self.headers = {
             "Authorization": f"Bearer {api_key}",
             "Content-Type": "application/json",
