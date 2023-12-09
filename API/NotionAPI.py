@@ -59,7 +59,12 @@ class NotionAPI:
         try:
             body = {
                 "page_size": 4
+
             }
+            print(
+                f"https://api.notion.com/v1/databases/{database_id}/query",
+                headers=self.headers,
+                json=body)
             response = requests.post(
                 f"https://api.notion.com/v1/databases/{database_id}/query",
                 headers=self.headers,
