@@ -24,6 +24,8 @@ if 'pinecone_api_key' not in st.session_state:
 	st.session_state.pinecone_api_key = ""
 if 'pinecone_env' not in st.session_state:
 	st.session_state.pinecone_env = ""
+if 'pinecone_project_id' not in st.session_state:
+	st.session_state.pinecone_project_id = ""
 if 'pinecone_index' not in st.session_state:
 	st.session_state.pinecone_index = ""
 if 'notion_api_key' not in st.session_state:
