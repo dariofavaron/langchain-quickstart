@@ -171,18 +171,18 @@ st.text("")
 
 
 if st.button("Get Areas structure"):
-    fetch_and_display_notion_structure(notion_api_key, db_id_areas)
+    fetch_and_display_notion_structure(st.session_state.notion_api_key, db_id_areas)
 
 if st.button("Get Projects structure"):
-    fetch_and_display_notion_structure(notion_api_key, db_id_projects)
+    fetch_and_display_notion_structure(st.session_state.notion_api_key, db_id_projects)
 
 if st.button("Get Tasks structure"):
-    fetch_and_display_notion_structure(notion_api_key, db_id_tasks)
+    fetch_and_display_notion_structure(st.session_state.notion_api_key, db_id_tasks)
 
 
 if st.button("Test embeddings"):
     try:
-        embeddingClass = OpenAIEmbeddingsAPI(openai_api_key)
+        embeddingClass = OpenAIEmbeddingsAPI(st.session_state.openai_api_key)
         prompt = "What are the areas?"
         result = embeddingClass.generate_embedding(prompt)
         st.success(result)
