@@ -45,14 +45,14 @@ st.markdown(
 #get secret keys
 with st.sidebar:
     # Get API keys
-    openai_api_key = st.text_input("OpenAI API Key", value=st.session_state.openai_api_key, type="password")
+    st.session_state.openai_api_key = st.text_input("OpenAI API Key", value=st.session_state.openai_api_key, type="password")
     # Get PINECONE keys
-    pinecone_api_key = st.text_input("Pinecone API Key", value=st.session_state.pinecone_api_key, type="password")
-    pinecone_env = st.text_input("Pinecone Enviroment", value=st.session_state.pinecone_env, type="password")
-    pinecone_index = st.text_input("Pinecone Index Name", value=st.session_state.pinecone_index, type="password")
-    pinecone_project_id = st.text_input("Pinecone Project ID", value=st.session_state.pinecone_project_id, type="password")
+    st.session_state.pinecone_api_key = st.text_input("Pinecone API Key", value=st.session_state.pinecone_api_key, type="password")
+    st.session_state.pinecone_env = st.text_input("Pinecone Enviroment", value=st.session_state.pinecone_env, type="password")
+    st.session_state.pinecone_index = st.text_input("Pinecone Index Name", value=st.session_state.pinecone_index, type="password")
+    st.session_state.pinecone_project_id = st.text_input("Pinecone Project ID", value=st.session_state.pinecone_project_id, type="password")
     # Get Notion keys
-    notion_api_key = st.text_input("Notion API Key", value=st.session_state.notion_api_key, type="password")
+    st.session_state.notion_api_key = st.text_input("Notion API Key", value=st.session_state.notion_api_key, type="password")
 
 if st.button("initialize pinecone"):
     # Initialize Pinecone API if API key is provided
