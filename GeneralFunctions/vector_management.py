@@ -81,3 +81,48 @@ def create_project_vector_with_extracted_data(json_obj, embeddingClass):
         'metadata': metadata,
     }
     return vector
+
+
+def create_task_vector_with_extracted_data(json_obj, embeddingClass):
+    # Extracting data
+    id_data = {
+        "Name": json_obj["properties"]["Name"]["title"][0]["text"]["content"],
+        "id" : json_obj["id"]
+    }
+    metadata = {
+        "object": json_obj["object"],
+        "id": json_obj["id"],
+        "created_time": json_obj["created_time"],
+        "last_edited_time": json_obj["last_edited_time"],
+        "created_by": json_obj["created_by"]["id"],
+        "last_edited_by": json_obj["last_edited_by"]["id"],
+        "archived": json_obj["archived"],
+        "cover": json_obj["cover"],
+        "icon": json_obj["icon"],
+        "parent": json_obj["parent"]["database_id"],
+        "url": json_obj["url"],
+        "public_url": json_obj["public_url"],
+        # Properties
+        "Name": json_obj["properties"]["Name"]["title"][0]["text"]["content"],
+        "Projects": [relation["id"] for relation in json_obj["properties"]["Projects"]["relation"]] if "relation" in json_obj["properties"]["Projects"] else [],
+        "Knowledge": [relation["id"] for relation in json_obj["properties"]["Knowledge"]["relation"]] if "relation" in json_obj["properties"]["Knowledge"] else [],
+        "Status": json_obj["properties"]["Status"]["status"]["name"] if "status" in json_obj["properties"]["Status"] else None,
+        "Description": json_obj["properties"]["Description"]["rich_text"][0]["text"]["content"] if "rich_text" in json_obj["properties"]["Description"] else None
+    }
+    content = {
+        "id": json_obj["id"],
+        "Name": json_obj["properties"]["Name"]["title"][0]["text"]["content"],
+        "Projects": [relation["id"] for relation in json_obj["properties"]["Projects"]["relation"]] if "relation" in json_obj["properties"]["Projects"] else [],
+        "Knowledge": [relation["id"] for relation in json_obj["properties"]["Knowledge"]["relation"]] if "relation" in json_obj["properties"]["Knowledge"] else [],
+        "Status": json_obj["properties"]["Status"]["status"]["name"] if "status" in json_obj["properties"]["Status"] else None,
+        "Description": json_obj["properties"]["Description"]["rich_text"][0]["text"]["content"] if "rich_text" in json_obj["properties"]["Description"] else None
+    }
+
+    # Creating vector
+    embedded_content = embeddingClass.generate_embedding(str(content))
+    vector = {
+        'id': id_data,
+        'values': embedded_content,
+        'metadata': metadata,
+    }
+    return vector
