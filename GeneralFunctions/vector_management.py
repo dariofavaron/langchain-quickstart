@@ -58,13 +58,18 @@ def create_project_vector_with_extracted_data(json_obj, embeddingClass):
         "url": json_obj["url"],
         "public_url": json_obj["public_url"],
         # Properties
-        "Name": json_obj["properties"]["Name"]["title"][0]["text"]["content"]
-        # add areas, priority, tasks and Knowledge
+        "Name": json_obj["properties"]["Name"]["title"][0]["text"]["content"],
+        "Areas": json_obj["properties"]["Areas"]["relation"][0]["id"] if "relation" in json_obj["properties"]["Areas"] else None,
+        "Priority": json_obj["properties"]["Priority"]["status"]["name"] if "status" in json_obj["properties"]["Priority"] else None,
+        "Tasks": json_obj["properties"]["Tasks"]["relation"][0]["id"] if "relation" in json_obj["properties"]["Tasks"] else None,
+        "Knowledge": json_obj["properties"]["Knowledge"]["relation"][0]["id"] if "relation" in json_obj["properties"]["Knowledge"] else None
     }
     content = {
         "id": json_obj["id"],
-        "Name": json_obj["properties"]["Name"]["title"][0]["text"]["content"]
-        # add areas, priority, tasks and Knowledge
+        "Areas": json_obj["properties"]["Areas"]["relation"][0]["id"] if "relation" in json_obj["properties"]["Areas"] else None,
+        "Priority": json_obj["properties"]["Priority"]["status"]["name"] if "status" in json_obj["properties"]["Priority"] else None,
+        "Tasks": json_obj["properties"]["Tasks"]["relation"][0]["id"] if "relation" in json_obj["properties"]["Tasks"] else None,
+        "Knowledge": json_obj["properties"]["Knowledge"]["relation"][0]["id"] if "relation" in json_obj["properties"]["Knowledge"] else None
     }
 
     # Creating vector
