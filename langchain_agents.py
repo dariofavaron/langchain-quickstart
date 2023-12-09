@@ -13,16 +13,23 @@ class NotionQueryAgent(BaseLLM):
 
     def complete(self, prompt):
         # Implement the _generate and _llm_type methods as required
-        def _generate(prompt, max_tokens=50):
-            # Add your code here to generate text based on the prompt
-            pass
+        result = self._generate(prompt)  # Generate text based on the prompt
+        return result
 
-        def _llm_type():
-            # Return the type of your language model (e.g., "text-completion")
-            return "text-completion"
-
+    def _generate(prompt, max_tokens=50):
+        # Add your code here to generate text based on the prompt
         response = self.notion_api.query_database(self.db_id, {"page_size": 10})  # Modify the query as needed
-        return response.json()
+        
+        # Extract relevant information from the response and generate text
+        generated_text = "Generated text goes here"  # Replace with your actual generated text
+        return generated_text
+
+    def _llm_type():
+        # Return the type of your language model (e.g., "text-completion")
+        return "text-completion"
+
+    response = self.notion_api.query_database(self.db_id, {"page_size": 10})  # Modify the query as needed
+    return response.json()
 
 # LangChain agent for Notion Retrieve Tool
 class NotionRetrieveAgent(BaseLLM):
