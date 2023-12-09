@@ -27,12 +27,17 @@ class OpenAIEmbeddingsAPI:
     """
 
     def __init__(self, api_key: str, max_tokens: int = 2046):
+        self.validate_api_key(api_key)
         self.api_key = api_key
         self.max_tokens = max_tokens
         self.headers = {
             "Authorization": f"Bearer {api_key}",
             "Content-Type": "application/json"
         }
+
+    def validate_api_key(self, api_key):
+        if not api_key:
+            raise ValueError("API key is missing or invalid")
 
     def count_tokens(self, text: str, encoding_name: str = "cl100k_base") -> int:
         """
@@ -73,8 +78,13 @@ class OpenAIEmbeddingsAPI:
 
 class OpenAITextCompletionAPI:
     def __init__(self, api_key: str):
+        self.validate_api_key(api_key)
         self.api_key = api_key
         openai.api_key = self.api_key
+
+    def validate_api_key(self, api_key):
+        if not api_key:
+            raise ValueError("API key is missing or invalid")
 
     def generate_text_completion(self, model: str, prompt: str, max_tokens: int = 150, temperature: float = 0.7):
         """
