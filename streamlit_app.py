@@ -47,7 +47,7 @@ with st.sidebar:
     # Get PINECONE keys
     pinecone_api_key = st.text_input("Pinecone API Key", value=st.session_state.pinecone_api_key, type="password")
     pinecone_index = st.text_input("Pinecone Index Name", value=st.session_state.pinecone_index, type="password")
-    pinecone_project_id = st.text_input("Pinecone Project ID", value=st.session_state.pinecone_project_id)
+    pinecone_project_id = st.text_input("Pinecone Project ID", value=st.session_state.pinecone_project_id, type="password")
     pinecone_env = st.text_input("Pinecone Enviroment", value=st.session_state.pinecone_env, type="password")
     # Get Notion keys
     notion_api_key = st.text_input("Notion API Key", value=st.session_state.notion_api_key, type="password")
