@@ -57,7 +57,9 @@ class NotionAPI:
             Response: The response object containing the query results.
         """
         try:
-            body = {}
+            body = {
+                "page_size": 3
+            }
             response = requests.post(
                 f"https://api.notion.com/v1/databases/{database_id}/query",
                 headers=self.headers,

@@ -77,7 +77,7 @@ if st.button("Button 1 - Get Data from Notion"):
 
             # log the first 3 rows content
             st.write("First 3 rows of areas content:")
-            st.json(areas_content.json()[:3], expanded=False)
+            st.json(areas_content.json(), expanded=False)
 
         # Open API - embed each row with OpenAI embeddings
         with st.spinner('Embedding data with OpenAI...'):
