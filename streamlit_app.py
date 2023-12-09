@@ -10,6 +10,7 @@ import json
 # import helper files to scrape Notion API
 from helper_files import get_all_pages, get_page, get_page_content
 from notion_functions import fetch_and_display_notion_structure
+from GeneralFunctions.vector_management import extract_metadata_and_content_area
 
 # Assume NotionAPI class is defined elsewhere and imported here
 from API.NotionAPI import NotionAPI  # Replace 'your_notion_api_module' with the actual module name
@@ -72,8 +73,6 @@ if st.button("Button 1 - Get Data from Notion"):
             notionClass = NotionAPI(notion_api_key)
 
             areas_content = notionClass.query_database(db_id_areas)
-            #project_content = notionClass.query_database(db_id_projects)
-            #tasks_content = notionClass.query_database(db_id_tasks)
 
             # log the first 3 rows content
             st.write("First 3 rows of areas content:")
@@ -84,37 +83,32 @@ if st.button("Button 1 - Get Data from Notion"):
             st.write("Embedding areas content:")
             embeddingClass = OpenAIEmbeddingsAPI(openai_api_key)
 
-            areas_embedded = []
+            areas_vectors = []
             for result in areas_content["results"]:
                 st.json(result, expanded=False)
-                embedded_row = embeddingClass.generate_embedding(str(result))
-                areas_embedded.append(embedded_row)
+                metadata, content = extract_metadata_and_content_area(result)
 
-            st.write(f"Number of rows embedded for areas: {len(areas_embedded)}")
+                embedded_content = embeddingClass.generate_embedding(content) #str(result))
+
+
+                #create vector
+                embedded_row = {
+                    "id": result["id"],
+                    "values": embedded_content,
+                    "sparseValues": {
+                        "metadata": metadata,
+                        "namespace": "areas"
+                    }
+                }
+        
+                areas_vectors.append(embedded_row)
+
+            st.write(f"Number of rows embedded for areas: {len(areas_vectors)}")
+
+            #Create vector structure for pinecone
         
 
-
-        # project_embedded = []
-        # for row in project_content:
-        #     embedded_row = embeddingClass.generate_embedding(row)
-        #     project_embedded.append(embedded_row)
-
-        # tasks_embedded = []
-        # for row in tasks_content:
-        #     embedded_row = embeddingClass.generate_embedding(row)
-        #     tasks_embedded.append(embedded_row)
-
-        # Log the number of rows embedded
-        #st.write(f"Number of rows embedded for projects: {len(project_embedded)}")
-        #st.write(f"Number of rows embedded for tasks: {len(tasks_embedded)}")
-
-        #vizualize in streamlit the content of the first row per table
-        # st.write("First row of areas content:")
-        # st.write(areas_content[0].json())
-        # st.write("First row of projects content:")
-        # st.write(project_content[0].json())
-        # st.write("First row of tasks content:")
-        # st.write(tasks_content[0].json())
+        # Pinecone API - Store it in a Pinecone DB
 
         #Pinecone API - Store it in a Pinecone DB
         #pineconeClass = PineconeAPI(pinecone_api_key, "your_project_id", pinecone_env)

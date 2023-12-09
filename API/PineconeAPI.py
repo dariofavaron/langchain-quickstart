@@ -77,7 +77,4 @@ class PineconeAPI:
         response = requests.post(url, headers=self.headers, json=payload)
         return response.json()
 
-# Example usage
-# pinecone_db_tools = PineconeDBTools(api_key="your_pinecone_key", project_id="your_project_id", environment="your_environment")
-# query_response = pinecone_db_tools.query(index_name="your_index", query_vector=[...], topK=10, namespace="your_namespace")
-# upsert_response = pinecone_db_tools.upsert(index_name="your_index", vectors=[...], namespace="your_namespace")
+
