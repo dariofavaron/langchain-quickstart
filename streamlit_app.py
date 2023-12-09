@@ -77,10 +77,13 @@ if st.button("Button 1 - Get Data from Notion"):
         embeddingClass = OpenAIEmbeddingsAPI(openai_api_key)
 
         areas_embedded = []
-        for row in areas_content:
-            embedded_row = embeddingClass.generate_embedding(row)
+        for result in areas_content["results"]:
+            embedded_row = embeddingClass.generate_embedding(result)
             areas_embedded.append(embedded_row)
-        st.write(areas_content)
+
+        # log the first 3 rows content
+        st.write("First 3 rows of areas content:")
+        st.write(areas_content["results"][0:3])
 
         project_embedded = []
         for row in project_content:
