@@ -104,7 +104,9 @@ if st.button("Button 1 - START"):
 
         with st.spinner('Areas'):
             try:
-                areas_content = notionClass.query_database(db_id_areas)
+                areas_content = notionClass.query_database(st.session_state.notion_api_key, db_id_areas)
+                st.json(areas_content)
+
                 st.text(f"- Number of rows retrieved for areas: {len(areas_content['results'])}")
             except Exception as e:
                 st.error (f"Area ready query notion: {e}")
