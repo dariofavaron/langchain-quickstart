@@ -1,5 +1,4 @@
 import requests
-import streamlit as st
 
 # Modularization of Notion API interactions
 class NotionAPI:
@@ -44,32 +43,29 @@ class NotionAPI:
         except Exception as e:
             raise ValueError("An error occurred: {e}")
 
-    def query_database(self, database_id, filter= {}, sort={}):
-        """
-        Queries a Notion database with optional filter and sort parameters.
+def query_database(self, database_id, filter={}, sort={}):
+    """
+    Queries a Notion database with optional filter and sort parameters.
 
-        Args:
-            database_id (str): The ID of the database.
-            filter (dict, optional): The filter parameters for the query. Defaults to None.
-            sort (list, optional): The sort parameters for the query. Defaults to None.
+    Args:
+        database_id (str): The ID of the database.
+        filter (dict, optional): The filter parameters for the query. Defaults to {}.
+        sort (list, optional): The sort parameters for the query. Defaults to {}.
 
-        Returns:
-            Response: The response object containing the query results.
-        """
-        try:
-            body = {
-                "page_size": 4
-
-            }
-            print(
-                f"https://api.notion.com/v1/databases/{database_id}/query",
-                headers=self.headers,
-                json=body)
-            response = requests.post(
-                f"https://api.notion.com/v1/databases/{database_id}/query",
-                headers=self.headers,
-                json=body
-            )
-            return response.json()
-        except Exception as e:
-            raise ValueError("An error occurred: {e}")
+    Returns:
+        Response: The response object containing the query results.
+    """
+    try:
+        body = {
+            "page_size": 4,
+            "filter": filter,
+            "sorts": sort
+        }
+        response = requests.post(
+            f"https://api.notion.com/v1/databases/{database_id}/query",
+            headers=self.headers,
+            json=body
+        )
+        return response.json()
+    except Exception as e:
+        raise ValueError(f"An error occurred: {e}")
