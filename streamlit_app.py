@@ -104,7 +104,7 @@ if st.button("Button 1 - START"):
 
         with st.spinner('Areas'):
 
-            areas_content = notionClass.query_database(db_id_areas)+
+            areas_content = notionClass.query_database(db_id_areas)
             st.text(f"- Number of rows retrieved for areas: {len(areas_content['results'])}")
 
         # Skip projects and tasks if "Only Areas" is checked
