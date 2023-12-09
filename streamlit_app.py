@@ -87,7 +87,7 @@ if st.button("Button 1 - Get Data from Notion"):
             areas_embedded = []
             for result in areas_content["results"]:
                 st.json(result, expanded=False)
-                embedded_row = embeddingClass.generate_embedding(result.str())
+                embedded_row = embeddingClass.generate_embedding(str(result))
                 areas_embedded.append(embedded_row)
 
             st.write(f"Number of rows embedded for areas: {len(areas_embedded)}")
