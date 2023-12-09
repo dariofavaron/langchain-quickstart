@@ -1,0 +1,77 @@
+def create_area_vector_with_extracted_data(json_obj, embeddingClass):
+    # Extracting data
+    id_data = {
+        "Name": json_obj["properties"]["Name"]["title"][0]["text"]["content"],
+        "id" : json_obj["id"]
+    }
+    metadata = {
+        "object": json_obj["object"],
+        "id": json_obj["id"],
+        "created_time": json_obj["created_time"],
+        "last_edited_time": json_obj["last_edited_time"],
+        "created_by": json_obj["created_by"]["id"],
+        "last_edited_by": json_obj["last_edited_by"]["id"],
+        "archived": json_obj["archived"],
+        "cover": json_obj["cover"],
+        "icon": json_obj["icon"],
+        "parent": json_obj["parent"]["database_id"],
+        "url": json_obj["url"],
+        "public_url": json_obj["public_url"],
+        # Properties
+        "Name": json_obj["properties"]["Name"]["title"][0]["text"]["content"],
+        "Type": json_obj["properties"]["Type"]["select"]["name"] if "select" in json_obj["properties"]["Type"] else None,
+        "Projects": json_obj["properties"]["Projects"]["relation"][0]["id"] if "relation" in json_obj["properties"]["Projects"] else None
+    }
+    content = {
+        "id": json_obj["id"],
+        "Name": json_obj["properties"]["Name"]["title"][0]["text"]["content"],
+        "Type": json_obj["properties"]["Type"]["select"]["name"] if "select" in json_obj["properties"]["Type"] else None,
+        "Projects": json_obj["properties"]["Projects"]["relation"][0]["id"] if "relation" in json_obj["properties"]["Projects"] else None
+    }
+
+    # Creating vector
+    embedded_content = embeddingClass.generate_embedding(str(content))
+    vector = {
+        'id': id_data,
+        'values': embedded_content,
+        'metadata': metadata,
+    }
+    return vector
+
+def create_project_vector_with_extracted_data(json_obj, embeddingClass):
+    # Extracting data
+    id_data = {
+        "Name": json_obj["properties"]["Name"]["title"][0]["text"]["content"],
+        "id" : json_obj["id"]
+    }
+    metadata = {
+        "object": json_obj["object"],
+        "id": json_obj["id"],
+        "created_time": json_obj["created_time"],
+        "last_edited_time": json_obj["last_edited_time"],
+        "created_by": json_obj["created_by"]["id"],
+        "last_edited_by": json_obj["last_edited_by"]["id"],
+        "archived": json_obj["archived"],
+        "cover": json_obj["cover"],
+        "icon": json_obj["icon"],
+        "parent": json_obj["parent"]["database_id"],
+        "url": json_obj["url"],
+        "public_url": json_obj["public_url"],
+        # Properties
+        "Name": json_obj["properties"]["Name"]["title"][0]["text"]["content"]
+        # add areas, priority, tasks and Knowledge
+    }
+    content = {
+        "id": json_obj["id"],
+        "Name": json_obj["properties"]["Name"]["title"][0]["text"]["content"]
+        # add areas, priority, tasks and Knowledge
+    }
+
+    # Creating vector
+    embedded_content = embeddingClass.generate_embedding(str(content))
+    vector = {
+        'id': id_data,
+        'values': embedded_content,
+        'metadata': metadata,
+    }
+    return vector

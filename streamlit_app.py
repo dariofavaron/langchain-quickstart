@@ -10,6 +10,7 @@ import json
 # import helper files to scrape Notion API
 from helper_files import get_all_pages, get_page, get_page_content
 from notion_functions import fetch_and_display_notion_structure
+from GeneralFunctions.vector_management import create_area_vector_with_extracted_data, create_project_vector_with_extracted_data
 
 # Assume NotionAPI class is defined elsewhere and imported here
 from API.NotionAPI import NotionAPI  # Replace 'your_notion_api_module' with the actual module name
@@ -63,49 +64,6 @@ Main fucntion: Get Data from Notion
 - Open API - embed each row with OpenAI embeddings
 - Pinecone API - Store it in a Pinecone DB
 '''
-
-
-
-def extract_metadata_and_content_area(json_obj):
-    id = {
-		"Name": json_obj["properties"]["Name"]["title"][0]["text"]["content"],
-        "id" : json_obj["id"]
-    }
-    metadata = {
-        "object": json_obj["object"],
-        "id": json_obj["id"],
-        "created_time": json_obj["created_time"],
-        "last_edited_time": json_obj["last_edited_time"],
-        "created_by": json_obj["created_by"]["id"],
-        "last_edited_by": json_obj["last_edited_by"]["id"],
-        "archived": json_obj["archived"],
-        "cover": json_obj["cover"],
-        "icon": json_obj["icon"],
-        "parent": json_obj["parent"]["database_id"],
-        "url": json_obj["url"],
-        "public_url": json_obj["public_url"],
-        "properties": json_obj["properties"]
-    }
-    content = {
-        "id": json_obj["id"],
-        "Name": json_obj["properties"]["Name"]["title"][0]["text"]["content"],
-        "Type": json_obj["properties"]["Type"]["select"]["name"] if "select" in json_obj["properties"]["Type"] else None,
-        "Projects": json_obj["properties"]["Projects"]["relation"][0]["id"] if "relation" in json_obj["properties"]["Projects"] else None
-    }
-    return id, metadata, content
-
-#create vector
-def create_area_vector(json_obj):
-    id, metadata, content = extract_metadata_and_content_area(json_obj)
-    embedded_content = embeddingClass.generate_embedding(str(content))
-    vector = {
-        'id':id,
-        'values':embedded_content,
-        'metadata':metadata,
-    }
-    return vector
-
-
 if st.button("Button 1 - Get Data from Notion"):
     try:
         #Notion API - Get Areas DB content
@@ -114,20 +72,34 @@ if st.button("Button 1 - Get Data from Notion"):
             notionClass = NotionAPI(notion_api_key)
 
             areas_content = notionClass.query_database(db_id_areas)
+            projects_content = notionClass.query_database(db_id_projects)
+            tasks_content = notionClass.query_database(db_id_tasks)
 
             st.write(f"Number of rows retrieved for areas: {len(areas_content['results'])}")
+            st.write(f"Number of rows retrieved for projects: {len(projects_content['results'])}")
+            st.write(f"Number of rows retrieved for tasks: {len(tasks_content['results'])}")
+
 
         # Open API - embed each row with OpenAI embeddings
         with st.spinner('creating vector and Embedding data with OpenAI...'):
             st.write("creating vector and Embedding areas content:")
             embeddingClass = OpenAIEmbeddingsAPI(openai_api_key)
 
+            st.write("areas:")
             areas_vectors = []
             for result in areas_content["results"]:
-                vector = create_area_vector(result)
+                st.json(result, expanded=False)
+                vector = create_area_vector_with_extracted_data(result, embeddingClass)
                 areas_vectors.append(vector)
-
             st.write(f"Number of rows embedded for areas: {len(areas_vectors)}")
+
+            st.write("projects:")
+            projects_vectors = []
+            for result in projects_content["results"]:
+                st.json(result, expanded=False)
+                vector = create_project_vector_with_extracted_data(result, embeddingClass)
+                projects_vectors.append(vector)
+            st.write(f"Number of rows embedded for projects: {len(projects_vectors)}")
 
 
         st.success("Data from Notion, OpenAI, and Pinecone successfully retrieved and stored.")
