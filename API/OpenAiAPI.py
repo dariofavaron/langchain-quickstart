@@ -58,7 +58,7 @@ class OpenAIEmbeddingsAPI:
                 "model": model
             }
             response = requests.post("https://api.openai.com/v1/embeddings", headers=self.headers, json=payload)
-            print(response.json())
+            
             return response.json()['data'][0]['embedding']
         else:
             raise ValueError("Text exceeds the maximum token limit.")
@@ -95,13 +95,3 @@ class OpenAITextCompletionAPI:
         except Exception as e:
             print(f"An error occurred: {e}")
             return None
-
-# Example usage
-# Replace 'your_openai_api_key' with your actual OpenAI API key
-openai_text_completion_api = OpenAITextCompletionAPI(api_key="your_openai_api_key")
-prompt = "Write a short story about a robot learning to love."
-model = "gpt-3.5-turbo-instruct"
-
-# Generate text completion
-completion = openai_text_completion_api.generate_text_completion(model=model, prompt=prompt)
-print(completion)
