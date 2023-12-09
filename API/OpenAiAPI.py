@@ -1,4 +1,4 @@
-import requests
+import requests, openai
 import tiktoken
 
 class OpenAIEmbeddingsAPI:
