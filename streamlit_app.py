@@ -91,7 +91,8 @@ def extract_metadata_and_content_area(json_obj):
     }
     #id is just the name of the area and his unique id
     id = {
-		json_obj["properties"]["Name"]["title"][0]["text"]["content"]
+		json_obj["properties"]["Name"]["title"][0]["text"]["content"],
+        json_obj["id"]
     }
     return id, metadata, content
 
