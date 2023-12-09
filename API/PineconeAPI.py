@@ -1,4 +1,4 @@
-import requests, pinecone
+import requests
 
 class PineconeAPI:
     """
@@ -43,7 +43,7 @@ class PineconeAPI:
         Returns the statistics of the index.
         """
         url = f"https://{self.index_name}-{self.project_id}.svc.{self.environment}.pinecone.io/describe_index_stats"
-        response = requests.get(url, headers=self.headers)
+        response = requests.post(url, headers=self.headers, timeout=10)
         return response.json()
 
     
@@ -70,7 +70,7 @@ class PineconeAPI:
                 "vector": query_vector
             }
         }
-        response = requests.post(url, headers=self.headers, json=payload)
+        response = requests.post(url, headers=self.headers, json=payload, timeout=10)
         return response.json()
 
     def upsert(self, vectors: list, namespace: str):
@@ -91,5 +91,5 @@ class PineconeAPI:
             "vectors": vectors,
             "namespace": namespace
         }
-        response = requests.post(url, headers=self.headers, json=payload)
+        response = requests.post(url, headers=self.headers, json=payload, timeout=10)
         return response.json()

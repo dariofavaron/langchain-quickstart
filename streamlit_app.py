@@ -5,8 +5,7 @@ from langchain.llms.openai import OpenAI
 from langchain.chains.summarize import load_summarize_chain
 from langchain.llms import BaseLLM
 
-import requests
-import json
+
 # import helper files to scrape Notion API
 from helper_files import get_all_pages, get_page, get_page_content
 from notion_functions import fetch_and_display_notion_structure
@@ -53,14 +52,16 @@ with st.sidebar:
     notion_api_key = st.text_input("Notion API Key", value=st.session_state.notion_api_key, type="password")
 
 
-
     # Initialize Pinecone API if API key is provided
     if st.session_state.pinecone_api_key:
         try:
-            pineconeClass = PineconeAPI(st.session_state.pinecone_api_key, st.session_state.pinecone_index, st.session_state.pinecone_env)
-            index_stats = pineconeClass.DescribeIndexStats()
-            st.write("Pinecone Index Stats:")
-            st.json(index_stats)
+            st.subheader("Pinecone API - Store it in a Pinecone DB")
+            with st.spinner('inizializing index in Pinecone...'):
+                pineconeClass = PineconeAPI(st.session_state.pinecone_api_key, st.session_state.pinecone_index, st.session_state.pinecone_env)
+                index_stats = pineconeClass.DescribeIndexStats()
+                st.write("Pinecone Index Stats:")
+                st.json(index_stats)
+        
 
         except Exception as e:
             st.error(f"Failed to retrieve Pinecone index stats: {e}")
