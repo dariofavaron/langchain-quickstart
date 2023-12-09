@@ -10,7 +10,7 @@ import json
 # import helper files to scrape Notion API
 from helper_files import get_all_pages, get_page, get_page_content
 from notion_functions import fetch_and_display_notion_structure
-from GeneralFunctions.vector_management import create_area_vector_with_extracted_data, create_project_vector_with_extracted_data, create_tasks_vector_with_extracted_data
+from GeneralFunctions.vector_management import create_area_vector_with_extracted_data, create_project_vector_with_extracted_data, create_task_vector_with_extracted_data
 
 # Assume NotionAPI class is defined elsewhere and imported here
 from API.NotionAPI import NotionAPI  # Replace 'your_notion_api_module' with the actual module name
@@ -112,7 +112,7 @@ if st.button("Button 1 - Get Data from Notion"):
             for result in tasks_content["results"]:
                 st.write("result: ")
                 st.json(result, expanded=False)
-                vector = create_tasks_vector_with_extracted_data(result, embeddingClass)
+                vector = create_task_vector_with_extracted_data(result, embeddingClass)
                 tasks_vectors.append(vector)
                 st.write("vector: ")
                 st.json(vector, expanded=False)
