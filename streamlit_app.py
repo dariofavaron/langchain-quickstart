@@ -46,8 +46,9 @@ with st.sidebar:
     openai_api_key = st.text_input("OpenAI API Key", value=st.session_state.openai_api_key, type="password")
     # Get PINECONE keys
     pinecone_api_key = st.text_input("Pinecone API Key", value=st.session_state.pinecone_api_key, type="password")
-    pinecone_env = st.text_input("Pinecone Enviroment", value=st.session_state.pinecone_env, type="password")
     pinecone_index = st.text_input("Pinecone Index Name", value=st.session_state.pinecone_index, type="password")
+    pinecone_project_id = st.text_input("Pinecone Project ID", value=st.session_state.pinecone_project_id)
+    pinecone_env = st.text_input("Pinecone Enviroment", value=st.session_state.pinecone_env, type="password")
     # Get Notion keys
     notion_api_key = st.text_input("Notion API Key", value=st.session_state.notion_api_key, type="password")
 
@@ -57,7 +58,7 @@ if st.button("initialize pinecone"):
         try:
             st.subheader("Pinecone API - Store it in a Pinecone DB")
             with st.spinner('inizializing index in Pinecone...'):
-                pineconeClass = PineconeAPI(st.session_state.pinecone_api_key, st.session_state.pinecone_index, st.session_state.pinecone_env)
+                pineconeClass = PineconeAPI(st.session_state.pinecone_api_key, st.session_state.pinecone_index, st.session_state.pinecone.project_id, st.session_state.pinecone_env)
                 index_stats = pineconeClass.DescribeIndexStats()
                 st.write("Pinecone Index Stats:")
                 st.json(index_stats)
@@ -141,12 +142,9 @@ if st.button("Button 1 - START"):
 
         # Pinecone API - Store it in a Pinecone DB
         st.subheader("Pinecone API - Store it in a Pinecone DB")
-        with st.spinner('inizializing Storing data in Pinecone...'):
-            pineconeClass = PineconeAPI(pinecone_api_key, pinecone_index, pinecone_env, ["areas", "projects", "tasks"])
-            st.text(f"Indexes: {indexes}")
 
         with st.spinner('Areas'):
-            response = pineconeClass.upsert(pinecone_index, areas_vectors, "areas")
+            response = pineconeClass.upsert(areas_vectors, "areas")
             st.text(f"- Areas response: {response}")
 
         # ADD CODE HERE TO STORE PROJECTS AND TASKS
