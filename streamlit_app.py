@@ -64,7 +64,7 @@ Main fucntion: Get Data from Notion
 - Pinecone API - Store it in a Pinecone DB
 '''
 
-def extract_metadata_and_content_ares(json_obj):
+def extract_metadata_and_content_area(json_obj):
     metadata = {
         "id": json_obj["id"],
         "created_time": json_obj["created_time"],
@@ -117,16 +117,6 @@ if st.button("Button 1 - Get Data from Notion"):
 
             st.write(f"Number of rows embedded for areas: {len(areas_vectors)}")
 
-            #Create vector structure for pinecone
-        
-
-        # Pinecone API - Store it in a Pinecone DB
-
-        #Pinecone API - Store it in a Pinecone DB
-        #pineconeClass = PineconeAPI(pinecone_api_key, "your_project_id", pinecone_env)
-        #pineconeClass.upsert(pinecone_index, areas_embedded, "areas")
-        #pineconeClass.upsert(pinecone_index, project_embedded, "projects")
-        #pineconeClass.upsert(pinecone_index, tasks_embedded, "tasks")
 
         st.success("Data from Notion, OpenAI, and Pinecone successfully retrieved and stored.")
 
