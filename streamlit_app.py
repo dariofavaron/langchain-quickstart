@@ -11,6 +11,12 @@ import json
 from helper_files import get_all_pages, get_page, get_page_content
 from notion_functions import fetch_and_display_notion_structure
 
+# Assume NotionAPI class is defined elsewhere and imported here
+from API.NotionAPI import NotionAPI  # Replace 'your_notion_api_module' with the actual module name
+from API.OpenAiAPI import OpenAIEmbeddingsAPI, OpenAITextCompletionAPI  # Replace 'your_openai_api_module' with the actual module name
+from API.PineconeAPI import PineconeAPI  # Replace 'your_pinecone_api_module' with the actual module name
+
+
 # Initialize session state variables
 if 'openai_api_key' not in st.session_state:
 	st.session_state.openai_api_key = ""
@@ -60,13 +66,16 @@ if st.button("Get Tasks structure"):
     fetch_and_display_notion_structure(notion_api_key, '72c034d6343f4d1e926048b7dcbcbc2b')
 
 
-if st.button("Get Areas"):
+if st.button("Test embeddings"):
     db_id_areas = "c5fd05abfaca44f99b4e90358c3ed701"
     db_id_projects = "c20d87c181634f18bcd14c2649ba6e06"
     db_id_tasks = "72c034d6343f4d1e926048b7dcbcbc2b"
 
-    agent = NotionQueryAgent(notion_api_key, db_id_areas)
+    #agent = NotionQueryAgent(notion_api_key, db_id_areas)
+
+    embeddingClass = OpenAIEmbeddingsAPI(openai_api_key)
+
     prompt = "What are the areas?"
-    result = agent.complete(prompt)
+    result = embeddingClass.generate_embedding(prompt)
     st.success(result)
 
