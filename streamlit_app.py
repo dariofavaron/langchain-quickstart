@@ -58,34 +58,39 @@ db_id_projects = "c20d87c181634f18bcd14c2649ba6e06"
 db_id_tasks = "72c034d6343f4d1e926048b7dcbcbc2b"
 
 '''
-Main fucntion: Get Data from Notion
+Main function: Get Data from Notion
 - Streamlit UI - click button 1
 - Notion API - Get Tasks, Project, Areas, and Knowledge DB content
 - Open API - embed each row with OpenAI embeddings
 - Pinecone API - Store it in a Pinecone DB
 '''
-if st.button("Button 1 - Get Data from Notion"):
+if st.button("Button 1 - START"):
     try:
         # Notion API - Get Areas DB content
-        st.header("Data from Notion:")
-        with st.spinner('Fetching data from Notion...'):
+        st.subheader("Retrieve data from Notion:")
+        with st.spinner('Initializing notion connection...'):
             notionClass = NotionAPI(notion_api_key)
 
+        # Toggle for "Only Areas"
+        only_areas = st.checkbox("Only Areas")
+
+        with st.spinner('Areas'):
             areas_content = notionClass.query_database(db_id_areas)
             st.text(f"- Number of rows retrieved for areas: {len(areas_content['results'])}")
 
-            projects_content = notionClass.query_database(db_id_projects)
-            st.text(f"- Number of rows retrieved for projects: {len(projects_content['results'])}")
+        # Skip projects and tasks if "Only Areas" is checked
+        if not only_areas:
+            with st.spinner('Projects'):
+                projects_content = notionClass.query_database(db_id_projects)
+                st.text(f"- Number of rows retrieved for projects: {len(projects_content['results'])}")
 
-            tasks_content = notionClass.query_database(db_id_tasks)
-            st.text(f"- Number of rows retrieved for tasks: {len(tasks_content['results'])}")
-
-
-        
+            with st.spinner('Tasks'):
+                tasks_content = notionClass.query_database(db_id_tasks)
+                st.text(f"- Number of rows retrieved for tasks: {len(tasks_content['results'])}")
 
         # Open AI API - Embed each row with OpenAI embeddings
         st.subheader("Open API - embed each row with OpenAI embeddings")
-        with st.spinner('Embedding data with OpenAI...'):
+        with st.spinner('Initializing Embedding data with OpenAI...'):
             embeddingClass = OpenAIEmbeddingsAPI(openai_api_key)
 
         with st.spinner('Areas'):
@@ -93,29 +98,36 @@ if st.button("Button 1 - Get Data from Notion"):
             for result in areas_content["results"]:
                 vector = create_area_vector_with_extracted_data(result, embeddingClass)
                 areas_vectors.append(vector)
-        st.text(f"- Number of rows embedded for areas: {len(areas_vectors)}")
+            st.text(f"- Number of rows embedded for areas: {len(areas_vectors)}")
 
-        with st.spinner('Projects'):
-            projects_vectors = []
-            for result in projects_content["results"]:
-                vector = create_project_vector_with_extracted_data(result, embeddingClass)
-                projects_vectors.append(vector)
-        st.text(f"- Number of rows embedded for projects: {len(projects_vectors)}")
+        if not only_areas:
+            with st.spinner('Projects'):
+                projects_vectors = []
+                for result in projects_content["results"]:
+                    vector = create_project_vector_with_extracted_data(result, embeddingClass)
+                    projects_vectors.append(vector)
+                st.text(f"- Number of rows embedded for projects: {len(projects_vectors)}")
 
-        with st.spinner('Tasks'):
-            tasks_vectors = []
-            for result in tasks_content["results"]:
-                vector = create_task_vector_with_extracted_data(result, embeddingClass)
-                tasks_vectors.append(vector)
-        st.text(f"- Number of rows embedded for tasks: {len(tasks_vectors)}")
-
+            with st.spinner('Tasks'):
+                tasks_vectors = []
+                for result in tasks_content["results"]:
+                    vector = create_task_vector_with_extracted_data(result, embeddingClass)
+                    tasks_vectors.append(vector)
+                st.text(f"- Number of rows embedded for tasks: {len(tasks_vectors)}")
 
 
         # Pinecone API - Store it in a Pinecone DB
         st.subheader("Pinecone API - Store it in a Pinecone DB")
-        # with st.spinner('Storing data in Pinecone...'):
-        #     st.text("Storing data in Pinecone...")
+        with st.spinner('inizializing Storing data in Pinecone...'):
+            pineconeClass = PineconeAPI(pinecone_api_key, pinecone_index, pinecone_env) 
 
+        with st.spinner('Areas'):
+            response = pineconeClass.upsert(pinecone_index, areas_vectors, "areas")
+            st.text(f"- Areas response: {response}")
+
+        # ADD CODE HERE TO STORE PROJECTS AND TASKS
+
+        
         st.success("Data from Notion, OpenAI, and Pinecone successfully retrieved and stored.")
 
     except ValueError as e:
