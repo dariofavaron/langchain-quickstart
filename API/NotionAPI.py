@@ -1,0 +1,58 @@
+import requests
+import streamlit as st
+
+# Modularization of Notion API interactions
+class NotionAPI:
+    """
+    A class representing the Notion API.
+
+    Attributes:
+        headers (dict): The headers used for API requests.
+            Contains the authorization token, content type, and Notion version.
+
+    Methods:
+        __init__(api_key): Initializes the NotionAPI object with the provided API key.
+        get_database_structure(database_id): Retrieves the structure of a Notion database.
+        query_database(database_id, filter, sort): Queries a Notion database with optional filter and sort parameters.
+    """
+
+    def __init__(self, api_key):
+        self.headers = {
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+            "Notion-Version": "2022-02-22"
+        }
+
+    def get_database_structure(self, database_id):
+        """
+        Retrieves the structure of a Notion database.
+
+        Args:
+            database_id (str): The ID of the database.
+
+        Returns:
+            Response: The response object containing the database structure.
+        """
+        return requests.get(
+            f"https://api.notion.com/v1/databases/{database_id}",
+            headers=self.headers
+        )
+
+    def query_database(self, database_id, filter=None, sort=None):
+        """
+        Queries a Notion database with optional filter and sort parameters.
+
+        Args:
+            database_id (str): The ID of the database.
+            filter (dict, optional): The filter parameters for the query. Defaults to None.
+            sort (list, optional): The sort parameters for the query. Defaults to None.
+
+        Returns:
+            Response: The response object containing the query results.
+        """
+        body = {"filter": filter or {}, "sorts": sort or []}
+        return requests.post(
+            f"https://api.notion.com/v1/databases/{database_id}/query",
+            headers=self.headers,
+            json=body
+        )

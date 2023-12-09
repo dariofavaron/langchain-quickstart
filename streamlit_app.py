@@ -3,6 +3,7 @@ from langchain.text_splitter import CharacterTextSplitter
 from langchain.docstore.document import Document
 from langchain.llms.openai import OpenAI
 from langchain.chains.summarize import load_summarize_chain
+from langchain_agents import NotionQueryAgent
 import requests
 import json
 # import helper files to scrape Notion API
@@ -22,13 +23,12 @@ if 'notion_api_key' not in st.session_state:
 	st.session_state.notion_api_key = ""
 
 
-
 st.set_page_config(page_title="Home", page_icon="🦜️🔗")
-st.title('🦜🔗 Quickstart App')
+st.title('Notion Database Explorer')
 
 st.markdown(
     """
-    This is the beginning of MVP for LangChain.    
+    the goal of this app is to explore the notion database and create a knowledge graph
 
     """
 )
@@ -48,8 +48,6 @@ with st.sidebar:
     st.caption("*Required*")
 
 
-#- Streamlit UI - click button 1
-#- Notion API - Get Tasks, Project, Areas, and Knowledge DB
 
 if st.button("Get Areas structure"):
     fetch_and_display_notion_structure(notion_api_key, 'c5fd05abfaca44f99b4e90358c3ed701')
@@ -59,4 +57,15 @@ if st.button("Get Projects structure"):
 
 if st.button("Get Tasks structure"):
     fetch_and_display_notion_structure(notion_api_key, '72c034d6343f4d1e926048b7dcbcbc2b')
+
+
+if st.button("Get Areas"):
+    db_id_areas = "c5fd05abfaca44f99b4e90358c3ed701"
+    db_id_projects = "c20d87c181634f18bcd14c2649ba6e06"
+    db_id_tasks = "72c034d6343f4d1e926048b7dcbcbc2b"
+
+    agent = NotionQueryAgent(notion_api_key, db_id_areas)
+    prompt = "What are the areas?"
+    result = agent.complete(prompt)
+    st.success(result)
 
