@@ -96,6 +96,14 @@ if st.button("Button 1 - Get Data from Notion"):
         st.write(f"Number of rows embedded for projects: {len(project_embedded)}")
         st.write(f"Number of rows embedded for tasks: {len(tasks_embedded)}")
 
+        #vizualize in streamlit the content of the first row per table
+        st.write("First row of areas content:")
+        st.write(areas_content[0])
+        st.write("First row of projects content:")
+        st.write(project_content[0])
+        st.write("First row of tasks content:")
+        st.write(tasks_content[0])
+
         #Pinecone API - Store it in a Pinecone DB
         #pineconeClass = PineconeAPI(pinecone_api_key, "your_project_id", pinecone_env)
         #pineconeClass.upsert(pinecone_index, areas_embedded, "areas")
