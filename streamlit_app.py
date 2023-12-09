@@ -67,6 +67,10 @@ Main fucntion: Get Data from Notion
 
 
 def extract_metadata_and_content_area(json_obj):
+    id = {
+		"Name": json_obj["properties"]["Name"]["title"][0]["text"]["content"],
+        "id" : json_obj["id"]
+    }
     metadata = {
         "object": json_obj["object"],
         "id": json_obj["id"],
@@ -78,35 +82,25 @@ def extract_metadata_and_content_area(json_obj):
         "cover": json_obj["cover"],
         "icon": json_obj["icon"],
         "parent": json_obj["parent"]["database_id"],
-        "archived": json_obj["archived"],
         "url": json_obj["url"],
         "public_url": json_obj["public_url"],
         "properties": json_obj["properties"]
     }
-    #content is the string that will be embedded in the vector, including all the useful priorities
     content = {
+        "id": json_obj["id"],
         "Name": json_obj["properties"]["Name"]["title"][0]["text"]["content"],
         "Type": json_obj["properties"]["Type"]["select"]["name"] if "select" in json_obj["properties"]["Type"] else None,
         "Projects": json_obj["properties"]["Projects"]["relation"][0]["id"] if "relation" in json_obj["properties"]["Projects"] else None
-    }
-    #id is just the name of the area and his unique id
-    id = {
-		json_obj["properties"]["Name"]["title"][0]["text"]["content"],
-        json_obj["id"]
     }
     return id, metadata, content
 
 #create vector
 def create_area_vector(json_obj):
-    st.write("test 1")
     id, metadata, content = extract_metadata_and_content_area(json_obj)
-    st.write("CONTENT:")
-    st.json(content, expanded=False)
-    embedded_content = embeddingClass.generate_embedding(str(content)) 
-    st.write("test 3")
+    embedded_content = embeddingClass.generate_embedding(str(content))
     vector = {
-        'id':id, 
-        'values':embedded_content, 
+        'id':id,
+        'values':embedded_content,
         'metadata':metadata,
     }
     return vector
@@ -114,7 +108,6 @@ def create_area_vector(json_obj):
 
 if st.button("Button 1 - Get Data from Notion"):
     try:
-        
         #Notion API - Get Areas DB content
         with st.spinner('Fetching data from Notion...'):
             notionClass = NotionAPI(notion_api_key)
@@ -132,17 +125,8 @@ if st.button("Button 1 - Get Data from Notion"):
 
             areas_vectors = []
             for result in areas_content["results"]:
-                st.json(result, expanded=False)
-
-                #create vector
                 vector = create_area_vector(result)
-                st.json(vector, expanded=False)
-
                 areas_vectors.append(vector)
-
-            # log all the vectors
-            st.write("Areas vectors:")
-            st.json(areas_vectors, expanded=False)
             st.write(f"Number of rows embedded for areas: {len(areas_vectors)}")
 
 
