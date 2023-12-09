@@ -69,9 +69,9 @@ if st.button("Button 1 - Get Data from Notion"):
         #Notion API - Get Tasks, Project, Areas, and Knowledge DB content
         notionClass = NotionAPI(notion_api_key)
 
-        areas_content = notionClass.query_database(db_id_areas, {"page_size": 10})
-        project_content = notionClass.query_database(db_id_projects, {"page_size": 10})
-        tasks_content = notionClass.query_database(db_id_tasks, {"page_size": 10})
+        areas_content = notionClass.query_database(db_id_areas)
+        project_content = notionClass.query_database(db_id_projects)
+        tasks_content = notionClass.query_database(db_id_tasks)
 
         # Open API - embed each row with OpenAI embeddings
         embeddingClass = OpenAIEmbeddingsAPI(openai_api_key)
