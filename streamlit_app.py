@@ -4,7 +4,7 @@ from langchain.docstore.document import Document
 from langchain.llms.openai import OpenAI
 from langchain.chains.summarize import load_summarize_chain
 from langchain.llms import BaseLLM
-from langchain_agents import NotionQueryAgent
+
 import requests
 import json
 # import helper files to scrape Notion API
