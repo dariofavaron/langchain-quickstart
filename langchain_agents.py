@@ -28,8 +28,8 @@ class NotionQueryAgent(BaseLLM):
         # Return the type of your language model (e.g., "text-completion")
         return "text-completion"
 
-    response = self.notion_api.query_database(self.db_id, {"page_size": 10})  # Modify the query as needed
-    return response.json()
+    #response = self.notion_api.query_database(self.db_id, {"page_size": 10})  # Modify the query as needed
+    #return response.json()
 
 # LangChain agent for Notion Retrieve Tool
 class NotionRetrieveAgent(BaseLLM):
