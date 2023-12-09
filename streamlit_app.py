@@ -98,11 +98,13 @@ if st.button("Button 1 - START"):
         st.subheader("Retrieve data from Notion:")
         with st.spinner('Initializing notion connection...'):
             notionClass = NotionAPI(st.session_state.openai_api_key)
+            st.write("initialized")
 
-
+        st.write("start areas")
 
         with st.spinner('Areas'):
-            areas_content = notionClass.query_database(db_id_areas)
+
+            areas_content = notionClass.query_database(db_id_areas)+
             st.text(f"- Number of rows retrieved for areas: {len(areas_content['results'])}")
 
         # Skip projects and tasks if "Only Areas" is checked
