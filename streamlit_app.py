@@ -162,7 +162,7 @@ if st.button("Button 1 - START"):
 
                 url = f"https://{st.session_state.pinecone_index}-{st.session_state.pinecone_project_id}.svc.{st.session_state.pinecone_env}.pinecone.io/vectors/upsert"
                 body = {
-                    "vectors": areas_vectors[0],
+                    "vectors": vectors,
                     "namespace": "areas"
                 }
                 response = requests.post(url, headers=headers, json=body, timeout=10)
