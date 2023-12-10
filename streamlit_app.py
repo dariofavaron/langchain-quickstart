@@ -159,7 +159,7 @@ if st.button("Button 1 - START"):
                     'metadata':{'genre': 'drama'},
                     }
                 ]
-
+                st.json(vectors, expanded=False)
                 url = f"https://{st.session_state.pinecone_index}-{st.session_state.pinecone_project_id}.svc.{st.session_state.pinecone_env}.pinecone.io/vectors/upsert"
                 body = {
                     "vectors": vectors,
@@ -167,8 +167,12 @@ if st.button("Button 1 - START"):
                 }
                 response = requests.post(url, headers=headers, json=body, timeout=10)
                 
-                st.json(response.json(), expanded=False)
-                #vectors_upserted = pineconeClass.upsert(areas_vectors, "areas")
+                st.json(response, expanded=False)
+                
+                st.json(vectors, expanded=False)
+                vectors_upserted = pineconeClass.upsert(areas_vectors[0], "areas")
+                st.json(vectors_upserted.json(), expanded=False)
+
             except Exception as e:
                 st.error(f"Failed to upsert vectors for areas: {e}")
 

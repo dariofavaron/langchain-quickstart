@@ -4,6 +4,7 @@ def create_area_vector_with_extracted_data(json_obj, embeddingClass):
         "Name": json_obj["properties"]["Name"]["title"][0]["text"]["content"],
         "id" : json_obj["id"]
     }
+
     metadata = {
         "object": json_obj["object"],
         "id": json_obj["id"],
@@ -32,7 +33,7 @@ def create_area_vector_with_extracted_data(json_obj, embeddingClass):
     # Creating vector
     embedded_content = embeddingClass.generate_embedding(str(content))
     vector = {
-        'id': id_data,
+        'id': str(id_data),
         'values': embedded_content,
         'metadata': metadata,
     }
