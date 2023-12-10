@@ -151,6 +151,7 @@ if st.button("Button 1 - START"):
             try:
                 
                 headers = {"Api-Key": st.session_state.pinecone_api_key}
+                st.json(areas_vectors[0])
 
                 url = f"https://{st.session_state.pinecone_index}-{st.session_state.pinecone_project_id}.svc.{st.session_state.pinecone_env}.pinecone.io/vectors/upsert"
                 body = {
