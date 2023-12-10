@@ -152,7 +152,7 @@ if st.button("Button 1 - START"):
                 
                 headers = {"Api-Key": st.session_state.pinecone_api_key}
 
-                url = f"https://{st.session_state.index_name}-{st.session_state.project_id}.svc.{st.session_state.environment}.pinecone.io/vectors/upsert"
+                url = f"https://{st.session_state.pinecone_index}-{st.session_state.pinecone_project_id}.svc.{st.session_state.pinecone_env}.pinecone.io/vectors/upsert"
                 body = {
                     "vectors": areas_vectors[0],
                     "namespace": "areas"
