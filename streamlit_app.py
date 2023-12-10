@@ -5,6 +5,7 @@ from langchain.llms.openai import OpenAI
 from langchain.chains.summarize import load_summarize_chain
 from langchain.llms import BaseLLM
 
+import requests
 
 # import helper files to scrape Notion API
 from helper_files import get_all_pages, get_page, get_page_content
@@ -148,7 +149,17 @@ if st.button("Button 1 - START"):
         st.json(areas_vectors, expanded=False)
         with st.spinner('Areas'):
             try:
-                vectors_upserted = pineconeClass.upsert(areas_vectors, "areas")
+                
+                headers = {"Api-Key": st.session_state.pinecone_api_key}
+
+                url = f"https://{st.session_state.index_name}-{st.session_state.project_id}.svc.{st.session_state.environment}.pinecone.io/vectors/upsert"
+                body = {
+                    "vectors": areas_vectors[0],
+                    "namespace": "areas"
+                }
+                response = requests.post(url, headers=self.headers, json=body, timeout=10)
+                
+                #vectors_upserted = pineconeClass.upsert(areas_vectors, "areas")
             except Exception as e:
                 st.error(f"Failed to upsert vectors for areas: {e}")
 
