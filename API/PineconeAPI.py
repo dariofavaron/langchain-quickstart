@@ -73,7 +73,7 @@ class PineconeAPI:
         response = requests.post(url, headers=self.headers, json=payload, timeout=10)
         return response.json()
 
-    def upsert(self, vectors, namespace: str):
+    def upsert(self, vectors:list, namespace: str):
         """
         Upserts vectors into the Pinecone database in the specified namespace.
         Each vector should contain an 'id', 'values', and optional 'metadata'.
