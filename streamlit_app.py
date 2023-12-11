@@ -57,18 +57,10 @@ with st.sidebar:
         st.session_state.pinecone_project_id = all_keys['PINECONE_PROJECT_ID']
         st.session_state.notion_api_key = all_keys['NOTION_API_KEY']
 
-    # st.session_state.openai_api_key = st.text_input("OpenAI API Key", value=st.session_state.openai_api_key, type="password")
-    # # Get PINECONE keys
-    # st.session_state.pinecone_api_key = st.text_input("Pinecone API Key", value=st.session_state.pinecone_api_key, type="password")
-    # st.session_state.pinecone_env = st.text_input("Pinecone Enviroment", value=st.session_state.pinecone_env, type="password")
-    # st.session_state.pinecone_index = st.text_input("Pinecone Index Name", value=st.session_state.pinecone_index, type="password")
-    # st.session_state.pinecone_project_id = st.text_input("Pinecone Project ID", value=st.session_state.pinecone_project_id, type="password")
-    # # Get Notion keys
-    # st.session_state.notion_api_key = st.text_input("Notion API Key", value=st.session_state.notion_api_key, type="password")
-
 db_id_areas = "c5fd05abfaca44f99b4e90358c3ed701"
 db_id_projects = "c20d87c181634f18bcd14c2649ba6e06"
 db_id_tasks = "72c034d6343f4d1e926048b7dcbcbc2b"
+db_id_note_inbox = "50d49cabe62146689b61932004d5687c"
 
 #initailize Notion class
 if st.session_state.notion_api_key:
@@ -105,21 +97,19 @@ if st.session_state.pinecone_api_key:
 else:
     st.warning("Pinecone API key not provided. Please enter the API key to check index stats.")
 
-
-'''
-First step: Get Data from Notion
-- Streamlit UI - click button 1
-- Notion API - Get Tasks, Project, Areas, and Knowledge DB content
-- Open API - embed each row with OpenAI embeddings
-- Pinecone API - Store it in a Pinecone DB
-'''
-
 # Toggle for "Only Areas"
 only_areas = st.checkbox("Only Areas")
 only_4 = st.checkbox("Only 4")
 
+
 if st.button("Button 1 - START"):
-    st.write("Button 1 - pressed")
+    '''
+    First step: Get Data from Notion
+    - Streamlit UI - click button 1
+    - Notion API - Get Tasks, Project, Areas, and Knowledge DB content
+    - Open API - embed each row with OpenAI embeddings
+    - Pinecone API - Store it in a Pinecone DB
+    '''
     try:
         # Notion API - Get Areas DB content
         st.subheader("Retrieve data from Notion:")
@@ -166,7 +156,6 @@ if st.button("Button 1 - START"):
                     tasks_vectors.append(vector)
                 st.text(f"- Number of rows embedded for tasks: {len(tasks_vectors)}")
 
-
         # Pinecone API - Store it in a Pinecone DB
         st.subheader("Pinecone API - Store it in a Pinecone DB")
 
@@ -208,8 +197,27 @@ if st.button("Button 1 - START"):
 #     - Streamlit UI - click button 2
 #     - Notion API - Get one element of Note Inbox DB and show it on the screen
 
-#if st.button("Button 2 - Analyze one Note Inbox"):
+if st.button("Button 2 - Analyze one Note Inbox"):
+    try:
+        # Notion API - Get Areas DB content
+        st.subheader("Retrieve Inbox from Notion:")
 
+        with st.spinner('retrieving inbox'):
+            try:
+                inbox_content = notionClass.query_database(only_4, db_id_note_inbox)
+
+                st.json(inbox_content, expanded=False)
+
+                st.text(f"- Number of rows retrieved from Note Inbox: {len(inbox_content['results'])}")
+            except Exception as e:
+                st.error (f"Area ready query notion: {e}")
+
+        st.success("Extracted inbox note!")
+    except ValueError as e:
+        st.error(f"Value Error: {e}")
+    except Exception as e:
+        # Handle other exceptions, possibly API related
+        st.error(f"General exception: {e}")
 
 # add space in the UI
 st.text("")
