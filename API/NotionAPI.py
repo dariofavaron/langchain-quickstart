@@ -97,7 +97,7 @@ class NotionAPI:
             # Iterate over the blocks
             for block in blocks:
                 block_type = block.get("type")
-                st.write(block_type)
+                st.write(block[block_type]["rich_text"][0]["text"]["content"])
                 try:
                     content = block[block_type]["rich_text"][0]["text"]["content"]
                     page_content += content + "\n"  # Append content with a newline
