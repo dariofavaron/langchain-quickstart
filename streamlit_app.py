@@ -138,7 +138,7 @@ if st.button("Button 1 - START"):
                     pineconeClass = PineconeAPI(st.session_state.pinecone_api_key, st.session_state.pinecone_index, st.session_state.pinecone_project_id, st.session_state.pinecone_env)
                     index_stats = pineconeClass.DescribeIndexStats()
                     st.write("Pinecone Index Stats:")
-                    st.json(index_stats)
+                    st.text(index_stats)
             
             except Exception as e:
                 st.error(f"Failed to retrieve Pinecone index stats: {e}")
@@ -146,18 +146,18 @@ if st.button("Button 1 - START"):
         else:
             st.warning("Pinecone API key not provided. Please enter the API key to check index stats.")
 
+        # Upsert AREAS vectors into Pinecone index
         st.json(areas_vectors, expanded=False)
         with st.spinner('Areas'):
             try:
 
                 vectors_upserted = pineconeClass.upsert(areas_vectors, "areas")
-
-                st.text(vectors_upserted)
+                st.text(f"- Number of rows upserted for areas: {(vectors_upserted)}")
 
             except Exception as e:
                 st.error(f"Failed to upsert vectors for areas: {e}")
 
-            st.text(f"- Number of rows upserted for areas: {(vectors_upserted)}")
+            
 
         # ADD CODE HERE TO STORE PROJECTS AND TASKS
 
