@@ -149,31 +149,15 @@ if st.button("Button 1 - START"):
         st.json(areas_vectors, expanded=False)
         with st.spinner('Areas'):
             try:
-                
-                st.json(areas_vectors[0], expanded=False)
-
-                vectors = [
-                    {
-                    'id':areas_vectors[0]['id'], 
-                    'values':areas_vectors[0]['values'], 
-                    'metadata':areas_vectors[0]['metadata'],
-                    },
-                    {
-                    'id':areas_vectors[1]['id'], 
-                    'values':areas_vectors[1]['values'], 
-                    'metadata':areas_vectors[1]['metadata'],
-                    }
-                ]
-                st.json(vectors, expanded=False)
 
                 vectors_upserted = pineconeClass.upsert(areas_vectors, "areas")
 
-                st.json(vectors_upserted, expanded=False)
+                st.text(vectors_upserted)
 
             except Exception as e:
                 st.error(f"Failed to upsert vectors for areas: {e}")
 
-            st.text(f"- Number of rows upserted for areas: {len(vectors_upserted)}")
+            st.text(f"- Number of rows upserted for areas: {(vectors_upserted)}")
 
         # ADD CODE HERE TO STORE PROJECTS AND TASKS
 
