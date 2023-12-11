@@ -147,6 +147,8 @@ if st.button("Button 1 - START"):
 
         # Upsert AREAS vectors into Pinecone index
         st.json(areas_vectors, expanded=False)
+        st.json(projects_vectors, expanded=False)
+        st.json(tasks_vectors, expanded=False)
         with st.spinner('Areas'):
             try:
 
