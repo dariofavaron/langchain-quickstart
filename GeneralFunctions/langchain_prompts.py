@@ -1,38 +1,20 @@
-import pandas as pd
 
-def visualize_notion_database_row_object(notion_db_row):
+from langchain.llms.openai import OpenAI
+from langchain.output_parsers import PandasDataFrameOutputParser
+from langchain.prompts import PromptTemplate
+from langchain.llms import BaseLLM
+
+
+def langchain_to_convert_json_to_df(inbox_note_to_review):
     """
-    Function to visualize a Notion object.
-    """
-    try:
-
-        data = [
-            {
-            "Object": notion_db_row["object"],
-            "id": notion_db_row["id"],
-            "url": notion_db_row["url"]
-            }
-        ]
-
-        #scan the input jason properties and append to the dataframe structure the properties
-        # Create a DataFrame
-        df = pd.DataFrame(data, columns=["Object", "ID", "Url"])
-
-        return df
-
-    except Exception as e:
-        print(f"Error: {e}")
-        return None 
-
-
-
-def visualize_notion_db_properties(db_response):
-    """
-    Improved version of the function to visualize Notion database properties.
-    This version includes handling for 'status' and 'rollup' property types.
+    Function to convert the JSON response from the Notion API into a DataFrame.
     """
     try:
-        properties = db_response["properties"]
+        model_name = "text-davinci-003"
+        temperature = 0.5
+        model = OpenAI(model_name=model_name, temperature=temperature)
+
+        properties = inbox_note_to_review["properties"]
         data = []
 
         for prop_name, prop_details in properties.items():

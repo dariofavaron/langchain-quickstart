@@ -1,16 +1,11 @@
 import streamlit as st
-from langchain.text_splitter import CharacterTextSplitter
-from langchain.docstore.document import Document
-from langchain.llms.openai import OpenAI
-from langchain.chains.summarize import load_summarize_chain
-from langchain.llms import BaseLLM
 
 import json
 
 # import helper files to scrape Notion API
 from GeneralFunctions.get_notion_content import get_all_pages, get_page, get_page_content
 from GeneralFunctions.vector_metadata_creation import create_area_vector_with_extracted_data, create_project_vector_with_extracted_data, create_task_vector_with_extracted_data
-from GeneralFunctions.dataframe_creation import visualize_notion_db_properties
+from GeneralFunctions.dataframe_creation import visualize_notion_db_properties, visualize_notion_database_row_object
 
 
 # Assume NotionAPI class is defined elsewhere and imported here
@@ -192,6 +187,7 @@ if st.button("Button 1 - START"):
         st.error(f"Error details: {e}")
 
 
+inbox_note_to_review = ""
 
 # - Analyze one Note Inbox
 #     - Streamlit UI - click button 2
@@ -208,6 +204,14 @@ if st.button("Button 2 - Analyze one Note Inbox"):
 
                 st.json(inbox_content, expanded=False)
 
+                # Get first element of the inbox
+                inbox_note_to_review = inbox_content["results"][0]
+
+                st.json(inbox_note_to_review, expanded=False)
+                
+                dataframe_to_visualize = visualize_notion_database_row_object(inbox_note_to_review)
+                st.dataframe(dataframe_to_visualize)
+ 
                 st.text(f"- Number of rows retrieved from Note Inbox: {len(inbox_content['results'])}")
             except Exception as e:
                 st.error (f"Area ready query notion: {e}")
