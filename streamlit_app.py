@@ -252,7 +252,7 @@ if st.button("Button 2 - Analyze one Note Inbox"):
                         #extract property type
                         prop_type = property[1]["type"]
                         st.write("property type: ")
-                        st.json(prop_type, expanded=False)
+                        st.write(prop_type)
 
 
                         if prop_type == "title":
@@ -272,7 +272,7 @@ if st.button("Button 2 - Analyze one Note Inbox"):
                     df = pd.DataFrame(data_to_format, columns=columns)
 
                 except Exception as e:
-                    st.error (f"Area ready query notion: {e}")
+                    st.error (f"Error in vizualization: {e}")
 
                 dataframe_to_visualize = df
 
