@@ -256,15 +256,20 @@ if st.button("Button 2 - Analyze one Note Inbox"):
 
 
                         if prop_type == "title":
-                            prop_value = property[1]["title"][0]["plain_text"]
-
-                            columns.append(prop_name)
-                            data_to_format.append(prop_value)
+                            if property[1]["title"]:
+                                prop_value = property[1]["title"][0]["plain_text"]
+                            else:
+                                prop_value = ""
 
                             st.write("property name: ")
                             st.write(prop_name)
                             st.write("property value: ")
                             st.write(prop_value)
+
+                            columns.append(prop_name)
+                            data_to_format.append(prop_value)
+
+
 
 
                     #scan the input jason properties and append to the dataframe structure the properties
@@ -272,7 +277,7 @@ if st.button("Button 2 - Analyze one Note Inbox"):
                     df = pd.DataFrame(data_to_format, columns=columns)
 
                 except Exception as e:
-                    st.error (f"Error in vizualization: {e}")
+                    st.error (f"Error in visualization: {e}")
 
                 dataframe_to_visualize = df
 
