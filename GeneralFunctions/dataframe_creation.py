@@ -16,7 +16,7 @@ def visualize_notion_database_row_object(notion_db_row):
 
         #scan the input jason properties and append to the dataframe structure the properties
         # Create a DataFrame
-        df = pd.DataFrame(data, columns=["Object", "ID", "Url"])
+        df = pd.DataFrame(data, columns=["Object", "id", "url"])
 
         return df
 
