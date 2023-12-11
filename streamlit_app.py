@@ -175,15 +175,7 @@ if st.button("Button 1 - START"):
                     {
                     'id':areas_vectors[0]['id'], 
                     'values':areas_vectors[0]['values'], 
-                    'metadata':{
-                        "object":"page",
-                        "id":"4bd41969-5171-45d4-902f-4d484962965c",
-                        "created_time":"2023-12-05T22:01:00.000Z",
-                        "last_edited_time":"2023-12-06T07:51:00.000Z",
-                        "created_by":"177bf9e8-731b-4ee2-884c-29fdaf9903ee",
-                        "last_edited_by":"177bf9e8-731b-4ee2-884c-29fdaf9903ee"
-                    },
-                    #'metadata':areas_vectors[0]['metadata'],
+                    'metadata':areas_vectors[0]['metadata'],
                     }
                 ]
                 st.json(vectors, expanded=False)
