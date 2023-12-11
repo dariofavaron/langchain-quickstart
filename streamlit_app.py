@@ -149,26 +149,8 @@ if st.button("Button 1 - START"):
         st.json(areas_vectors, expanded=False)
         with st.spinner('Areas'):
             try:
-                
                 headers = {"Api-Key": st.session_state.pinecone_api_key}
                 
-                vectors=[
-                    {
-                    'id':'vec1', 
-                    'values':[0.1, 0.2, 0.3, 0.4], 
-                    'metadata':{'genre': 'drama'},
-                    }
-                ]
-                st.json(vectors, expanded=False)
-                url = f"https://{st.session_state.pinecone_index}-{st.session_state.pinecone_project_id}.svc.{st.session_state.pinecone_env}.pinecone.io/vectors/upsert"
-                body = {
-                    "vectors": vectors,
-                    "namespace": "areas"
-                }
-                response = requests.post(url, headers=headers, json=body, timeout=10)
-                
-                st.json(response.json(), expanded=False)
-
                 st.json(areas_vectors[0], expanded=False)
 
                 vectors = [
@@ -179,11 +161,9 @@ if st.button("Button 1 - START"):
                     }
                 ]
                 st.json(vectors, expanded=False)
-                body = {
-                    "vectors": vectors,
-                    "namespace": "areas"
-                }
-                vectors_upserted = pineconeClass.upsert(body, vectors, "areas")
+
+                vectors_upserted = pineconeClass.upsert(vectors, "areas")
+                
                 st.json(vectors_upserted, expanded=False)
 
             except Exception as e:
