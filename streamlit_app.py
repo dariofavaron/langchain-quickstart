@@ -245,12 +245,26 @@ if st.button("Button 2 - Analyze one Note Inbox"):
                         st.write("single property: ")
                         st.json(property, expanded=False)
 
-                        prop_type = property["type"]
+                        #extract property name
+                        prop_name = property[0]
+                        
+
+                        #extract property type
+                        prop_type = property[1]["type"]
                         st.write("property type: ")
                         st.json(prop_type, expanded=False)
-                        #if prop_type == "title":
-                            
 
+
+                        if prop_type == "title":
+                            prop_value = property[1]["title"][0]["plain_text"]
+
+                            columns.append(prop_name)
+                            data_to_format.append(prop_value)
+
+                            st.write("property name: ")
+                            st.write(prop_name)
+                            st.write("property value: ")
+                            st.write(prop_value)
 
 
                     #scan the input jason properties and append to the dataframe structure the properties
