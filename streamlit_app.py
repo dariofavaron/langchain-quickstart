@@ -184,7 +184,7 @@ if st.button("Button 1 - START"):
                     "namespace": "areas"
                 }
                 vectors_upserted = pineconeClass.upsert(body, vectors, "areas")
-                st.json(vectors_upserted.json(), expanded=False)
+                st.json(vectors_upserted, expanded=False)
 
             except Exception as e:
                 st.error(f"Failed to upsert vectors for areas: {e}")
