@@ -1,5 +1,6 @@
 import pandas as pd
 
+
 def visualize_notion_database_row_object(notion_db_row):
     """
     Function to visualize a Notion object.
@@ -8,15 +9,34 @@ def visualize_notion_database_row_object(notion_db_row):
 
         data = [
             {
-            "Object": notion_db_row["object"],
+            "object": notion_db_row["object"],
             "id": notion_db_row["id"],
             "url": notion_db_row["url"]
             }
         ]
+        columns = [
+            "object",
+            "id",
+            "url"
+        ]
+
+        properties = notion_db_row["properties"]
+        for property in properties.items():
+
+
+            prop_type = property["type"]
+            #if prop_type == "title":
+                
+
+
+
+            data.append(property)
+            columns.append(property[0])
+
 
         #scan the input jason properties and append to the dataframe structure the properties
         # Create a DataFrame
-        df = pd.DataFrame(data, columns=["Object", "id", "url"])
+        df = pd.DataFrame(data, columns=columns)
 
         return df
 

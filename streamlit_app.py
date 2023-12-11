@@ -1,6 +1,7 @@
 import streamlit as st
 
 import json
+import pandas as pd
 
 # import helper files to scrape Notion API
 from GeneralFunctions.get_notion_content import get_all_pages, get_page, get_page_content
@@ -209,7 +210,66 @@ if st.button("Button 2 - Analyze one Note Inbox"):
 
                 st.json(inbox_note_to_review, expanded=False)
                 
-                dataframe_to_visualize = visualize_notion_database_row_object(inbox_note_to_review)
+                #dataframe_to_visualize = visualize_notion_database_row_object(inbox_note_to_review)
+
+
+
+
+
+
+                st.write(" TEST OF A FUNCTION TO VISUALIZE THE NOTION DB ROW ")
+
+
+                notion_db_row = inbox_note_to_review
+
+                try:
+
+                    data_to_format = [
+                        {
+                        "object": notion_db_row["object"],
+                        "id": notion_db_row["id"],
+                        "url": notion_db_row["url"]
+                        }
+                    ]
+                    columns = [
+                        "object",
+                        "id",
+                        "url"
+                    ]
+
+                    properties = notion_db_row["properties"]
+                    st.write("all properties: ")
+                    st.json(properties, expanded=False)
+
+                    for property in properties.items():
+                        st.write("single property: ")
+                        st.json(property, expanded=False)
+
+                        prop_type = property["type"]
+                        st.write("property type: ")
+                        st.json(prop_type, expanded=False)
+                        #if prop_type == "title":
+                            
+
+
+
+                    #scan the input jason properties and append to the dataframe structure the properties
+                    # Create a DataFrame
+                    df = pd.DataFrame(data_to_format, columns=columns)
+
+                except Exception as e:
+                    st.error (f"Area ready query notion: {e}")
+
+                dataframe_to_visualize = df
+
+
+                # TEST OF A FUNCTION TO VISUALIZE THE NOTION DB ROW
+
+
+
+
+
+
                 st.dataframe(dataframe_to_visualize)
  
                 st.text(f"- Number of rows retrieved from Note Inbox: {len(inbox_content['results'])}")
