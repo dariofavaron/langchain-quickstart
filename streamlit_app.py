@@ -5,6 +5,8 @@ from langchain.llms.openai import OpenAI
 from langchain.chains.summarize import load_summarize_chain
 from langchain.llms import BaseLLM
 
+import json
+
 # import helper files to scrape Notion API
 from GeneralFunctions.get_notion_content import get_all_pages, get_page, get_page_content
 from GeneralFunctions.vector_metadata_creation import create_area_vector_with_extracted_data, create_project_vector_with_extracted_data, create_task_vector_with_extracted_data
@@ -47,6 +49,7 @@ with st.sidebar:
     all_keys = st.text_input("All Keys in json format", type="password")
 
     if all_keys:
+        all_keys = json.loads(all_keys_str)
         st.session_state.openai_api_key = all_keys['OPENAI_API_KEY']
         st.session_state.pinecone_api_key = all_keys['PINECONE_API_KEY']
         st.session_state.pinecone_env = all_keys['PINECONE_ENV']
@@ -63,13 +66,48 @@ with st.sidebar:
     # # Get Notion keys
     # st.session_state.notion_api_key = st.text_input("Notion API Key", value=st.session_state.notion_api_key, type="password")
 
-
 db_id_areas = "c5fd05abfaca44f99b4e90358c3ed701"
 db_id_projects = "c20d87c181634f18bcd14c2649ba6e06"
 db_id_tasks = "72c034d6343f4d1e926048b7dcbcbc2b"
 
+#initailize Notion class
+if st.session_state.notion_api_key:
+    try:
+        with st.spinner('Initializing connection...'):
+            notionClass = NotionAPI(st.session_state.notion_api_key)
+            st.write("- Notion API connection established")
+    except Exception as e:
+        st.error(f"Failed to connect to Notion: {e}")
+else:
+    st.warning("Notion API key not provided.")
+
+#Initialize OpenAI API if API key is provided
+if st.session_state.openai_api_key:
+    try:
+        with st.spinner('Initializing Embedding data with OpenAI...'):
+            embeddingClass = OpenAIEmbeddingsAPI(st.session_state.openai_api_key)
+            st.write("- OpenAI API connection established")
+    except Exception as e:
+        st.error(f"Failed to connect to OpenAI: {e}")
+else:
+    st.warning("OpenAI API key not provided.")
+
+# Initialize Pinecone API if API key is provided
+if st.session_state.pinecone_api_key:
+    try:
+        with st.spinner('inizializing index in Pinecone...'):
+            pineconeClass = PineconeAPI(st.session_state.pinecone_api_key, st.session_state.pinecone_index, st.session_state.pinecone_project_id, st.session_state.pinecone_env)
+            index_stats = pineconeClass.DescribeIndexStats()
+            st.write(f"- Pinecone Index Stats: {(index_stats)}")
+    
+    except Exception as e:
+        st.error(f"Failed to retrieve Pinecone index stats: {e}")
+else:
+    st.warning("Pinecone API key not provided. Please enter the API key to check index stats.")
+
+
 '''
-Main function: Get Data from Notion
+First step: Get Data from Notion
 - Streamlit UI - click button 1
 - Notion API - Get Tasks, Project, Areas, and Knowledge DB content
 - Open API - embed each row with OpenAI embeddings
@@ -85,8 +123,6 @@ if st.button("Button 1 - START"):
     try:
         # Notion API - Get Areas DB content
         st.subheader("Retrieve data from Notion:")
-        with st.spinner('Initializing notion connection...'):
-            notionClass = NotionAPI(st.session_state.notion_api_key)
 
         with st.spinner('Areas'):
             try:
@@ -107,8 +143,6 @@ if st.button("Button 1 - START"):
 
         # Open AI API - Embed each row with OpenAI embeddings
         st.subheader("Open API - embed each row with OpenAI embeddings")
-        with st.spinner('Initializing Embedding data with OpenAI...'):
-            embeddingClass = OpenAIEmbeddingsAPI(st.session_state.openai_api_key)
 
         with st.spinner('Areas'):
             areas_vectors = []
@@ -136,27 +170,12 @@ if st.button("Button 1 - START"):
         # Pinecone API - Store it in a Pinecone DB
         st.subheader("Pinecone API - Store it in a Pinecone DB")
 
-        # Initialize Pinecone API if API key is provided
-        if st.session_state.pinecone_api_key:
-            try:
-                with st.spinner('inizializing index in Pinecone...'):
-                    pineconeClass = PineconeAPI(st.session_state.pinecone_api_key, st.session_state.pinecone_index, st.session_state.pinecone_project_id, st.session_state.pinecone_env)
-                    index_stats = pineconeClass.DescribeIndexStats()
-                    st.write(f"- Pinecone Index Stats: {(index_stats)}")
-            
-            except Exception as e:
-                st.error(f"Failed to retrieve Pinecone index stats: {e}")
-            
-        else:
-            st.warning("Pinecone API key not provided. Please enter the API key to check index stats.")
-
         # Upsert AREAS vectors into Pinecone index
         st.json(areas_vectors, expanded=False)
         st.json(projects_vectors, expanded=False)
         st.json(tasks_vectors, expanded=False)
         with st.spinner('Areas'):
             try:
-
                 vectors_upserted = pineconeClass.upsert(areas_vectors, "areas")
                 st.text(f"- Number of rows upserted for areas: {(vectors_upserted)}")
 
@@ -188,21 +207,11 @@ if st.button("Button 1 - START"):
 
 
 
-
 # - Analyze one Note Inbox
 #     - Streamlit UI - click button 2
 #     - Notion API - Get one element of Note Inbox DB and show it on the screen
 
 #if st.button("Button 2 - Analyze one Note Inbox"):
-     
-
-
-
-
-
-
-
-
 
 
 # add space in the UI
