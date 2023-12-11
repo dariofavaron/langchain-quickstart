@@ -156,9 +156,21 @@ if st.button("Button 1 - START"):
             except Exception as e:
                 st.error(f"Failed to upsert vectors for areas: {e}")
 
+        if not only_areas:
+            with st.spinner('Projects'):
+                try:
+                    vectors_upserted = pineconeClass.upsert(projects_vectors, "projects")
+                    st.text(f"- Number of rows upserted for projects: {(vectors_upserted)}")
+                except Exception as e:
+                    st.error(f"Failed to upsert vectors for projects: {e}")
             
-
-        # ADD CODE HERE TO STORE PROJECTS AND TASKS
+        if not only_areas:
+            with st.spinner('Tasks'):
+                try:
+                    vectors_upserted = pineconeClass.upsert(tasks_vectors, "tasks")
+                    st.text(f"- Number of rows upserted for tasks: {(vectors_upserted)}")
+                except Exception as e:
+                    st.error(f"Failed to upsert vectors for tasks: {e}")
 
 
         st.success("Data from Notion extracted, embedded with OpenAI, and uploaded to Pinecone successfully!")
