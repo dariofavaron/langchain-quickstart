@@ -85,7 +85,7 @@ if st.button("Button 1 - START"):
 
         with st.spinner('Areas'):
             try:
-                areas_content = notionClass.query_database(db_id_areas)
+                areas_content = notionClass.query_database(false, db_id_areas)
 
                 st.text(f"- Number of rows retrieved for areas: {len(areas_content['results'])}")
             except Exception as e:
@@ -93,11 +93,11 @@ if st.button("Button 1 - START"):
         # Skip projects and tasks if "Only Areas" is checked
         if not only_areas:
             with st.spinner('Projects'):
-                projects_content = notionClass.query_database(db_id_projects)
+                projects_content = notionClass.query_database(false, db_id_projects)
                 st.text(f"- Number of rows retrieved for projects: {len(projects_content['results'])}")
 
             with st.spinner('Tasks'):
-                tasks_content = notionClass.query_database(db_id_tasks)
+                tasks_content = notionClass.query_database(false, db_id_tasks)
                 st.text(f"- Number of rows retrieved for tasks: {len(tasks_content['results'])}")
 
         # Open AI API - Embed each row with OpenAI embeddings
@@ -192,22 +192,3 @@ st.text("")
 
 if st.button("Get Areas structure"):
     fetch_and_display_notion_structure(st.session_state.notion_api_key, db_id_areas)
-
-if st.button("Get Projects structure"):
-    fetch_and_display_notion_structure(st.session_state.notion_api_key, db_id_projects)
-
-if st.button("Get Tasks structure"):
-    fetch_and_display_notion_structure(st.session_state.notion_api_key, db_id_tasks)
-
-
-if st.button("Test embeddings"):
-    try:
-        embeddingClass = OpenAIEmbeddingsAPI(st.session_state.openai_api_key)
-        prompt = "What are the areas?"
-        result = embeddingClass.generate_embedding(prompt)
-        st.success(result)
-    except ValueError as e:  # Catching invalid or missing API key error
-        st.error(f"Error: {e}")
-    except Exception as e:  # Catching other potential errors (e.g., network issues, API errors)
-        st.error(f"An unexpected error occurred: {e}")
-
