@@ -1,9 +1,7 @@
 def create_area_vector_with_extracted_data(json_obj, embeddingClass):
     # Extracting data
-    id_data = {
-        "Name": json_obj["properties"]["Name"]["title"][0]["text"]["content"],
-        "id" : json_obj["id"]
-    }
+    id_data = (str(json_obj["properties"]["Name"]["title"][0]["text"]["content"]) + 
+        str(json_obj["id"]))
 
     metadata = {
         "object": json_obj["object"],
@@ -77,7 +75,7 @@ def create_project_vector_with_extracted_data(json_obj, embeddingClass):
     # Creating vector
     embedded_content = embeddingClass.generate_embedding(str(content))
     vector = {
-        'id': id_data,
+        'id': str(id_data),
         'values': embedded_content,
         'metadata': metadata,
     }
@@ -123,7 +121,7 @@ def create_task_vector_with_extracted_data(json_obj, embeddingClass):
     # Creating vector
     embedded_content = embeddingClass.generate_embedding(str(content))
     vector = {
-        'id': id_data,
+        'id': str(id_data),
         'values': embedded_content,
         'metadata': metadata,
     }
