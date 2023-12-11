@@ -170,6 +170,9 @@ if st.button("Button 1 - START"):
                 st.json(response, expanded=False)
 
                 st.json(areas_vectors[0], expanded=False)
+                body = {
+                    areas_vectors[0]
+                }
                 vectors_upserted = pineconeClass.upsert(areas_vectors[0], "areas")
                 st.json(vectors_upserted.json(), expanded=False)
 

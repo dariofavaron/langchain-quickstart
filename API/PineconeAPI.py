@@ -87,11 +87,9 @@ class PineconeAPI:
             dict: The response JSON containing the upsert result.
         """
         url = f"https://{self.index_name}-{self.project_id}.svc.{self.environment}.pinecone.io/vectors/upsert"
-        payload = [ 
-        {
+        payload = {
             "vectors": vectors,
             "namespace": namespace
         }
-        ]
         response = requests.post(url, headers=self.headers, json=payload, timeout=10)
         return response.json()
