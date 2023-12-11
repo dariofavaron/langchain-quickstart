@@ -71,7 +71,7 @@ Main function: Get Data from Notion
 '''
 # Toggle for "Only Areas"
 only_areas = st.checkbox("Only Areas")
-
+only_4 = st.checkbox("Only 4")
 
 
 
@@ -85,7 +85,7 @@ if st.button("Button 1 - START"):
 
         with st.spinner('Areas'):
             try:
-                areas_content = notionClass.query_database(false, db_id_areas)
+                areas_content = notionClass.query_database(only_4, db_id_areas)
 
                 st.text(f"- Number of rows retrieved for areas: {len(areas_content['results'])}")
             except Exception as e:
@@ -93,11 +93,11 @@ if st.button("Button 1 - START"):
         # Skip projects and tasks if "Only Areas" is checked
         if not only_areas:
             with st.spinner('Projects'):
-                projects_content = notionClass.query_database(false, db_id_projects)
+                projects_content = notionClass.query_database(only_4, db_id_projects)
                 st.text(f"- Number of rows retrieved for projects: {len(projects_content['results'])}")
 
             with st.spinner('Tasks'):
-                tasks_content = notionClass.query_database(false, db_id_tasks)
+                tasks_content = notionClass.query_database(only_4, db_id_tasks)
                 st.text(f"- Number of rows retrieved for tasks: {len(tasks_content['results'])}")
 
         # Open AI API - Embed each row with OpenAI embeddings
