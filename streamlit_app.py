@@ -137,8 +137,7 @@ if st.button("Button 1 - START"):
                 with st.spinner('inizializing index in Pinecone...'):
                     pineconeClass = PineconeAPI(st.session_state.pinecone_api_key, st.session_state.pinecone_index, st.session_state.pinecone_project_id, st.session_state.pinecone_env)
                     index_stats = pineconeClass.DescribeIndexStats()
-                    st.write("Pinecone Index Stats:")
-                    st.text(index_stats)
+                    st.write(f"- Pinecone Index Stats: {(index_stats)}")
             
             except Exception as e:
                 st.error(f"Failed to retrieve Pinecone index stats: {e}")
@@ -162,7 +161,7 @@ if st.button("Button 1 - START"):
         # ADD CODE HERE TO STORE PROJECTS AND TASKS
 
 
-        st.success("Data from Notion, OpenAI, and Pinecone successfully retrieved and stored.")
+        st.success("Data from Notion extracted, embedded with OpenAI, and uploaded to Pinecone successfully!")
 
     except ValueError as e:
         st.error(f"Error: {e}")
