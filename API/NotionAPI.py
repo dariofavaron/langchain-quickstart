@@ -85,21 +85,28 @@ class NotionAPI:
             )
             st.json(response.json(), expanded=False)
 
+            # Check if the request was successful
+            if response.status_code != 200:
+                raise Exception(f"API request failed with status code: {response.status_code}")
+
+
+            # string to store the page content of current page
+            page_content = ""
+            blocks = response.json().get("results", [])
+
+            # Iterate over the blocks
+            for block in blocks:
+                block_type = block.get("type")
+                st.write(block_type)
+                try:
+                    content = block[block_type]["rich_text"][0]["text"]["content"]
+                    page_content += content + "\n"  # Append content with a newline
+                except KeyError:
+                    # Skip the block if it doesn't contain the expected keys
+                    continue
+
         except Exception as e:
             raise Exception(f"An error occurred: {e}")
-
-        # string to store the page content of current page
-        page_content = ""
-
-        # loop through all blocks and try to get the page content if it exists
-        for i in response["results"]:
-            type = i["type"]
-            st.write(type)
-            try:
-                page_content += i[type]["rich_text"][0]["text"]["content"]
-            except:
-                # continue if the current block does not contain text
-                continue
 
         # return the page content
         return page_content
