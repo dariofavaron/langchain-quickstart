@@ -52,7 +52,7 @@ def create_project_vector_with_extracted_data(json_obj, embeddingClass):
         "last_edited_time": json_obj["last_edited_time"],
         "created_by": json_obj["created_by"]["id"],
         "last_edited_by": json_obj["last_edited_by"]["id"],
-        "archived": json_obj["archived"],
+        "archived": str(json_obj["archived"]),
         "cover": json_obj["cover"],
         "icon": json_obj["icon"],
         "parent": json_obj["parent"]["database_id"],
