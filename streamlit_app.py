@@ -158,12 +158,17 @@ if st.button("Button 1 - START"):
                     'id':areas_vectors[0]['id'], 
                     'values':areas_vectors[0]['values'], 
                     'metadata':areas_vectors[0]['metadata'],
+                    },
+                    {
+                    'id':areas_vectors[1]['id'], 
+                    'values':areas_vectors[1]['values'], 
+                    'metadata':areas_vectors[1]['metadata'],
                     }
                 ]
                 st.json(vectors, expanded=False)
 
                 vectors_upserted = pineconeClass.upsert(vectors, "areas")
-                
+
                 st.json(vectors_upserted, expanded=False)
 
             except Exception as e:
