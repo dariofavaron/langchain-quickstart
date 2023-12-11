@@ -170,10 +170,20 @@ if st.button("Button 1 - START"):
                 st.json(response, expanded=False)
 
                 st.json(areas_vectors[0], expanded=False)
+
+                vectors = [
+                    {
+                    'id':areas_vectors[0]['id'], 
+                    'values':areas_vectors[0]['values'], 
+                    'metadata':areas_vectors[0]['metadata'],
+                    }
+                st.json(vectors, expanded=False)
+                ]
                 body = {
-                    areas_vectors[0]
+                    "vectors": vectors,
+                    "namespace": "areas"
                 }
-                vectors_upserted = pineconeClass.upsert(areas_vectors[0], "areas")
+                vectors_upserted = pineconeClass.upsert(body, vectors, "areas")
                 st.json(vectors_upserted.json(), expanded=False)
 
             except Exception as e:
