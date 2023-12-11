@@ -149,7 +149,6 @@ if st.button("Button 1 - START"):
         st.json(areas_vectors, expanded=False)
         with st.spinner('Areas'):
             try:
-                headers = {"Api-Key": st.session_state.pinecone_api_key}
                 
                 st.json(areas_vectors[0], expanded=False)
 
@@ -167,7 +166,7 @@ if st.button("Button 1 - START"):
                 ]
                 st.json(vectors, expanded=False)
 
-                vectors_upserted = pineconeClass.upsert(vectors, "areas")
+                vectors_upserted = pineconeClass.upsert(areas_vectors, "areas")
 
                 st.json(vectors_upserted, expanded=False)
 
