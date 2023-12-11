@@ -46,12 +46,13 @@ with st.sidebar:
     # Get API keys
     all_keys = st.text_input("All Keys in json format", value="", type="password")
 
-    st.session_state.openai_api_key = all_keys['OPENAI_API_KEY']
-    st.session_state.pinecone_api_key = all_keys['PINECONE_API_KEY']
-    st.session_state.pinecone_env = all_keys['PINECONE_ENV']
-    st.session_state.pinecone_index = all_keys['PINECONE_INDEX_NAME']
-    st.session_state.pinecone_project_id = all_keys['PINECONE_PROJECT_ID']
-    st.session_state.notion_api_key = all_keys['NOTION_API_KEY']
+    if all_keys:
+        st.session_state.openai_api_key = all_keys['OPENAI_API_KEY']
+        st.session_state.pinecone_api_key = all_keys['PINECONE_API_KEY']
+        st.session_state.pinecone_env = all_keys['PINECONE_ENV']
+        st.session_state.pinecone_index = all_keys['PINECONE_INDEX_NAME']
+        st.session_state.pinecone_project_id = all_keys['PINECONE_PROJECT_ID']
+        st.session_state.notion_api_key = all_keys['NOTION_API_KEY']
 
     # st.session_state.openai_api_key = st.text_input("OpenAI API Key", value=st.session_state.openai_api_key, type="password")
     # # Get PINECONE keys
