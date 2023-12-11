@@ -167,7 +167,7 @@ if st.button("Button 1 - START"):
                 }
                 response = requests.post(url, headers=headers, json=body, timeout=10)
                 
-                st.json(response, expanded=False)
+                st.json(response.json(), expanded=False)
 
                 st.json(areas_vectors[0], expanded=False)
 
@@ -175,7 +175,8 @@ if st.button("Button 1 - START"):
                     {
                     'id':areas_vectors[0]['id'], 
                     'values':areas_vectors[0]['values'], 
-                    'metadata':areas_vectors[0]['metadata'],
+                    'metadata':{'object': 'drama'},
+                    #'metadata':areas_vectors[0]['metadata'],
                     }
                 ]
                 st.json(vectors, expanded=False)
