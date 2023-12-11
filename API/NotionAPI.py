@@ -72,18 +72,16 @@ class NotionAPI:
         except Exception as e:
             raise ValueError(f"An error occurred: {e}")
 
-    def get_page_content(self, st, page_id):
+    def get_page_content(self, page_id):
         """
         Get and return the page content from the Notion API    
         """
-        st.write(page_id)
         try:
             # get all the block for page associated with created_id
             response = requests.get(
                 f"https://api.notion.com/v1/blocks/{page_id}/children",
                 headers=self.headers
             )
-            st.json(response.json(), expanded=False)
 
             # Check if the request was successful
             if response.status_code != 200:
@@ -97,11 +95,10 @@ class NotionAPI:
             # Iterate over the blocks
             for block in blocks:
                 block_type = block.get("type")
-                
+
                 if block[block_type]["rich_text"]:
                     content = block[block_type]["rich_text"][0]["text"]["content"]
                     page_content += content + "\n"  # Append content with a newline
-                    st.write(page_content)
                 else:
                     # Skip the block if it doesn't contain the expected keys
                     continue

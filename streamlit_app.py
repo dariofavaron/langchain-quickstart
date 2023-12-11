@@ -202,21 +202,19 @@ if st.button("Button 2 - Analyze one Note Inbox"):
             try:
                 inbox_content = notionClass.query_database(1, only_4, db_id_note_inbox)
 
+                st.write("extracted data from note inbox: ")
                 st.json(inbox_content, expanded=False)
 
                 # Get first element of the inbox
                 inbox_note_to_review = inbox_content["results"][0]
 
-                st.json(inbox_note_to_review, expanded=False)
+                page_content = notionClass.get_page_content(inbox_note_to_review["id"])
+
+                dataframe_to_visualize = visualize_notion_database_row_object(inbox_note_to_review)
                 
-                dataframe_to_visualize = visualize_notion_database_row_object(st, inbox_note_to_review)
-
+                st.write("page_name: ") 
                 st.dataframe(dataframe_to_visualize)
- 
-                st.text(f"- Number of rows retrieved from Note Inbox: {len(inbox_content['results'])}")
-
-                page_content = notionClass.get_page_content(st, inbox_note_to_review["id"])
-                                                            
+                st.write("page_content: ")
                 st.write(page_content)
 
             except Exception as e:

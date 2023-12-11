@@ -1,7 +1,7 @@
 import pandas as pd
 
 
-def visualize_notion_database_row_object(st, notion_db_row):
+def visualize_notion_database_row_object(notion_db_row):
     """
     Function to visualize a Notion object.
     """
