@@ -267,7 +267,9 @@ if st.button("Button 2 - Analyze one Note Inbox"):
                             st.write(prop_value)
 
                             columns.append(prop_name)
-                            data_to_format.append(prop_value)
+                            data_to_format[0]["prop_name"] = prop_value
+
+                            #data_to_format.append(prop_value)
 
 
 
