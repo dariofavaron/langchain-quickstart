@@ -97,7 +97,7 @@ only_areas = st.checkbox("Only Areas")
 only_4 = st.checkbox("Only 4")
 
 
-if st.button("Button 1 - START"):
+if st.button("Button 1 - Get Data from Notion "):
     '''
     First step: Get Data from Notion
     - Streamlit UI - click button 1
@@ -111,7 +111,7 @@ if st.button("Button 1 - START"):
 
         with st.spinner('Areas'):
             try:
-                areas_content = notionClass.query_database(only_4, db_id_areas)
+                areas_content = notionClass.query_database(0, only_4, db_id_areas)
 
                 st.text(f"- Number of rows retrieved for areas: {len(areas_content['results'])}")
             except Exception as e:
@@ -119,11 +119,11 @@ if st.button("Button 1 - START"):
         # Skip projects and tasks if "Only Areas" is checked
         if not only_areas:
             with st.spinner('Projects'):
-                projects_content = notionClass.query_database(only_4, db_id_projects)
+                projects_content = notionClass.query_database(0, only_4, db_id_projects)
                 st.text(f"- Number of rows retrieved for projects: {len(projects_content['results'])}")
 
             with st.spinner('Tasks'):
-                tasks_content = notionClass.query_database(only_4, db_id_tasks)
+                tasks_content = notionClass.query_database(0, only_4, db_id_tasks)
                 st.text(f"- Number of rows retrieved for tasks: {len(tasks_content['results'])}")
 
         # Open AI API - Embed each row with OpenAI embeddings
@@ -187,13 +187,13 @@ if st.button("Button 1 - START"):
         st.error(f"Error details: {e}")
 
 
-inbox_note_to_review = ""
+
+if st.button("Button 2 - Get one element from Note Inbox"):
 
 # - Analyze one Note Inbox
 #     - Streamlit UI - click button 2
 #     - Notion API - Get one element of Note Inbox DB and show it on the screen
-
-if st.button("Button 2 - Analyze one Note Inbox"):
+    inbox_note_to_review = ""
     try:
         # Notion API - Get Areas DB content
         st.subheader("Retrieve Inbox from Notion:")

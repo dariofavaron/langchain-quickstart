@@ -61,7 +61,9 @@ class NotionAPI:
             if only_4:
                 body["page_size"] = 4
             if amount:
-                body["page_size"] = amount
+                if amount!=0:
+                    body["page_size"] = amount
+
 
             response = requests.post(
                 f"https://api.notion.com/v1/databases/{database_id}/query",
