@@ -44,7 +44,7 @@ if 'notion_api_key' not in st.session_state:
 #get secret keys
 with st.sidebar:
     # Get API keys
-    all_keys = st.text_input("All Keys in json format", value="", type="password")
+    all_keys = st.text_input("All Keys in json format", type="password")
 
     if all_keys:
         st.session_state.openai_api_key = all_keys['OPENAI_API_KEY']
