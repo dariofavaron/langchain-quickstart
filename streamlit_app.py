@@ -5,18 +5,27 @@ from langchain.llms.openai import OpenAI
 from langchain.chains.summarize import load_summarize_chain
 from langchain.llms import BaseLLM
 
-import requests
-
 # import helper files to scrape Notion API
-from helper_files import get_all_pages, get_page, get_page_content
-from notion_functions import fetch_and_display_notion_structure
-from GeneralFunctions.vector_management import create_area_vector_with_extracted_data, create_project_vector_with_extracted_data, create_task_vector_with_extracted_data
+from GeneralFunctions.get_notion_content import get_all_pages, get_page, get_page_content
+from GeneralFunctions.vector_metadata_creation import create_area_vector_with_extracted_data, create_project_vector_with_extracted_data, create_task_vector_with_extracted_data
+from GeneralFunctions.dataframe_creation import visualize_notion_db_properties
+
 
 # Assume NotionAPI class is defined elsewhere and imported here
 from API.NotionAPI import NotionAPI  # Replace 'your_notion_api_module' with the actual module name
 from API.OpenAiAPI import OpenAIEmbeddingsAPI, OpenAITextCompletionAPI  # Replace 'your_openai_api_module' with the actual module name
 from API.PineconeAPI import PineconeAPI  # Replace 'your_pinecone_api_module' with the actual module name
 
+# Set page title and favicon.
+st.set_page_config(page_title="Home", page_icon="🦜️🔗")
+st.title('Notion Database Explorer')
+
+st.markdown(
+    """
+    the goal of this app is to explore the notion database and create a knowledge graph
+
+    """
+)
 
 # Initialize session state variables
 if 'openai_api_key' not in st.session_state:
@@ -32,30 +41,26 @@ if 'pinecone_index' not in st.session_state:
 if 'notion_api_key' not in st.session_state:
 	st.session_state.notion_api_key = ""
 
-
-st.set_page_config(page_title="Home", page_icon="🦜️🔗")
-st.title('Notion Database Explorer')
-
-st.markdown(
-    """
-    the goal of this app is to explore the notion database and create a knowledge graph
-
-    """
-)
-
 #get secret keys
 with st.sidebar:
     # Get API keys
-    st.session_state.openai_api_key = st.text_input("OpenAI API Key", value=st.session_state.openai_api_key, type="password")
-    # Get PINECONE keys
-    st.session_state.pinecone_api_key = st.text_input("Pinecone API Key", value=st.session_state.pinecone_api_key, type="password")
-    st.session_state.pinecone_env = st.text_input("Pinecone Enviroment", value=st.session_state.pinecone_env, type="password")
-    st.session_state.pinecone_index = st.text_input("Pinecone Index Name", value=st.session_state.pinecone_index, type="password")
-    st.session_state.pinecone_project_id = st.text_input("Pinecone Project ID", value=st.session_state.pinecone_project_id, type="password")
-    # Get Notion keys
-    st.session_state.notion_api_key = st.text_input("Notion API Key", value=st.session_state.notion_api_key, type="password")
+    all_keys = st.text_input("All Keys in json format", value="", type="password")
 
+    st.session_state.openai_api_key = all_keys['OPENAI_API_KEY']
+    st.session_state.pinecone_api_key = all_keys['PINECONE_API_KEY']
+    st.session_state.pinecone_env = all_keys['PINECONE_ENV']
+    st.session_state.pinecone_index = all_keys['PINECONE_INDEX_NAME']
+    st.session_state.pinecone_project_id = all_keys['PINECONE_PROJECT_ID']
+    st.session_state.notion_api_key = all_keys['NOTION_API_KEY']
 
+    # st.session_state.openai_api_key = st.text_input("OpenAI API Key", value=st.session_state.openai_api_key, type="password")
+    # # Get PINECONE keys
+    # st.session_state.pinecone_api_key = st.text_input("Pinecone API Key", value=st.session_state.pinecone_api_key, type="password")
+    # st.session_state.pinecone_env = st.text_input("Pinecone Enviroment", value=st.session_state.pinecone_env, type="password")
+    # st.session_state.pinecone_index = st.text_input("Pinecone Index Name", value=st.session_state.pinecone_index, type="password")
+    # st.session_state.pinecone_project_id = st.text_input("Pinecone Project ID", value=st.session_state.pinecone_project_id, type="password")
+    # # Get Notion keys
+    # st.session_state.notion_api_key = st.text_input("Notion API Key", value=st.session_state.notion_api_key, type="password")
 
 
 db_id_areas = "c5fd05abfaca44f99b4e90358c3ed701"
@@ -69,11 +74,10 @@ Main function: Get Data from Notion
 - Open API - embed each row with OpenAI embeddings
 - Pinecone API - Store it in a Pinecone DB
 '''
+
 # Toggle for "Only Areas"
 only_areas = st.checkbox("Only Areas")
 only_4 = st.checkbox("Only 4")
-
-
 
 if st.button("Button 1 - START"):
     st.write("Button 1 - pressed")
@@ -174,15 +178,31 @@ if st.button("Button 1 - START"):
                 except Exception as e:
                     st.error(f"Failed to upsert vectors for tasks: {e}")
 
-
         st.success("Data from Notion extracted, embedded with OpenAI, and uploaded to Pinecone successfully!")
-
     except ValueError as e:
         st.error(f"Error: {e}")
-
     except Exception as e:
         # Handle other exceptions, possibly API related
         st.error(f"Error details: {e}")
+
+
+
+
+# - Analyze one Note Inbox
+#     - Streamlit UI - click button 2
+#     - Notion API - Get one element of Note Inbox DB and show it on the screen
+
+#if st.button("Button 2 - Analyze one Note Inbox"):
+     
+
+
+
+
+
+
+
+
+
 
 # add space in the UI
 st.text("")
@@ -191,4 +211,7 @@ st.text("")
 
 
 if st.button("Get Areas structure"):
-    fetch_and_display_notion_structure(st.session_state.notion_api_key, db_id_areas)
+    #fetch_and_display_notion_structure(st.session_state.notion_api_key, db_id_areas)
+    area_structure = notionClass.get_database_structure(db_id_areas)
+    df_properties = visualize_notion_db_properties(area_structure)
+    st.dataframe(df_properties)
