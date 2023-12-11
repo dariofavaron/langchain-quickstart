@@ -215,12 +215,12 @@ if st.button("Button 2 - Analyze one Note Inbox"):
  
                 st.text(f"- Number of rows retrieved from Note Inbox: {len(inbox_content['results'])}")
 
-                page_content = notionClass.get_page_content(inbox_note_to_review["id"])
+                page_content = notionClass.get_page_content(st, inbox_note_to_review["id"])
                                                             
                 st.write(page_content)
-                
+
             except Exception as e:
-                st.error (f"Area ready query notion: {e}")
+                st.error (f"Error: {e}")
 
         st.success("Extracted inbox note!")
     except ValueError as e:
