@@ -1,13 +1,14 @@
 import pandas as pd
 
 
-def visualize_notion_database_row_object(notion_db_row):
+def visualize_notion_database_row_object(st, notion_db_row):
     """
     Function to visualize a Notion object.
     """
+
     try:
 
-        data = [
+        data_to_format = [
             {
             "object": notion_db_row["object"],
             "id": notion_db_row["id"],
@@ -21,22 +22,40 @@ def visualize_notion_database_row_object(notion_db_row):
         ]
 
         properties = notion_db_row["properties"]
+        st.write("all properties: ")
+        st.json(properties, expanded=False)
+
         for property in properties.items():
+            st.write("single property: ")
+            st.json(property, expanded=False)
+
+            #extract property name
+            prop_name = property[0]
+            
+
+            #extract property type
+            prop_type = property[1]["type"]
+            st.write("property type: ")
+            st.write(prop_type)
 
 
-            prop_type = property["type"]
-            #if prop_type == "title":
-                
+            if prop_type == "title":
+                if property[1]["title"]:
+                    prop_value = property[1]["title"][0]["plain_text"]
+                else:
+                    prop_value = ""
 
+                st.write("property name: ")
+                st.write(prop_name)
+                st.write("property value: ")
+                st.write(prop_value)
 
-
-            data.append(property)
-            columns.append(property[0])
-
+                columns.append(prop_name)
+                data_to_format[0]["prop_name"] = prop_value
 
         #scan the input jason properties and append to the dataframe structure the properties
         # Create a DataFrame
-        df = pd.DataFrame(data, columns=columns)
+        df = pd.DataFrame(data_to_format, columns=columns)
 
         return df
 
