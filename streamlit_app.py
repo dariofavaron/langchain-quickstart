@@ -177,8 +177,8 @@ if st.button("Button 1 - START"):
                     'values':areas_vectors[0]['values'], 
                     'metadata':areas_vectors[0]['metadata'],
                     }
-                st.json(vectors, expanded=False)
                 ]
+                st.json(vectors, expanded=False)
                 body = {
                     "vectors": vectors,
                     "namespace": "areas"
