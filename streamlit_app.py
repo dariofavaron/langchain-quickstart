@@ -4,7 +4,6 @@ import json
 import pandas as pd
 
 # import helper files to scrape Notion API
-from GeneralFunctions.get_notion_content import get_all_pages, get_page, get_page_content
 from GeneralFunctions.vector_metadata_creation import create_area_vector_with_extracted_data, create_project_vector_with_extracted_data, create_task_vector_with_extracted_data
 from GeneralFunctions.dataframe_creation import visualize_notion_db_properties, visualize_notion_database_row_object
 
@@ -201,7 +200,7 @@ if st.button("Button 2 - Analyze one Note Inbox"):
 
         with st.spinner('retrieving inbox'):
             try:
-                inbox_content = notionClass.query_database(only_4, db_id_note_inbox)
+                inbox_content = notionClass.query_database(1, only_4, db_id_note_inbox)
 
                 st.json(inbox_content, expanded=False)
 
@@ -215,6 +214,11 @@ if st.button("Button 2 - Analyze one Note Inbox"):
                 st.dataframe(dataframe_to_visualize)
  
                 st.text(f"- Number of rows retrieved from Note Inbox: {len(inbox_content['results'])}")
+
+                page_content = notionClass.get_page_content(inbox_note_to_review["id"])
+                                                            
+                st.write(page_content)
+                
             except Exception as e:
                 st.error (f"Area ready query notion: {e}")
 

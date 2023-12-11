@@ -43,7 +43,7 @@ class NotionAPI:
         except Exception as e:
             raise ValueError("An error occurred: {e}")
 
-    def query_database(self, only_4, database_id):
+    def query_database(self, amount, only_4, database_id):
         """
         Queries a Notion database with optional filter and sort parameters.
 
@@ -60,6 +60,8 @@ class NotionAPI:
             
             if only_4:
                 body["page_size"] = 4
+            if amount:
+                body["page_size"] = amount
 
             response = requests.post(
                 f"https://api.notion.com/v1/databases/{database_id}/query",
@@ -69,3 +71,32 @@ class NotionAPI:
             return response.json()
         except Exception as e:
             raise ValueError(f"An error occurred: {e}")
+
+    def get_page_content(self, page_id):
+        """
+        Get and return the page content from the Notion API    
+        """
+
+        try:
+            # get all the block for page associated with created_id
+            response = requests.get(
+                f"https://api.notion.com/v1/blocks/{page_id}/children",
+                headers=self.headers
+            )
+        except Exception as e:
+            raise Exception(f"An error occurred: {e}")
+
+        # string to store the page content of current page
+        page_content = ""
+
+        # loop through all blocks and try to get the page content if it exists
+        for i in response["results"]:
+            type = i["type"]
+            try:
+                page_content += i[type]["rich_text"][0]["text"]["content"]
+            except:
+                # continue if the current block does not contain text
+                continue
+
+        # return the page content
+        return page_content
