@@ -4,7 +4,7 @@ import json
 import pandas as pd
 
 # import helper files to scrape Notion API
-from GeneralFunctions.vector_metadata_creation import create_area_vector_with_extracted_data, create_project_vector_with_extracted_data, create_task_vector_with_extracted_data
+from GeneralFunctions.vector_metadata_creation import create_area_vector_with_extracted_data, create_project_vector_with_extracted_data, create_task_vector_with_extracted_data, create_new_note_vector_with_extracted_data
 from GeneralFunctions.dataframe_creation import visualize_notion_db_properties, visualize_notion_database_row_object
 
 
@@ -187,7 +187,6 @@ if st.button("Button 1 - Get Data from Notion "):
         st.error(f"Error details: {e}")
 
 
-
 if st.button("Button 2 - Get one element from Note Inbox"):
 
 # - Analyze one Note Inbox
@@ -211,6 +210,7 @@ if st.button("Button 2 - Get one element from Note Inbox"):
                 page_content = notionClass.get_page_content(inbox_note_to_review["id"])
 
                 dataframe_to_visualize = visualize_notion_database_row_object(inbox_note_to_review)
+
                 
                 st.write("page_name: ") 
                 st.dataframe(dataframe_to_visualize)
@@ -226,6 +226,39 @@ if st.button("Button 2 - Get one element from Note Inbox"):
     except Exception as e:
         # Handle other exceptions, possibly API related
         st.error(f"General exception: {e}")
+
+
+if st.button("Button 3 - Get relevant docs from Pinecone"):
+# - Extract relevant docs from pinecone
+#     - Streamlit UI - click button 3
+#     - OpenAI API - transform into vectors the visualized Note Inbox,
+#     - Pinecone API - extract from Pinecone DB the most relevant documents
+#     - Streamlit - show on screen [note inbox]+[prompt]+[relevant docs]
+
+    try:
+        
+        with st.spinner('Embedding the note inbox'):
+            vector = create_new_note_vector_with_extracted_data(inbox_note_to_review, page_content, embeddingClass)
+            input_notes_vectors=[vector]
+            st.text(f"- Number of rows embedded for inbox notes: {len(input_notes_vectors)}")
+
+        with st.spinner('Extracting relevant docs from Pinecone'):
+            areas_response = pineconeClass.query(input_notes_vectors[0]["values"], 10, "areas")
+            projects_response = pineconeClass.query(input_notes_vectors[0]["values"], 10, "projects")
+            tasks_response = pineconeClass.query(input_notes_vectors[0]["values"], 10, "tasks")
+
+            st.write("areas_response: ")
+            st.json(areas_response, expanded=False)
+            st.write("projects_response: ")
+            st.json(projects_response, expanded=False)
+            st.write("tasks_response: ")
+            st.json(tasks_response, expanded=False)
+
+            st.success("Extracted relevant docs from Pinecone!")
+    
+    except ValueError as e:
+        st.error(f"Value Error: {e}")
+
 
 # add space in the UI
 st.text("")

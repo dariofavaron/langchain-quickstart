@@ -65,7 +65,7 @@ def create_project_vector_with_extracted_data(json_obj, embeddingClass):
         "Knowledge": [relation["id"] for relation in json_obj["properties"]["Knowledge"]["relation"]] if "relation" in json_obj["properties"]["Knowledge"] else []
     }
     content = {
-        "id": json_obj["id"],
+        #"id": json_obj["id"],
         "Name": json_obj["properties"]["Name"]["title"][0]["text"]["content"],
         "Areas": [relation["id"] for relation in json_obj["properties"]["Areas"]["relation"]] if "relation" in json_obj["properties"]["Areas"] else [],
         "Priority": json_obj["properties"]["Priority"]["status"]["name"] if "status" in json_obj["properties"]["Priority"] else None,
@@ -111,12 +111,49 @@ def create_task_vector_with_extracted_data(json_obj, embeddingClass):
 
     }
     content = {
-        "id": json_obj["id"],
+        #"id": json_obj["id"],
         "Name": json_obj["properties"]["Name"]["title"][0]["text"]["content"],
         "Projects": [relation["id"] for relation in json_obj["properties"]["Projects"]["relation"]] if "relation" in json_obj["properties"]["Projects"] else [],
         "Knowledge": [relation["id"] for relation in json_obj["properties"]["Knowledge"]["relation"]] if "relation" in json_obj["properties"]["Knowledge"] else [],
         "Status": json_obj["properties"]["Status"]["status"]["name"] if "status" in json_obj["properties"]["Status"] else None,
         "Description": json_obj["properties"]["Description"]["rich_text"][0]["text"]["content"] if "rich_text" in json_obj["properties"]["Description"] and json_obj["properties"]["Description"]["rich_text"] else None
+    }
+
+    # Creating vector
+    embedded_content = embeddingClass.generate_embedding(str(content))
+    vector = {
+        'id': str(id_data),
+        'values': embedded_content,
+        'metadata': metadata,
+    }
+    return vector
+
+def create_new_note_vector_with_extracted_data(json_obj, page_content, embeddingClass):
+    # Extracting data
+    id_data = (str(json_obj["properties"]["Name"]["title"][0]["text"]["content"] if "title" in json_obj["properties"]["title"] else None) + 
+        " - " +
+        str(json_obj["id"]))
+
+    metadata = {
+        "object": json_obj["object"],
+        "id": json_obj["id"],
+        "created_time": json_obj["created_time"],
+        "last_edited_time": json_obj["last_edited_time"],
+        "created_by": json_obj["created_by"]["id"],
+        "last_edited_by": json_obj["last_edited_by"]["id"],
+        "parent": json_obj["parent"]["database_id"],
+        "url": json_obj["url"],
+        # Properties
+        "Name": json_obj["properties"]["Name"]["title"][0]["text"]["content"] if "title" in json_obj["properties"]["title"] else None
+        #"Type": json_obj["properties"]["Type"]["select"]["name"] if "select" in json_obj["properties"]["Type"] else None,
+        #"Projects": json_obj["properties"]["Projects"]["relation"][0]["id"] if "relation" in json_obj["properties"]["Projects"] else None
+    }
+    content = {
+        #"id": json_obj["id"],
+        "Name": json_obj["properties"]["Name"]["title"][0]["text"]["content"] if "title" in json_obj["properties"]["title"] else None,
+        "Content": page_content if page_content else None
+        #"Type": json_obj["properties"]["Type"]["select"]["name"] if "select" in json_obj["properties"]["Type"] else None,
+        #"Projects": json_obj["properties"]["Projects"]["relation"][0]["id"] if "relation" in json_obj["properties"]["Projects"] else None
     }
 
     # Creating vector
