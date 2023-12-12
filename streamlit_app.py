@@ -187,12 +187,14 @@ if st.button("Button 1 - Get Data from Notion "):
         st.error(f"Error details: {e}")
 
 
+inbox_note_to_review = ""
+
 if st.button("Button 2 - Get one element from Note Inbox"):
 
 # - Analyze one Note Inbox
 #     - Streamlit UI - click button 2
 #     - Notion API - Get one element of Note Inbox DB and show it on the screen
-    inbox_note_to_review = ""
+    
     try:
         # Notion API - Get Areas DB content
         st.subheader("Retrieve Inbox from Notion:")
