@@ -234,18 +234,18 @@ if st.button("Button 2 - Get one element from Note Inbox"):
                     
                     st.json(input_notes_vectors, expanded=False)
 
-                    st.json(input_notes_vectors[0]["values"], expanded=False)
+                    #st.json(input_notes_vectors[0]["values"], expanded=False)
 
                     areas_response = pineconeClass.query(query_vector=input_notes_vectors[0]["values"], topK=10, namespace="areas")
-                    #projects_response = pineconeClass.query(input_notes_vectors[0]["values"], 10, "projects")
-                    #tasks_response = pineconeClass.query(input_notes_vectors[0]["values"], 10, "tasks")
+                    projects_response = pineconeClass.query(input_notes_vectors[0]["values"], 10, "projects")
+                    tasks_response = pineconeClass.query(input_notes_vectors[0]["values"], 10, "tasks")
 
                     st.write("areas_response: ")
                     st.json(areas_response, expanded=False)
-                    # st.write("projects_response: ")
-                    # st.json(projects_response, expanded=False)
-                    # st.write("tasks_response: ")
-                    # st.json(tasks_response, expanded=False)
+                    st.write("projects_response: ")
+                    st.json(projects_response, expanded=False)
+                    st.write("tasks_response: ")
+                    st.json(tasks_response, expanded=False)
 
                     st.success("Extracted relevant docs from Pinecone!")
 
