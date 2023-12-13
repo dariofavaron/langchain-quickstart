@@ -215,7 +215,7 @@ if st.button("Button 2 - Get one element from Note Inbox"):
                 dataframe_to_visualize = visualize_notion_database_row_object(inbox_note_to_review)
 
                 
-                st.write("page_name: ") 
+                st.write("page_name: ")
                 st.dataframe(dataframe_to_visualize)
                 st.write("page_content: ")
                 st.write(page_content)
