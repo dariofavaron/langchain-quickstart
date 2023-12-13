@@ -47,7 +47,7 @@ class PineconeAPI:
         return response.json()
 
     
-    def query(self, query_vector: list, topK: int = 10, namespace: str, include_metadata: bool = False):
+    def query(self, query_vector: list, namespace: str, topK: int = 10, include_metadata: bool = False):
         """
         Queries the Pinecone database using a query vector and retrieves similar item ids along with their scores.
 
