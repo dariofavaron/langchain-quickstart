@@ -130,7 +130,7 @@ def create_task_vector_with_extracted_data(json_obj, embeddingClass):
 
 def create_new_note_vector_with_extracted_data(json_obj, page_content, embeddingClass):
     # Extracting data
-    id_data = (str(json_obj["properties"]["Name"]["title"][0]["text"]["content"] if "title" in json_obj["properties"]["title"] else None) + 
+    id_data = (str(json_obj["properties"]["Name"]["title"][0]["text"]["content"] if "title" in json_obj["properties"]["title"] else None) +
         " - " +
         str(json_obj["id"]))
 
