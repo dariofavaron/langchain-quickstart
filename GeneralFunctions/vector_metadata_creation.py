@@ -130,7 +130,7 @@ def create_task_vector_with_extracted_data(json_obj, embeddingClass):
 
 def create_new_note_vector_with_extracted_data(json_obj, page_content, embeddingClass):
     # Extracting data
-    id_data = (str(json_obj["properties"]["Name"]["title"][0]["text"]["content"] if "title" in json_obj["properties"]["title"] else None) +
+    id_data = (str(json_obj["properties"]["Name"]["title"][0]["text"]["content"] if "title" in json_obj["properties"]["Name"]["title"] else None) +
         " - " +
         str(json_obj["id"]))
 
@@ -144,13 +144,13 @@ def create_new_note_vector_with_extracted_data(json_obj, page_content, embedding
         "parent": json_obj["parent"]["database_id"],
         "url": json_obj["url"],
         # Properties
-        "Name": json_obj["properties"]["Name"]["title"][0]["text"]["content"] if "title" in json_obj["properties"]["title"] else None
+        "Name": json_obj["properties"]["Name"]["title"][0]["text"]["content"] if "title" in json_obj["properties"]["Name"]["title"] else None
         #"Type": json_obj["properties"]["Type"]["select"]["name"] if "select" in json_obj["properties"]["Type"] else None,
         #"Projects": json_obj["properties"]["Projects"]["relation"][0]["id"] if "relation" in json_obj["properties"]["Projects"] else None
     }
     content = {
         #"id": json_obj["id"],
-        "Name": json_obj["properties"]["Name"]["title"][0]["text"]["content"] if "title" in json_obj["properties"]["title"] else None,
+        "Name": json_obj["properties"]["Name"]["title"][0]["text"]["content"] if "title" in json_obj["properties"]["Name"]["title"] else None,
         "Content": page_content if page_content else None
         #"Type": json_obj["properties"]["Type"]["select"]["name"] if "select" in json_obj["properties"]["Type"] else None,
         #"Projects": json_obj["properties"]["Projects"]["relation"][0]["id"] if "relation" in json_obj["properties"]["Projects"] else None
