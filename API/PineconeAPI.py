@@ -65,9 +65,9 @@ class PineconeAPI:
         payload = {
             "namespace": namespace,
             "topK": topK,
+            "vector": query_vector,
             "filter": {
-                "includeMetadata": include_metadata,
-                "vector": query_vector
+                "includeMetadata": include_metadata
             }
         }
         response = requests.post(url, headers=self.headers, json=payload, timeout=10)
