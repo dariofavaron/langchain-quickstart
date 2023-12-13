@@ -241,6 +241,7 @@ if st.button("Button 3 - Get relevant docs from Pinecone"):
     try:
         
         with st.spinner('Embedding the note inbox'):
+            st.json(inbox_note_to_review, expanded=False)
             vector = create_new_note_vector_with_extracted_data(inbox_note_to_review, page_content, embeddingClass)
             input_notes_vectors=[vector]
             st.text(f"- Number of rows embedded for inbox notes: {len(input_notes_vectors)}")
