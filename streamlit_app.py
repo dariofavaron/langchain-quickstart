@@ -226,10 +226,16 @@ if st.button("Button 2 - Get one element from Note Inbox"):
                 with st.spinner('Embedding the note inbox'):
                     st.json(inbox_note_to_review, expanded=False)
                     vector = create_new_note_vector_with_extracted_data(inbox_note_to_review, page_content, embeddingClass)
+
                     input_notes_vectors=[vector]
                     st.text(f"- Number of rows embedded for inbox notes: {len(input_notes_vectors)}")
 
                 with st.spinner('Extracting relevant docs from Pinecone'):
+                    
+                    st.json(input_notes_vectors, expanded=False)
+
+                    st.json(input_notes_vectors[0]["values"], expanded=False)
+
                     areas_response = pineconeClass.query(input_notes_vectors[0]["values"], 10, "areas")
                     projects_response = pineconeClass.query(input_notes_vectors[0]["values"], 10, "projects")
                     tasks_response = pineconeClass.query(input_notes_vectors[0]["values"], 10, "tasks")
