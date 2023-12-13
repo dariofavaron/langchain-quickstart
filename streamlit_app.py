@@ -188,6 +188,7 @@ if st.button("Button 1 - Get Data from Notion "):
 
 
 inbox_note_to_review = ""
+page_content = ""
 
 if st.button("Button 2 - Get one element from Note Inbox"):
 
