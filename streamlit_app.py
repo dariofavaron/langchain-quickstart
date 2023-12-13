@@ -219,11 +219,34 @@ if st.button("Button 2 - Get one element from Note Inbox"):
                 st.dataframe(dataframe_to_visualize)
                 st.write("page_content: ")
                 st.write(page_content)
+                
+                st.success("Extracted inbox note!")
+
+
+                with st.spinner('Embedding the note inbox'):
+                    st.json(inbox_note_to_review, expanded=False)
+                    vector = create_new_note_vector_with_extracted_data(inbox_note_to_review, page_content, embeddingClass)
+                    input_notes_vectors=[vector]
+                    st.text(f"- Number of rows embedded for inbox notes: {len(input_notes_vectors)}")
+
+                with st.spinner('Extracting relevant docs from Pinecone'):
+                    areas_response = pineconeClass.query(input_notes_vectors[0]["values"], 10, "areas")
+                    projects_response = pineconeClass.query(input_notes_vectors[0]["values"], 10, "projects")
+                    tasks_response = pineconeClass.query(input_notes_vectors[0]["values"], 10, "tasks")
+
+                    st.write("areas_response: ")
+                    st.json(areas_response, expanded=False)
+                    st.write("projects_response: ")
+                    st.json(projects_response, expanded=False)
+                    st.write("tasks_response: ")
+                    st.json(tasks_response, expanded=False)
+
+                    st.success("Extracted relevant docs from Pinecone!")
+
 
             except Exception as e:
                 st.error (f"Error: {e}")
 
-        st.success("Extracted inbox note!")
     except ValueError as e:
         st.error(f"Value Error: {e}")
     except Exception as e:
