@@ -241,16 +241,15 @@ if st.button("Button 2 - Get one element from Note Inbox"):
                     tasks_response = pineconeClass.query(input_notes_vectors[0]["values"], topK=10, namespace="tasks", include_metadata=True)
 
                     st.write("areas_response: ")
-                    st.json(areas_response, expanded=False)
-
-                    st.write("areas_response dataframe: ")
-                    areas_retrieved_df = visualize_retrieved_vectors(st, areas_response)
+                    areas_retrieved_df = visualize_retrieved_vectors(areas_response)
                     st.dataframe(areas_retrieved_df)
 
                     st.write("projects_response: ")
-                    st.json(projects_response, expanded=False)
+                    projects_retrieved_df = visualize_retrieved_vectors(projects_response)
+                    st.dataframe(projects_retrieved_df)
                     st.write("tasks_response: ")
-                    st.json(tasks_response, expanded=False)
+                    tasks_retrieved_df = visualize_retrieved_vectors(tasks_response)
+                    st.dataframe(tasks_retrieved_df)
 
                     st.success("Extracted relevant docs from Pinecone!")
 
