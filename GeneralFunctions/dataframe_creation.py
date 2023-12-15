@@ -108,6 +108,9 @@ def visualize_retrieved_vectors(st, matches):
         if matches[0]["metadata"]["Type"]:
             columns.append("Type")
 
+        st.write("Matches:")
+        st.json(matches)
+
         for match in matches:
 
             st.write(match)
