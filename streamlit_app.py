@@ -224,7 +224,7 @@ if st.button("Button 2 - Get one element from Note Inbox"):
 
 
                 with st.spinner('Embedding the note inbox'):
-                    st.json(inbox_note_to_review, expanded=False)
+                    #st.json(inbox_note_to_review, expanded=False)
                     vector = create_new_note_vector_with_extracted_data(inbox_note_to_review, page_content, embeddingClass)
 
                     input_notes_vectors=[vector]
@@ -232,7 +232,7 @@ if st.button("Button 2 - Get one element from Note Inbox"):
 
                 with st.spinner('Extracting relevant docs from Pinecone'):
                     
-                    st.json(input_notes_vectors, expanded=False)
+                    #st.json(input_notes_vectors, expanded=False)
 
                     #st.json(input_notes_vectors[0]["values"], expanded=False)
 
@@ -250,6 +250,8 @@ if st.button("Button 2 - Get one element from Note Inbox"):
                     st.write("tasks_response: ")
                     tasks_retrieved_df = visualize_retrieved_vectors(tasks_response)
                     st.dataframe(tasks_retrieved_df)
+                    st.write(tasks_retrieved_df)
+                    st.json(tasks_retrieved_df)
 
                     st.success("Extracted relevant docs from Pinecone!")
 
