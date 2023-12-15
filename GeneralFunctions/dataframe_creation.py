@@ -96,7 +96,7 @@ def visualize_notion_db_properties(db_response):
     
 
 
-def visualize_retrieved_vectors(matches):
+def visualize_retrieved_vectors(st, matches):
     """
     take as an input a list of matches and return a dataframe with selected metadata
     """
@@ -109,7 +109,8 @@ def visualize_retrieved_vectors(matches):
             columns.append("Type")
 
         for match in matches:
-            
+
+            st.write(match)
             data_to_format.append([
                 match["metadata"]["Name"]if "Name" in match["metadata"] else None,
                 match["score"],

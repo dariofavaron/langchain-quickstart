@@ -244,7 +244,7 @@ if st.button("Button 2 - Get one element from Note Inbox"):
                     st.json(areas_response, expanded=False)
 
                     st.write("areas_response dataframe: ")
-                    areas_retrieved_df = visualize_retrieved_vectors(areas_response)
+                    areas_retrieved_df = visualize_retrieved_vectors(st, areas_response)
                     st.dataframe(areas_retrieved_df)
 
                     st.write("projects_response: ")
