@@ -5,7 +5,7 @@ import pandas as pd
 
 # import helper files to scrape Notion API
 from GeneralFunctions.vector_metadata_creation import create_area_vector_with_extracted_data, create_project_vector_with_extracted_data, create_task_vector_with_extracted_data, create_new_note_vector_with_extracted_data
-from GeneralFunctions.dataframe_creation import visualize_notion_db_properties, visualize_notion_database_row_object
+from GeneralFunctions.dataframe_creation import visualize_notion_db_properties, visualize_notion_database_row_object, visualize_retrieved_vectors
 
 
 # Assume NotionAPI class is defined elsewhere and imported here
@@ -242,6 +242,11 @@ if st.button("Button 2 - Get one element from Note Inbox"):
 
                     st.write("areas_response: ")
                     st.json(areas_response, expanded=False)
+
+                    st.write("areas_response dataframe: ")
+                    areas_retrieved_df = visualize_retrieved_vectors(areas_response)
+                    st.dataframe(areas_retrieved_df)
+
                     st.write("projects_response: ")
                     st.json(projects_response, expanded=False)
                     st.write("tasks_response: ")

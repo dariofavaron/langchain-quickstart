@@ -93,3 +93,34 @@ def visualize_notion_db_properties(db_response):
     except KeyError as e:
         print(f"Error: {e} key not found in the JSON response.")
         return None
+    
+
+
+def visualize_retrieved_vectors(matches):
+    """
+    take as an input a list of matches and return a dataframe with selected metadata
+    """
+
+    try:
+        data_to_format = []
+        columns = ["Name", "Score"]
+
+        if matches[0]["metadata"]["Type"]:
+            columns.append("Type")
+
+        for match in matches:
+            
+            data_to_format.append([
+                match["metadata"]["Name"]if "Name" in match["metadata"] else None,
+                match["score"],
+                match["metadata"]["Type"] if "Type" in match["metadata"] else None
+            ])
+
+        # Create a DataFrame
+        df = pd.DataFrame(data_to_format, columns=columns)
+
+        return df
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return None
