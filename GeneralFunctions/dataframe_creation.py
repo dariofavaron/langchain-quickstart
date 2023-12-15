@@ -15,9 +15,9 @@ def visualize_notion_database_row_object(notion_db_row, page_content):
         ]
 
         data_to_format.append([
-            "Object": notion_db_row["object"],
-            "Name": notion_db_row["properties"]["Name"]["title"][0]["text"]["content"] if "title" in notion_db_row["properties"]["Name"]["title"] else None,
-            "Content": page_content if page_content else None
+            notion_db_row["object"],
+            notion_db_row["properties"]["Name"]["title"][0]["text"]["content"] if "title" in notion_db_row["properties"]["Name"]["title"] else None,
+            page_content if page_content else None
             ])
 
         # Create a DataFrame
