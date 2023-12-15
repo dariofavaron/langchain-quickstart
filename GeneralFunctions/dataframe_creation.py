@@ -104,6 +104,9 @@ def visualize_retrieved_vectors(st, matches):
     try:
         data_to_format = []
         columns = ["Name", "Score"]
+        
+        st.write("Matches:")
+        st.json(matches)
 
         if matches[0]["metadata"]["Type"]:
             columns.append("Type")
