@@ -236,9 +236,9 @@ if st.button("Button 2 - Get one element from Note Inbox"):
 
                     #st.json(input_notes_vectors[0]["values"], expanded=False)
 
-                    areas_response = pineconeClass.query(query_vector=input_notes_vectors[0]["values"], topK=10, namespace="areas")
-                    projects_response = pineconeClass.query(input_notes_vectors[0]["values"], topK=10, namespace="projects")
-                    tasks_response = pineconeClass.query(input_notes_vectors[0]["values"], topK=10, namespace="tasks")
+                    areas_response = pineconeClass.query(query_vector=input_notes_vectors[0]["values"], topK=10, namespace="areas", include_metadata=True)
+                    projects_response = pineconeClass.query(input_notes_vectors[0]["values"], topK=10, namespace="projects", include_metadata=True)
+                    tasks_response = pineconeClass.query(input_notes_vectors[0]["values"], topK=10, namespace="tasks", include_metadata=True)
 
                     st.write("areas_response: ")
                     st.json(areas_response, expanded=False)
