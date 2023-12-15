@@ -212,13 +212,11 @@ if st.button("Button 2 - Get one element from Note Inbox"):
 
                 page_content = notionClass.get_page_content(inbox_note_to_review["id"])
 
-                dataframe_to_visualize = visualize_notion_database_row_object(inbox_note_to_review)
+                dataframe_to_visualize = visualize_notion_database_row_object(inbox_note_to_review, page_content)
 
                 
                 st.write("page_name: ")
                 st.dataframe(dataframe_to_visualize)
-                st.write("page_content: ")
-                st.write(page_content)
                 
                 st.success("Extracted inbox note!")
 
@@ -232,10 +230,6 @@ if st.button("Button 2 - Get one element from Note Inbox"):
 
                 with st.spinner('Extracting relevant docs from Pinecone'):
                     
-                    #st.json(input_notes_vectors, expanded=False)
-
-                    #st.json(input_notes_vectors[0]["values"], expanded=False)
-
                     areas_response = pineconeClass.query(query_vector=input_notes_vectors[0]["values"], topK=10, namespace="areas", include_metadata=True)
                     projects_response = pineconeClass.query(input_notes_vectors[0]["values"], topK=10, namespace="projects", include_metadata=True)
                     tasks_response = pineconeClass.query(input_notes_vectors[0]["values"], topK=10, namespace="tasks", include_metadata=True)
@@ -243,15 +237,12 @@ if st.button("Button 2 - Get one element from Note Inbox"):
                     st.write("areas_response: ")
                     areas_retrieved_df = visualize_retrieved_vectors(areas_response)
                     st.dataframe(areas_retrieved_df)
-
                     st.write("projects_response: ")
                     projects_retrieved_df = visualize_retrieved_vectors(projects_response)
                     st.dataframe(projects_retrieved_df)
                     st.write("tasks_response: ")
                     tasks_retrieved_df = visualize_retrieved_vectors(tasks_response)
                     st.dataframe(tasks_retrieved_df)
-                    st.write(tasks_retrieved_df)
-                    st.json(tasks_retrieved_df)
 
                     st.success("Extracted relevant docs from Pinecone!")
 

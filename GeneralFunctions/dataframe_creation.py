@@ -1,45 +1,24 @@
 import pandas as pd
 
 
-def visualize_notion_database_row_object(notion_db_row):
+def visualize_notion_database_row_object(notion_db_row, page_content):
     """
     Function to visualize a Notion object.
     """
 
     try:
 
-        data_to_format = [
-            {
-            "object": notion_db_row["object"]
-            #,"id": notion_db_row["id"]
-            #,"url": notion_db_row["url"]
-            }
-        ]
+        data_to_format = []
+
         columns = [
-            "object"
-            #,"id"
-            #,"url"
+            "Object", "Name", "Content"
         ]
 
-        properties = notion_db_row["properties"]
-
-        for property in properties.items():
-
-            #extract property name
-            prop_name = property[0]
-            
-            #extract property type
-            prop_type = property[1]["type"]
-
-            if prop_type == "title":
-                if property[1]["title"]:
-                    prop_value = property[1]["title"][0]["plain_text"]
-                else:
-                    prop_value = ""
-
-                columns.append(prop_name)
-                data_to_format[0][prop_name] = prop_value
-
+        data_to_format.append([
+            "Object": notion_db_row["object"],
+            "Name": notion_db_row["properties"]["Name"]["title"][0]["text"]["content"] if "title" in notion_db_row["properties"]["Name"]["title"] else None,
+            "Content": page_content if page_content else None
+            ])
 
         # Create a DataFrame
         df = pd.DataFrame(data_to_format, columns=columns)
