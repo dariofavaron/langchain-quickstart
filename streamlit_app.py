@@ -236,8 +236,10 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
                 st.dataframe(dataframe_to_visualize)
                 
                 st.success("Extracted inbox note!")
+            except Exception as e:
+                st.error (f"Error - retrieving inbox: {e}")
 
-
+            try:
                 with st.spinner('Embedding the note inbox'):
                     #st.json(inbox_note_to_review, expanded=False)
                     vector = create_new_note_vector_with_extracted_data(inbox_note_to_review, page_content, embeddingClass)
@@ -264,6 +266,8 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
                     st.json(areas_retrieved_df.to_json(orient="records"))
 
                     st.success("Extracted relevant docs from Pinecone!")
+            except Exception as e:
+                st.error (f"Error - retrieving inbox: {e}")
         
         if st.button("Button 2.1 - Create prompt for openAI and visualize it on the screen"):
             #[note inbox]
@@ -276,10 +280,6 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
             st.json(areas_retrieved_df.to_json(orient="records"), expanded=False)
             st.json(projects_retrieved_df.to_json(orient="records"), expanded=False)
             st.json(tasks_retrieved_df.to_json(orient="records"), expanded=False)
-
-
-            except Exception as e:
-                st.error (f"Error: {e}")
 
     except ValueError as e:
         st.error(f"Value Error: {e}")
