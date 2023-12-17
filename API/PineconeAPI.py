@@ -25,12 +25,16 @@ class PineconeAPI:
     """
 
     def __init__(self, api_key: str, index_name:str, project_id: str, environment: str):
-        self.validate_api_key(api_key)
-        self.api_key = api_key
-        self.index_name = index_name
-        self.project_id = project_id
-        self.environment = environment
-        self.headers = {"Api-Key": api_key}
+        try:
+            self.validate_api_key(api_key)
+            self.api_key = api_key
+            self.index_name = index_name
+            self.project_id = project_id
+            self.environment = environment
+            self.headers = {"Api-Key": api_key}
+        except ValueError as e:
+            raise ValueError(f"Error in PineconeAPI init: {str(e)}")
+
 
 
     def validate_api_key(self, api_key):
@@ -46,8 +50,8 @@ class PineconeAPI:
             url = f"https://{self.index_name}-{self.project_id}.svc.{self.environment}.pinecone.io/describe_index_stats"
             response = requests.post(url, headers=self.headers, timeout=10)
             return response.json()
-        except Exception as e:
-            raise Exception(f"Error in DescribeIndexStats: {str(e)}")
+        except ValueError as e:
+            raise ValueError(f"Error in DescribeIndexStats: {str(e)}")
 
     
     def query(self, query_vector: list, namespace: str, topK: int = 10, include_metadata: bool = False, include_values: bool = False):
@@ -76,8 +80,8 @@ class PineconeAPI:
             }
             response = requests.post(url, headers=self.headers, json=payload, timeout=10)
             return response.json()
-        except Exception as e:
-            raise Exception(f"Error in query: {str(e)}")
+        except ValueError as e:
+            raise ValueError(f"Error in query: {str(e)}")
 
     def upsert(self, vectors:list, namespace: str):
         """
@@ -100,5 +104,5 @@ class PineconeAPI:
         }
         response = requests.post(url, headers=self.headers, json=payload, timeout=10)
         return response.json()
-    except Exception as e:
-        raise Exception(f"Error in query: {str(e)}")
+    except ValueError as e:
+        raise ValueError(f"Error in query: {str(e)}")

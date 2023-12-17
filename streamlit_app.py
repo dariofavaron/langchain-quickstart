@@ -9,9 +9,9 @@ from GeneralFunctions.dataframe_creation import visualize_notion_db_properties, 
 
 
 # Assume NotionAPI class is defined elsewhere and imported here
-from API.NotionAPI import NotionAPI  # Replace 'your_notion_api_module' with the actual module name
-from API.OpenAiAPI import OpenAIEmbeddingsAPI, OpenAITextCompletionAPI  # Replace 'your_openai_api_module' with the actual module name
-from API.PineconeAPI import PineconeAPI  # Replace 'your_pinecone_api_module' with the actual module name
+from API.NotionAPI import NotionAPI 
+from API.OpenAiAPI import OpenAIEmbeddingsAPI, OpenAITextCompletionAPI 
+from API.PineconeAPI import PineconeAPI 
 
 # Set page title and favicon.
 st.set_page_config(page_title="Home", page_icon="🦜️🔗")
