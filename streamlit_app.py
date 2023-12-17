@@ -97,6 +97,8 @@ only_areas = st.checkbox("Only Areas")
 only_4 = st.checkbox("Only 4")
 
 
+
+
 if st.button("Button 1 - Get Data from Notion "):
     '''
     First step: Get Data from Notion
@@ -190,11 +192,12 @@ if st.button("Button 1 - Get Data from Notion "):
 #inbox_note_to_review = {}
 #page_content = ""
 
-if st.button("Button 2 - Get one element from Note Inbox"):
+if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract relevant docs from Pinecone"):
 
 # - Analyze one Note Inbox
 #     - Streamlit UI - click button 2
 #     - Notion API - Get one element of Note Inbox DB and show it on the screen
+#     - Pinecone API - extract from Pinecone DB the most relevant documents
     
     try:
         # Notion API - Get Areas DB content
@@ -244,6 +247,8 @@ if st.button("Button 2 - Get one element from Note Inbox"):
                     tasks_retrieved_df = visualize_retrieved_vectors(tasks_response)
                     st.dataframe(tasks_retrieved_df)
 
+                    st.json(areas_retrieved_df.to_json(orient="records"))
+
                     st.success("Extracted relevant docs from Pinecone!")
 
 
@@ -254,19 +259,28 @@ if st.button("Button 2 - Get one element from Note Inbox"):
         st.error(f"Value Error: {e}")
     except Exception as e:
         # Handle other exceptions, possibly API related
-        st.error(f"General exception: {e}")
+        st.error(f"General exception - Button 2: {e}")
 
 
-if st.button("Button 3 - Get relevant docs from Pinecone"):
-# - Extract relevant docs from pinecone
-#     - Streamlit UI - click button 3
-#     - OpenAI API - transform into vectors the visualized Note Inbox,
-#     - Pinecone API - extract from Pinecone DB the most relevant documents
-#     - Streamlit - show on screen [note inbox]+[prompt]+[relevant docs]
+if st.button("Button 3 - Create prompt for openAI and visualize it on the screen"):
+    
+        # #     - Streamlit - show on screen 
+        #     [note inbox]
+            
+            
+        #     [prompt]
+        #     - import prompt from file
+            
+        #     [relevant docs]
+    
+            
+
+
+
 
     try:
         
-        with st.spinner('Embedding the note inbox'):
+        with st.spinner('**'):
             st.json(inbox_note_to_review, expanded=False)
             vector = create_new_note_vector_with_extracted_data(inbox_note_to_review, page_content, embeddingClass)
             input_notes_vectors=[vector]
@@ -287,7 +301,10 @@ if st.button("Button 3 - Get relevant docs from Pinecone"):
             st.success("Extracted relevant docs from Pinecone!")
     
     except ValueError as e:
-        st.error(f"Value Error: {e}")
+        st.error(f"Value Error Button 3: {e}")
+    except Exception as e:
+        # Handle other exceptions, possibly API related
+        st.error(f"General exception Button 3: {e}")
 
 
 # add space in the UI

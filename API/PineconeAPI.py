@@ -39,12 +39,15 @@ class PineconeAPI:
 
 
     def DescribeIndexStats(self):
-        """
-        Returns the statistics of the index.
-        """
-        url = f"https://{self.index_name}-{self.project_id}.svc.{self.environment}.pinecone.io/describe_index_stats"
-        response = requests.post(url, headers=self.headers, timeout=10)
-        return response.json()
+        try:
+            """
+            Returns the statistics of the index.
+            """
+            url = f"https://{self.index_name}-{self.project_id}.svc.{self.environment}.pinecone.io/describe_index_stats"
+            response = requests.post(url, headers=self.headers, timeout=10)
+            return response.json()
+        except Exception as e:
+            raise Exception(f"Error in DescribeIndexStats: {str(e)}")
 
     
     def query(self, query_vector: list, namespace: str, topK: int = 10, include_metadata: bool = False, include_values: bool = False):
@@ -61,17 +64,20 @@ class PineconeAPI:
         Returns:
             dict: The response JSON containing similar item ids and scores.
         """
-        url = f"https://{self.index_name}-{self.project_id}.svc.{self.environment}.pinecone.io/query"
-        payload = {
-            "namespace": namespace,
-            "topK": topK,
-            "vector": query_vector,
-            "filter": {},
-            "includeValues": include_values,
-            "includeMetadata": include_metadata
-        }
-        response = requests.post(url, headers=self.headers, json=payload, timeout=10)
-        return response.json()
+        try:
+            url = f"https://{self.index_name}-{self.project_id}.svc.{self.environment}.pinecone.io/query"
+            payload = {
+                "namespace": namespace,
+                "topK": topK,
+                "vector": query_vector,
+                "filter": {},
+                "includeValues": include_values,
+                "includeMetadata": include_metadata
+            }
+            response = requests.post(url, headers=self.headers, json=payload, timeout=10)
+            return response.json()
+        except Exception as e:
+            raise Exception(f"Error in query: {str(e)}")
 
     def upsert(self, vectors:list, namespace: str):
         """
@@ -86,6 +92,7 @@ class PineconeAPI:
         Returns:
             dict: The response JSON containing the upsert result.
         """
+    try:
         url = f"https://{self.index_name}-{self.project_id}.svc.{self.environment}.pinecone.io/vectors/upsert"
         payload = {
             "vectors": vectors,
@@ -93,3 +100,5 @@ class PineconeAPI:
         }
         response = requests.post(url, headers=self.headers, json=payload, timeout=10)
         return response.json()
+    except Exception as e:
+        raise Exception(f"Error in query: {str(e)}")
