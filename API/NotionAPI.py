@@ -74,7 +74,7 @@ class NotionAPI:
         except Exception as e:
             raise ValueError(f"Error - query_database: {e}")
 
-    def get_page_content(self, page_id):
+    def get_page_content(self, st, page_id):
         """
         Get and return the page content from the Notion API    
         """
@@ -84,6 +84,7 @@ class NotionAPI:
                 f"https://api.notion.com/v1/blocks/{page_id}/children",
                 headers=self.headers
             )
+            st.write(response)
 
             # Check if the request was successful
             if response.status_code != 200:

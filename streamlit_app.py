@@ -215,7 +215,7 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
                 st.write("inbox_note_to_review: ")
                 st.json(inbox_note_to_review, expanded=False)
 
-                page_content = notionClass.get_page_content(inbox_note_to_review["id"])
+                page_content = notionClass.get_page_content(st, inbox_note_to_review["id"])
                 st.write("page_content: ")
                 st.text(page_content)
                 
