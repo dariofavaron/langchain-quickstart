@@ -7,6 +7,15 @@ import pandas as pd
 from GeneralFunctions.vector_metadata_creation import create_area_vector_with_extracted_data, create_project_vector_with_extracted_data, create_task_vector_with_extracted_data, create_new_note_vector_with_extracted_data
 from GeneralFunctions.dataframe_creation import visualize_notion_db_properties, visualize_notion_database_row_object, visualize_retrieved_vectors
 
+# import and define the input file md with the prompt ans import it as a json
+# Define the input file path
+input_file_path = "/prompt/prompt_1.md"
+
+# Read the input file as a JSON
+with open(input_file_path, "r") as file:
+    input_data = json.load(file)
+
+
 
 # Assume NotionAPI class is defined elsewhere and imported here
 from API.NotionAPI import NotionAPI 
@@ -255,6 +264,18 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
                     st.json(areas_retrieved_df.to_json(orient="records"))
 
                     st.success("Extracted relevant docs from Pinecone!")
+        
+        if st.button("Button 2.1 - Create prompt for openAI and visualize it on the screen"):
+            #[note inbox]
+            st.write("note inbox: ")
+            st.json(inbox_note_to_review, expanded=False)
+            #[prompt]
+            st.write(input_data)
+            #[relevant docs]
+            st.write("relevant docs: ")
+            st.json(areas_retrieved_df.to_json(orient="records"), expanded=False)
+            st.json(projects_retrieved_df.to_json(orient="records"), expanded=False)
+            st.json(tasks_retrieved_df.to_json(orient="records"), expanded=False)
 
 
             except Exception as e:
