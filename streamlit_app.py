@@ -212,12 +212,15 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
 
                 # Get first element of the inbox
                 inbox_note_to_review = inbox_content["results"][0]
+                st.write("inbox_note_to_review: ")
+                st.json(inbox_note_to_review, expanded=False)
 
                 page_content = notionClass.get_page_content(inbox_note_to_review["id"])
+                st.write("page_content: ")
+                st.json(page_content, expanded=False)
 
                 dataframe_to_visualize = visualize_notion_database_row_object(inbox_note_to_review, page_content)
 
-                
                 st.write("page_name: ")
                 st.dataframe(dataframe_to_visualize)
                 
@@ -272,7 +275,9 @@ if st.button("Button 3 - Create prompt for openAI and visualize it on the screen
         #     - import prompt from file
             
         #     [relevant docs]
-    
+    st.subheader("Create prompt for openAI and visualize it on the screen")
+
+    st.write(inbox_note)
             
 
 
