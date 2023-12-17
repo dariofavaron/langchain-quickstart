@@ -104,9 +104,9 @@ class NotionAPI:
                 else:
                     # Skip the block if it doesn't contain the expected keys
                     continue
-
+            # return the page content
+            return page_content
+        
         except Exception as e:
             raise Exception(f"Error - get_page_content: {e}")
 
-        # return the page content
-        return page_content

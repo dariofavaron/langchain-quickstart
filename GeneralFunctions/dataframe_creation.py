@@ -14,9 +14,12 @@ def visualize_notion_database_row_object(notion_db_row, page_content):
             "Object", "Name", "Content"
         ]
 
+        name = notion_db_row["properties"]["Name"]["title"][0]["text"]["content"] if "title" in notion_db_row["properties"]["Name"]["title"] else None
+
+
         data_to_format.append([
             notion_db_row["object"],
-            notion_db_row["properties"]["Name"]["title"][0]["text"]["content"] if "title" in notion_db_row["properties"]["Name"]["title"] else None,
+            name,
             page_content if page_content else None
             ])
 
@@ -25,9 +28,9 @@ def visualize_notion_database_row_object(notion_db_row, page_content):
 
         return df
 
-    except Exception as e:
+    except ValueError as e:
         print(f"Error: {e}")
-        return None 
+        raise ValueError(f"Error in visualize_notion_database_row_object: {str(e)}")
 
 
 
