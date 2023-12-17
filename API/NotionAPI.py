@@ -85,6 +85,7 @@ class NotionAPI:
                 headers=self.headers
             )
             st.write(response)
+            st.json(response.json(), expanded=False)
 
             # Check if the request was successful
             if response.status_code != 200:
@@ -94,6 +95,7 @@ class NotionAPI:
             # string to store the page content of current page
             page_content = ""
             blocks = response.json().get("results", [])
+            st.write(blocks)
 
             # Iterate over the blocks
             for block in blocks:
