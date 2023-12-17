@@ -41,7 +41,7 @@ class NotionAPI:
             )
             return response.json()
         except Exception as e:
-            raise ValueError("An error occurred: {e}")
+            raise ValueError("Error - get_database_structure : {e}")
 
     def query_database(self, amount, only_4, database_id):
         """
@@ -72,7 +72,7 @@ class NotionAPI:
             )
             return response.json()
         except Exception as e:
-            raise ValueError(f"An error occurred: {e}")
+            raise ValueError(f"Error - query_database: {e}")
 
     def get_page_content(self, page_id):
         """
@@ -106,7 +106,7 @@ class NotionAPI:
                     continue
 
         except Exception as e:
-            raise Exception(f"An error occurred: {e}")
+            raise Exception(f"Error - get_page_content: {e}")
 
         # return the page content
         return page_content
