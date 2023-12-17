@@ -96,13 +96,13 @@ class PineconeAPI:
         Returns:
             dict: The response JSON containing the upsert result.
         """
-    try:
-        url = f"https://{self.index_name}-{self.project_id}.svc.{self.environment}.pinecone.io/vectors/upsert"
-        payload = {
-            "vectors": vectors,
-            "namespace": namespace
-        }
-        response = requests.post(url, headers=self.headers, json=payload, timeout=10)
-        return response.json()
-    except ValueError as e:
-        raise ValueError(f"Error in query: {str(e)}")
+        try:
+            url = f"https://{self.index_name}-{self.project_id}.svc.{self.environment}.pinecone.io/vectors/upsert"
+            payload = {
+                "vectors": vectors,
+                "namespace": namespace
+            }
+            response = requests.post(url, headers=self.headers, json=payload, timeout=10)
+            return response.json()
+        except ValueError as e:
+            raise ValueError(f"Error in query: {str(e)}")
