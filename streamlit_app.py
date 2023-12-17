@@ -218,6 +218,8 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
                 page_content = notionClass.get_page_content(inbox_note_to_review["id"])
                 st.write("page_content: ")
                 st.json(page_content, expanded=False)
+                
+                st.write("visualize_notion_database_row_object: ")
 
                 dataframe_to_visualize = visualize_notion_database_row_object(inbox_note_to_review, page_content)
 
