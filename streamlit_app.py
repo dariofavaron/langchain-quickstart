@@ -10,11 +10,10 @@ from GeneralFunctions.dataframe_creation import visualize_notion_db_properties, 
 # import and define the input file md with the prompt ans import it as a json
 from prompt.prompt import Prompts
 
-
 # Assume NotionAPI class is defined elsewhere and imported here
-from API.NotionAPI import NotionAPI 
-from API.OpenAiAPI import OpenAIEmbeddingsAPI, OpenAITextCompletionAPI 
-from API.PineconeAPI import PineconeAPI 
+from API.NotionAPI import NotionAPI
+from API.OpenAiAPI import OpenAIEmbeddingsAPI, OpenAITextCompletionAPI
+from API.PineconeAPI import PineconeAPI
 
 # Set page title and favicon.
 st.set_page_config(page_title="Home", page_icon="🦜️🔗")
