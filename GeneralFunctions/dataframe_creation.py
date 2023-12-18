@@ -14,7 +14,44 @@ def visualize_notion_database_row_object(notion_db_row, page_content):
             "Object", "Name", "Content"
         ]
 
-        name = notion_db_row["properties"]["Name"]["title"][0]["text"]["content"] if "title" in notion_db_row["properties"]["Name"]["title"] else None
+        # example:
+        # inbox_note_to_review:
+
+        # {
+        # "object":"page"
+        # "id":"7bb66b17-8ad0-4784-ba51-abf75170072f"
+        # "created_time":"2023-12-18T23:47:00.000Z"
+        # "last_edited_time":"2023-12-18T23:47:00.000Z"
+        # "created_by":{...}
+        # "last_edited_by":{...}
+        # "cover":NULL
+        # "icon":NULL
+        # "parent":{...}
+        # "archived":false
+        # "properties":{
+        # "Name":{
+        # "id":"title"
+        # "type":"title"
+        # "title":[
+        # 0:{
+        # "type":"text"
+        # "text":{
+        # "content":"Prova azione 1"
+        # "link":NULL
+        # }
+        # "annotations":{...}
+        # "plain_text":"Prova azione 1"
+        # "href":NULL
+        # }
+        # ]
+        # }
+        # }
+        # "url":"https://www.notion.so/Prova-azione-1-7bb66b178ad04784ba51abf75170072f"
+        # "public_url":NULL
+        # }
+
+
+        name = notion_db_row["properties"]["Name"]["title"][0]["text"]["content"] if "title" in notion_db_row["properties"]["Name"].get("title", [{}])[0] else None
 
 
         data_to_format.append([

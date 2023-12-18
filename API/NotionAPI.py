@@ -79,12 +79,13 @@ class NotionAPI:
         Get and return the page content from the Notion API    
         """
         try:
+            st.write(f"https://api.notion.com/v1/blocks/{page_id}/children")
             # get all the block for page associated with created_id
             response = requests.get(
                 f"https://api.notion.com/v1/blocks/{page_id}/children",
                 headers=self.headers
             )
-            st.write(response)
+            st.write("get_page_content request response: ")
             st.json(response.json(), expanded=False)
 
             # Check if the request was successful

@@ -256,8 +256,6 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
                     tasks_retrieved_df = visualize_retrieved_vectors(tasks_response)
                     st.dataframe(tasks_retrieved_df)
 
-                    st.json(areas_retrieved_df.to_json(orient="records"))
-
                     st.success("Extracted relevant docs from Pinecone!")
             except Exception as e:
                 st.error (f"Error - retrieving inbox: {e}")
