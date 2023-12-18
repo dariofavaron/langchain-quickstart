@@ -8,11 +8,10 @@ from GeneralFunctions.vector_metadata_creation import create_area_vector_with_ex
 from GeneralFunctions.dataframe_creation import visualize_notion_db_properties, visualize_notion_database_row_object, visualize_retrieved_vectors
 
 # import and define the input file md with the prompt ans import it as a json
-# Define the input file path
-input_file_path = "/prompt/prompt_1.md"
+from prompt.prompt import Prompt
 
 # Read the input file as a JSON
-with open(input_file_path, "r") as file:
+with open("/prompt/prompt.py", "r") as file:
     input_data = json.load(file)
 
 
@@ -275,6 +274,8 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
             st.json(inbox_note_to_review, expanded=False)
             #[prompt]
             st.write(input_data)
+            prompt = Prompt()
+            st.write(prompt.first_prompt)
             #[relevant docs]
             st.write("relevant docs: ")
             st.json(areas_retrieved_df.to_json(orient="records"), expanded=False)
