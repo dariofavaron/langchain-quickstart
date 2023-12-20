@@ -266,7 +266,7 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
             except Exception as e:
                 st.error (f"Error - retrieving inbox: {e}")
         
-            st.subheader("Create prompt for openAI and visualize it on the screen"):
+            st.subheader("Create prompt for openAI and visualize it on the screen")
             #[note inbox]
             st.write("note inbox: ")
             st.write(page_name + " - " + page_content)
