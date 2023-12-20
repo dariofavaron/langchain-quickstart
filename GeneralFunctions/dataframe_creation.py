@@ -50,6 +50,16 @@ def visualize_notion_database_row_object(notion_db_row, page_content):
         # "public_url":NULL
         # }
 
+        #not title
+        # "properties":{
+        # "Name":{
+        # "id":"title"
+        # "type":"title"
+        # "title":[
+        # ]
+        # }
+        # }
+
 
         name = notion_db_row["properties"]["Name"]["title"][0]["text"]["content"] if "title" in notion_db_row["properties"]["Name"].get("title", [{}])[0] else None
 
