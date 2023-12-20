@@ -229,8 +229,6 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
                 st.write("page_content: ")
                 st.text(page_content)
                 
-                st.write("visualize_notion_database_row_object: ")
-
                 dataframe_to_visualize = visualize_notion_database_row_object(page_name, page_content)
 
                 st.write("inbox_object: ")
@@ -268,12 +266,11 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
             except Exception as e:
                 st.error (f"Error - retrieving inbox: {e}")
         
-        if st.button("Button 2.1 - Create prompt for openAI and visualize it on the screen"):
+            st.subheader("Create prompt for openAI and visualize it on the screen"):
             #[note inbox]
             st.write("note inbox: ")
-            st.json(inbox_note_to_review, expanded=False)
+            st.write(page_name + " - " + page_content)
             #[prompt]
-            st.write(input_data)
             prompt = Prompts()
             st.write(prompt.first_prompt)
             #[relevant docs]
