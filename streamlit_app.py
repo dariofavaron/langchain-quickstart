@@ -272,7 +272,7 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
             st.write(page_name + " - " + page_content)
             #[prompt]
             prompt = Prompts()
-            st.write(prompt.first_prompt)
+            st.write(prompt.first_prompt["first_prompt"])
             #[relevant docs]
             st.write("relevant docs: ")
             st.dataframe(areas_retrieved_df)
