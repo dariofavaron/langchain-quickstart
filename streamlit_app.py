@@ -310,8 +310,8 @@ if st.button("Button 3 - send prompt to OpenAI and visualize it on the screen"):
             #st.write(st.session_state.note_inbox_prompt)
 
             messages=[
-                {"role": "system", "content": "You are a helpful assistant."},
-                {"role": "user", "content": "Hello!"}
+                {"role": "system", "content": st.session_state.note_inbox_prompt},
+                {"role": "user", "content": "Add to the caledar the dentist appointment for tomorrow at 10am"}
             ]
 
             response = openAiClass.generate_text_completion(
