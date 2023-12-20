@@ -219,10 +219,13 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
 
                 st.write("title" in inbox_note_to_review["properties"]["Name"])
 
-                if len(inbox_note_to_review["properties"]["Name"]["title"]) == 0 :
-                    page_name = inbox_note_to_review["properties"]["Name"]["title"][0]["text"]["content"]
-                else:
+                title= inbox_note_to_review["properties"]["Name"]["title"]
+                st.write(len(title))
+
+                if len(title) == 0 :
                     page_name = None
+                else:
+                    page_name = inbox_note_to_review["properties"]["Name"]["title"][0]["text"]["content"]
 
                 st.write("page_name: ")
                 st.text(page_name)
