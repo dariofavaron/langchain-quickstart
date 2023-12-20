@@ -99,20 +99,20 @@ def create_task_vector_with_extracted_data(json_obj, embeddingClass):
         raise Exception(f"Error in create_task_vector_with_extracted_data: {str(e)}")
 
 
-def create_new_note_vector_with_extracted_data(json_obj, page_content, embeddingClass):
+def create_new_note_vector_with_extracted_data(json_obj, page_name, page_content, embeddingClass):
     try:
         # Extracting data
-        id_data = (str(json_obj["properties"]["Name"]["title"][0]["text"]["content"] if "title" in json_obj["properties"]["Name"]["title"] else None) +
+        id_data = (page_name +
             " - " +
             str(json_obj["id"]))
 
         metadata = {
             "object": json_obj["object"],
             "id": json_obj["id"],
-            "Name": json_obj["properties"]["Name"]["title"][0]["text"]["content"] if "title" in json_obj["properties"]["Name"]["title"] else None
+            "Name": page_name
         }
         content = {
-            "Name": json_obj["properties"]["Name"]["title"][0]["text"]["content"] if "title" in json_obj["properties"]["Name"]["title"] else None,
+            "Name": page_name,
             "Content": page_content if page_content else None
         }
 

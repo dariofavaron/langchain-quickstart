@@ -85,8 +85,8 @@ class NotionAPI:
                 f"https://api.notion.com/v1/blocks/{page_id}/children",
                 headers=self.headers
             )
-            st.write("get_page_content request response: ")
-            st.json(response.json(), expanded=False)
+            #st.write("get_page_content request response: ")
+            #st.json(response.json(), expanded=False)
 
             # Check if the request was successful
             if response.status_code != 200:
@@ -96,7 +96,7 @@ class NotionAPI:
             # string to store the page content of current page
             page_content = ""
             blocks = response.json().get("results", [])
-            st.write(blocks)
+            #st.write(blocks)
 
             # Iterate over the blocks
             for block in blocks:

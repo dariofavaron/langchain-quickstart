@@ -1,7 +1,7 @@
 import pandas as pd
 
 
-def visualize_notion_database_row_object(notion_db_row, page_content):
+def visualize_notion_database_row_object(page_name, page_content):
     """
     Function to visualize a Notion object.
     """
@@ -10,63 +10,11 @@ def visualize_notion_database_row_object(notion_db_row, page_content):
 
         data_to_format = []
 
-        columns = [
-            "Object", "Name", "Content"
+        columns = ["Name", "Content"
         ]
 
-        # example:
-        # inbox_note_to_review:
-
-        # {
-        # "object":"page"
-        # "id":"7bb66b17-8ad0-4784-ba51-abf75170072f"
-        # "created_time":"2023-12-18T23:47:00.000Z"
-        # "last_edited_time":"2023-12-18T23:47:00.000Z"
-        # "created_by":{...}
-        # "last_edited_by":{...}
-        # "cover":NULL
-        # "icon":NULL
-        # "parent":{...}
-        # "archived":false
-        # "properties":{
-        # "Name":{
-        # "id":"title"
-        # "type":"title"
-        # "title":[
-        # 0:{
-        # "type":"text"
-        # "text":{
-        # "content":"Prova azione 1"
-        # "link":NULL
-        # }
-        # "annotations":{...}
-        # "plain_text":"Prova azione 1"
-        # "href":NULL
-        # }
-        # ]
-        # }
-        # }
-        # "url":"https://www.notion.so/Prova-azione-1-7bb66b178ad04784ba51abf75170072f"
-        # "public_url":NULL
-        # }
-
-        #not title
-        # "properties":{
-        # "Name":{
-        # "id":"title"
-        # "type":"title"
-        # "title":[
-        # ]
-        # }
-        # }
-
-
-        name = notion_db_row["properties"]["Name"]["title"][0]["text"]["content"] if "title" in notion_db_row["properties"]["Name"].get("title", [{}])[0] else None
-
-
         data_to_format.append([
-            notion_db_row["object"],
-            name,
+            page_name if page_name else None,
             page_content if page_content else None
             ])
 

@@ -217,12 +217,7 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
                 st.write("inbox_note_to_review: ")
                 st.json(inbox_note_to_review, expanded=False)
 
-                st.write("title" in inbox_note_to_review["properties"]["Name"])
-
-                title= inbox_note_to_review["properties"]["Name"]["title"]
-                st.write(len(title))
-
-                if len(title) == 0 :
+                if len(inbox_note_to_review["properties"]["Name"]["title"]) == 0 :
                     page_name = None
                 else:
                     page_name = inbox_note_to_review["properties"]["Name"]["title"][0]["text"]["content"]
@@ -236,9 +231,9 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
                 
                 st.write("visualize_notion_database_row_object: ")
 
-                dataframe_to_visualize = visualize_notion_database_row_object(inbox_note_to_review, page_content)
+                dataframe_to_visualize = visualize_notion_database_row_object(page_name, page_content)
 
-                st.write("page_name: ")
+                st.write("inbox_object: ")
                 st.dataframe(dataframe_to_visualize)
                 
                 st.success("Extracted inbox note!")
@@ -248,7 +243,7 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
             try:
                 with st.spinner('Embedding the note inbox'):
                     #st.json(inbox_note_to_review, expanded=False)
-                    vector = create_new_note_vector_with_extracted_data(inbox_note_to_review, page_content, embeddingClass)
+                    vector = create_new_note_vector_with_extracted_data(inbox_note_to_review, page_name, page_content, embeddingClass)
 
                     input_notes_vectors=[vector]
                     st.text(f"- Number of rows embedded for inbox notes: {len(input_notes_vectors)}")
