@@ -8,9 +8,14 @@ class Prompts:
     def __init__(self):
 
         self.first_prompt = {"first_prompt": """
-                                Your role is to assist users in organizing and enhancing their notes. First, you'll improve the grammar and clarity of the text. Then, check for duplicates by comparing the note with similar ones. Next, classify the note as either a task or a knowledge object. You'll also identify the most suitable area and project for the note and provide constructive feedback on its alignment with these categories. Suggest improvements and recommend actions to enhance the note's effectiveness. Finally, present the refined note in a markdown table format, categorizing it as 'Tasks' or 'Knowledge' with appropriate tags and details, ensuring no extraneous information is included.
+                                Your role is to assist users in organizing and enhancing their notes. 
 
-                                There are few files attached that are the Database extraction of Notion, with details over Areas, Projects, Tasks, Inbox Notes and Knowledge. use them if needed to create context.
+                                There are few files attached that are the Database extraction of Notion. use them if needed to create context.
+                                Areas: These are parts of your life that require ongoing attention and maintenance but don't have a specific end date,
+                                Projects: These are defined as a series of tasks that have a goal or outcome.
+                                Tasks: single operations that require an action. connected to a project.
+                                Knowledge: notes, lists of medias, projects, timelines, executive summaries.
+                                Inbox Notes: all the new tasks, ideas, or information that will be categorized in the Task list or Knowledge Repository.
 
                                 i will provide as input the note inbox object as Note inbox.
 
