@@ -1,7 +1,8 @@
-import requests, openai
+import requests
 import tiktoken
+import openai
 
-class OpenAIEmbeddingsAPI:
+class OpenAiAPI:
     """
     A class that provides methods for interacting with the OpenAI Embeddings API.
 
@@ -70,33 +71,21 @@ class OpenAIEmbeddingsAPI:
         else:
             raise ValueError("Text exceeds the maximum token limit.")
 
-
-class OpenAITextCompletionAPI:
-    def __init__(self, api_key: str):
-        self.validate_api_key(api_key)
-        self.api_key = api_key
-        openai.api_key = self.api_key
-
-    def validate_api_key(self, api_key):
-        if not api_key:
-            raise ValueError("Open API key is missing or invalid")
-
-    def generate_text_completion(self, model: str, prompt: str, max_tokens: int = 150, temperature: float = 0.7):
+    def generate_text_completion(self, model: str, messages: str, max_tokens: int = 150, temperature: float = 0.7):
         """
         Generates text completions using the specified model and prompt.
-        - model: The model to use for the completion (e.g., "gpt-3.5-turbo-instruct").
-        - prompt: The prompt to send to the model.
-        - max_tokens: The maximum number of tokens to generate.
-        - temperature: Controls the randomness of the output (0.0-1.0).
         """
         try:
-            response = openai.Completion.create(
-                model=model,
-                prompt=prompt,
-                max_tokens=max_tokens,
-                temperature=temperature
-            )
-            return response.choices[0].text.strip()
+            payload = {
+                "model":model,
+                "messages":messages,
+                "max_tokens":max_tokens,
+                "temperature":temperature
+            }
+
+            response = requests.post("https://api.openai.com/v1/chat/completions", headers=self.headers, json=payload)
+            return response.json()
+        
         except Exception as e:
-            print(f"An error occurred: {e}")
+            print(f"An error occurred generate_text_completion: {e}")
             return None

@@ -12,7 +12,7 @@ from prompt.prompt import Prompts
 
 # Assume NotionAPI class is defined elsewhere and imported here
 from API.NotionAPI import NotionAPI
-from API.OpenAiAPI import OpenAIEmbeddingsAPI, OpenAITextCompletionAPI
+from API.OpenAiAPI import OpenAiAPI
 from API.PineconeAPI import PineconeAPI
 
 # Set page title and favicon.
@@ -28,17 +28,17 @@ st.markdown(
 
 # Initialize session state variables
 if 'openai_api_key' not in st.session_state:
-	st.session_state.openai_api_key = ""
+    st.session_state.openai_api_key = ""
 if 'pinecone_api_key' not in st.session_state:
-	st.session_state.pinecone_api_key = ""
+    st.session_state.pinecone_api_key = ""
 if 'pinecone_env' not in st.session_state:
-	st.session_state.pinecone_env = ""
+    st.session_state.pinecone_env = ""
 if 'pinecone_project_id' not in st.session_state:
-	st.session_state.pinecone_project_id = ""
+    st.session_state.pinecone_project_id = ""
 if 'pinecone_index' not in st.session_state:
-	st.session_state.pinecone_index = ""
+    st.session_state.pinecone_index = ""
 if 'notion_api_key' not in st.session_state:
-	st.session_state.notion_api_key = ""
+    st.session_state.notion_api_key = ""
 
 #get secret keys
 with st.sidebar:
@@ -74,7 +74,7 @@ else:
 if st.session_state.openai_api_key:
     try:
         with st.spinner('Initializing Embedding data with OpenAI...'):
-            embeddingClass = OpenAIEmbeddingsAPI(st.session_state.openai_api_key)
+            openAiClass = OpenAiAPI(st.session_state.openai_api_key)
             st.write("- OpenAI API connection established")
     except Exception as e:
         st.error(f"Failed to connect to OpenAI: {e}")
@@ -99,6 +99,11 @@ only_areas = st.checkbox("Only Areas")
 only_4 = st.checkbox("Only 4")
 
 
+# Global variables
+if 'note_inbox_prompt' not in st.session_state:
+    st.session_state.note_inbox_prompt = ""
+
+prompt = Prompts()
 
 
 if st.button("Button 1 - Get Data from Notion "):
@@ -266,18 +271,26 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
             except Exception as e:
                 st.error (f"Error - retrieving inbox: {e}")
         
-            st.subheader("Create prompt for openAI and visualize it on the screen")
-            #[note inbox]
-            st.write("note inbox: ")
-            st.write(page_name + " - " + page_content)
-            #[prompt]
-            prompt = Prompts()
-            st.write(prompt.first_prompt["first_prompt"])
-            #[relevant docs]
-            st.write("relevant docs: ")
-            st.dataframe(areas_retrieved_df)
-            st.dataframe(projects_retrieved_df)
-            st.dataframe(tasks_retrieved_df)
+            # st.subheader("Create prompt for openAI and visualize it on the screen")
+            # #[note inbox]
+            # st.write("note inbox: ")
+            # st.write(page_name + " - " + page_content)
+            # #[prompt]
+            # prompt = Prompts()
+            # st.write(prompt.first_prompt["first_prompt"])
+            # #[relevant docs]
+            # st.write("relevant docs: ")
+            # st.dataframe(areas_retrieved_df)
+            # st.dataframe(projects_retrieved_df)
+            # st.dataframe(tasks_retrieved_df)
+
+            st.session_state.note_inbox_prompt = ( 
+                prompt.first_prompt["first_prompt"] 
+                + "\n" + page_name + " - " + page_content 
+                + "\n" + areas_retrieved_df.to_string() 
+                + "\n" + projects_retrieved_df.to_string() 
+                + "\n" + tasks_retrieved_df.to_string()
+            )
 
     except ValueError as e:
         st.error(f"Value Error: {e}")
@@ -285,52 +298,38 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
         # Handle other exceptions, possibly API related
         st.error(f"General exception - Button 2: {e}")
 
+st.write("prompt: ")
+st.write(st.session_state.note_inbox_prompt)
 
-if st.button("Button 3 - Create prompt for openAI and visualize it on the screen"):
-    
-        # #     - Streamlit - show on screen 
-        #     [note inbox]
-            
-            
-        #     [prompt]
-        #     - import prompt from file
-            
-        #     [relevant docs]
-    st.subheader("Create prompt for openAI and visualize it on the screen")
+if st.button("Button 3 - send prompt to OpenAI and visualize it on the screen"):
 
-    st.write(inbox_note)
-            
-
-
-
+    st.subheader("send prompt to OpenAI and visualize it on the screen")
 
     try:
-        
-        with st.spinner('**'):
-            st.json(inbox_note_to_review, expanded=False)
-            vector = create_new_note_vector_with_extracted_data(inbox_note_to_review, page_content, embeddingClass)
-            input_notes_vectors=[vector]
-            st.text(f"- Number of rows embedded for inbox notes: {len(input_notes_vectors)}")
+        with st.spinner('*sending data to OpenAI*'):
+            #st.write(st.session_state.note_inbox_prompt)
 
-        with st.spinner('Extracting relevant docs from Pinecone'):
-            areas_response = pineconeClass.query(input_notes_vectors[0]["values"], 10, "areas")
-            projects_response = pineconeClass.query(input_notes_vectors[0]["values"], 10, "projects")
-            tasks_response = pineconeClass.query(input_notes_vectors[0]["values"], 10, "tasks")
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "user", "content": "Hello!"}
+            ]
 
-            st.write("areas_response: ")
-            st.json(areas_response, expanded=False)
-            st.write("projects_response: ")
-            st.json(projects_response, expanded=False)
-            st.write("tasks_response: ")
-            st.json(tasks_response, expanded=False)
+            response = openAiClass.generate_text_completion(
+                model="gpt-3.5-turbo",
+                messages=messages,
+                max_tokens=150,
+                temperature=0.7
+            )
+            st.write("response from openAi completition:")
+            st.write(response)
+            st.success("communicated correctly with openai")
 
-            st.success("Extracted relevant docs from Pinecone!")
-    
     except ValueError as e:
         st.error(f"Value Error Button 3: {e}")
     except Exception as e:
         # Handle other exceptions, possibly API related
         st.error(f"General exception Button 3: {e}")
+
 
 
 # add space in the UI
