@@ -315,7 +315,7 @@ if st.button("Button 3 - send prompt to OpenAI and visualize it on the screen"):
             ]
 
             response = openAiClass.generate_text_completion(
-                model="gpt-3.5-turbo",
+                model="gpt-3.5-turbo-1106",
                 messages=messages,
                 max_tokens=150,
                 temperature=0.7
