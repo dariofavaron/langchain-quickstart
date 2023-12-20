@@ -141,7 +141,7 @@ if st.button("Button 1 - Get Data from Notion "):
         with st.spinner('Areas'):
             areas_vectors = []
             for result in areas_content["results"]:
-                vector = create_area_vector_with_extracted_data(result, embeddingClass)
+                vector = create_area_vector_with_extracted_data(result, openAiClass)
                 areas_vectors.append(vector)
             st.text(f"- Number of rows embedded for areas: {len(areas_vectors)}")
 
@@ -149,14 +149,14 @@ if st.button("Button 1 - Get Data from Notion "):
             with st.spinner('Projects'):
                 projects_vectors = []
                 for result in projects_content["results"]:
-                    vector = create_project_vector_with_extracted_data(result, embeddingClass)
+                    vector = create_project_vector_with_extracted_data(result, openAiClass)
                     projects_vectors.append(vector)
                 st.text(f"- Number of rows embedded for projects: {len(projects_vectors)}")
 
             with st.spinner('Tasks'):
                 tasks_vectors = []
                 for result in tasks_content["results"]:
-                    vector = create_task_vector_with_extracted_data(result, embeddingClass)
+                    vector = create_task_vector_with_extracted_data(result, openAiClass)
                     tasks_vectors.append(vector)
                 st.text(f"- Number of rows embedded for tasks: {len(tasks_vectors)}")
 
@@ -246,7 +246,7 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
             try:
                 with st.spinner('Embedding the note inbox'):
                     #st.json(inbox_note_to_review, expanded=False)
-                    vector = create_new_note_vector_with_extracted_data(inbox_note_to_review, page_name, page_content, embeddingClass)
+                    vector = create_new_note_vector_with_extracted_data(inbox_note_to_review, page_name, page_content, openAiClass)
 
                     input_notes_vectors=[vector]
                     st.text(f"- Number of rows embedded for inbox notes: {len(input_notes_vectors)}")
