@@ -43,10 +43,10 @@ class PineconeAPI:
 
 
     def DescribeIndexStats(self):
+        """
+        Returns the statistics of the index.
+        """
         try:
-            """
-            Returns the statistics of the index.
-            """
             url = f"https://{self.index_name}-{self.project_id}.svc.{self.environment}.pinecone.io/describe_index_stats"
             response = requests.post(url, headers=self.headers, timeout=10)
             return response.json()

@@ -54,11 +54,6 @@ with st.sidebar:
         st.session_state.pinecone_project_id = all_keys['PINECONE_PROJECT_ID']
         st.session_state.notion_api_key = all_keys['NOTION_API_KEY']
 
-db_id_areas = "c5fd05abfaca44f99b4e90358c3ed701"
-db_id_projects = "c20d87c181634f18bcd14c2649ba6e06"
-db_id_tasks = "72c034d6343f4d1e926048b7dcbcbc2b"
-db_id_note_inbox = "50d49cabe62146689b61932004d5687c"
-
 #initailize Notion class
 if st.session_state.notion_api_key:
     try:
@@ -85,7 +80,12 @@ else:
 if st.session_state.pinecone_api_key:
     try:
         with st.spinner('inizializing index in Pinecone...'):
-            pineconeClass = PineconeAPI(st.session_state.pinecone_api_key, st.session_state.pinecone_index, st.session_state.pinecone_project_id, st.session_state.pinecone_env)
+            pineconeClass = PineconeAPI(
+                st.session_state.pinecone_api_key,
+                st.session_state.pinecone_index,
+                st.session_state.pinecone_project_id,
+                st.session_state.pinecone_env
+                )
             index_stats = pineconeClass.DescribeIndexStats()
             st.write(f"- Pinecone Index Stats: {(index_stats)}")
     
@@ -94,19 +94,36 @@ if st.session_state.pinecone_api_key:
 else:
     st.warning("Pinecone API key not provided. Please enter the API key to check index stats.")
 
-# Toggle for "Only Areas"
-only_areas = st.checkbox("Only Areas")
-only_4 = st.checkbox("Only 4")
 
+# Global Variables
 
-# Global variables
+if 'only_areas' not in st.session_state:
+    st.session_state.only_areas = ""
+if 'only_4' not in st.session_state:
+    st.session_state.only_4 = ""
+if 'db_id_areas' not in st.session_state:
+    st.session_state.db_id_areas = ""
+if 'db_id_projects' not in st.session_state:
+    st.session_state.db_id_projects = ""
+if 'db_id_tasks' not in st.session_state:
+    st.session_state.db_id_tasks = ""
+if 'db_id_note_inbox' not in st.session_state:
+    st.session_state.db_id_note_inbox = ""
 if 'note_inbox_prompt' not in st.session_state:
     st.session_state.note_inbox_prompt = ""
+
+st.session_state.only_areas = st.checkbox("Only Areas")
+st.session_state.only_4 = st.checkbox("Only 4")
+
+st.session_state.db_id_areas = "c5fd05abfaca44f99b4e90358c3ed701"
+st.session_state.db_id_projects = "c20d87c181634f18bcd14c2649ba6e06"
+st.session_state.db_id_tasks = "72c034d6343f4d1e926048b7dcbcbc2b"
+st.session_state.db_id_note_inbox = "50d49cabe62146689b61932004d5687c"
 
 prompt = Prompts()
 
 
-if st.button("Button 1 - Get Data from Notion "):
+if st.button("Button 1 - Get Data from Notion, embed it and store it on Pinecone "):
     '''
     First step: Get Data from Notion
     - Streamlit UI - click button 1
@@ -120,19 +137,19 @@ if st.button("Button 1 - Get Data from Notion "):
 
         with st.spinner('Areas'):
             try:
-                areas_content = notionClass.query_database(0, only_4, db_id_areas)
+                areas_content = notionClass.query_database(0, st.session_state.only_4, st.session_state.db_id_areas)
 
                 st.text(f"- Number of rows retrieved for areas: {len(areas_content['results'])}")
             except Exception as e:
                 st.error (f"Area ready query notion: {e}")
         # Skip projects and tasks if "Only Areas" is checked
-        if not only_areas:
+        if not st.session_state.only_areas:
             with st.spinner('Projects'):
-                projects_content = notionClass.query_database(0, only_4, db_id_projects)
+                projects_content = notionClass.query_database(0, st.session_state.only_4, st.session_state.db_id_projects)
                 st.text(f"- Number of rows retrieved for projects: {len(projects_content['results'])}")
 
             with st.spinner('Tasks'):
-                tasks_content = notionClass.query_database(0, only_4, db_id_tasks)
+                tasks_content = notionClass.query_database(0, st.session_state.only_4, st.session_state.db_id_tasks)
                 st.text(f"- Number of rows retrieved for tasks: {len(tasks_content['results'])}")
 
         # Open AI API - Embed each row with OpenAI embeddings
@@ -145,7 +162,7 @@ if st.button("Button 1 - Get Data from Notion "):
                 areas_vectors.append(vector)
             st.text(f"- Number of rows embedded for areas: {len(areas_vectors)}")
 
-        if not only_areas:
+        if not st.session_state.only_areas:
             with st.spinner('Projects'):
                 projects_vectors = []
                 for result in projects_content["results"]:
@@ -172,7 +189,7 @@ if st.button("Button 1 - Get Data from Notion "):
             except Exception as e:
                 st.error(f"Failed to upsert vectors for areas: {e}")
 
-        if not only_areas:
+        if not st.session_state.only_areas:
             with st.spinner('Projects'):
                 try:
                     vectors_upserted = pineconeClass.upsert(projects_vectors, "projects")
@@ -180,7 +197,7 @@ if st.button("Button 1 - Get Data from Notion "):
                 except Exception as e:
                     st.error(f"Failed to upsert vectors for projects: {e}")
             
-        if not only_areas:
+        if not st.session_state.only_areas:
             with st.spinner('Tasks'):
                 try:
                     vectors_upserted = pineconeClass.upsert(tasks_vectors, "tasks")
@@ -196,9 +213,6 @@ if st.button("Button 1 - Get Data from Notion "):
         st.error(f"Error details: {e}")
 
 
-#inbox_note_to_review = {}
-#page_content = ""
-
 if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract relevant docs from Pinecone"):
 
 # - Analyze one Note Inbox
@@ -212,7 +226,7 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
 
         with st.spinner('retrieving inbox'):
             try:
-                inbox_content = notionClass.query_database(1, only_4, db_id_note_inbox)
+                inbox_content = notionClass.query_database(1, st.session_state.only_4, st.session_state.db_id_note_inbox)
 
                 st.write("extracted data from note inbox: ")
                 st.json(inbox_content, expanded=False)
@@ -285,11 +299,11 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
             # st.dataframe(tasks_retrieved_df)
 
             st.session_state.note_inbox_prompt = ( 
-                prompt.first_prompt["first_prompt"] 
-                + "\n" + page_name + " - " + page_content 
-                + "\n" + areas_retrieved_df.to_string() 
-                + "\n" + projects_retrieved_df.to_string() 
-                + "\n" + tasks_retrieved_df.to_string()
+                prompt.first_prompt["first_prompt"]
+                + "\n" + page_name + " - " + page_content
+                + "\n" + areas_retrieved_df.to_markdown()
+                + "\n" + projects_retrieved_df.to_markdown()
+                + "\n" + tasks_retrieved_df.to_markdown()
             )
 
     except ValueError as e:
@@ -299,7 +313,7 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
         st.error(f"General exception - Button 2: {e}")
 
 st.write("prompt: ")
-st.write(st.session_state.note_inbox_prompt)
+st.markdown(st.session_state.note_inbox_prompt)
 
 if st.button("Button 3 - send prompt to OpenAI and visualize it on the screen"):
 
@@ -339,7 +353,7 @@ st.text("")
 
 
 if st.button("Get Areas structure"):
-    #fetch_and_display_notion_structure(st.session_state.notion_api_key, db_id_areas)
-    area_structure = notionClass.get_database_structure(db_id_areas)
+    #fetch_and_display_notion_structure(st.session_state.notion_api_key, st.session_state.db_id_areas)
+    area_structure = notionClass.get_database_structure(st.session_state.db_id_areas)
     df_properties = visualize_notion_db_properties(area_structure)
     st.dataframe(df_properties)

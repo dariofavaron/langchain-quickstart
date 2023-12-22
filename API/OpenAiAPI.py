@@ -1,6 +1,5 @@
 import requests
 import tiktoken
-import openai
 
 class OpenAiAPI:
     """
@@ -65,7 +64,12 @@ class OpenAiAPI:
                 "input": text,
                 "model": model
             }
-            response = requests.post("https://api.openai.com/v1/embeddings", headers=self.headers, json=payload)
+            response = requests.post(
+                "https://api.openai.com/v1/embeddings", 
+                headers=self.headers, 
+                json=payload,
+                timeout=10
+                )
             
             return response.json()['data'][0]['embedding']
         else:
@@ -83,7 +87,12 @@ class OpenAiAPI:
                 "temperature":temperature
             }
 
-            response = requests.post("https://api.openai.com/v1/chat/completions", headers=self.headers, json=payload)
+            response = requests.post(
+                "https://api.openai.com/v1/chat/completions",
+                headers=self.headers,
+                json=payload,
+                timeout=10
+                )
             return response.json()
         
         except Exception as e:
