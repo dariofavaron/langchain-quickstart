@@ -300,9 +300,9 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
 
             st.session_state.note_inbox_extracted = (
                 page_name + " - " + page_content
-                + "\n" + areas_retrieved_df.to_string()
-                + "\n" + projects_retrieved_df.to_string()
-                + "\n" + tasks_retrieved_df.to_string()
+                + "\n" + areas_retrieved_df.to_markdown()
+                + "\n" + projects_retrieved_df.to_markdown()
+                + "\n" + tasks_retrieved_df.to_markdown()
             )
             st.write(st.session_state.note_inbox_extracted)
 
