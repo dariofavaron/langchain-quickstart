@@ -300,11 +300,10 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
 
             st.session_state.note_inbox_extracted = (
                 page_name + " - " + page_content
-                + "\n" + areas_retrieved_df.to_markdown()
-                + "\n" + projects_retrieved_df.to_markdown()
-                + "\n" + tasks_retrieved_df.to_markdown()
+                + "\n Related Areas: " + areas_retrieved_df.to_json()
+                + "\n Related Projects: " + projects_retrieved_df.to_json()
+                + "\n Related Tasks: " + tasks_retrieved_df.to_json()
             )
-            st.write(st.session_state.note_inbox_extracted)
 
     except ValueError as e:
         st.error(f"Value Error: {e}")
