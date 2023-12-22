@@ -243,6 +243,16 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
 
                 #st.write("page_name: ")
                 #st.text(page_name)
+                
+                st.json(inbox_note_to_review, expanded=False)
+                
+                if len(inbox_note_to_review["properties"]["URL"]) == 0 :
+                    page_properties = None
+                else:
+                    page_properties = inbox_note_to_review["properties"]["URL"]
+                
+                st.write("page_properties: ")
+                st.text(page_properties)
 
                 page_content = notionClass.get_page_content(st, inbox_note_to_review["id"])
                 #st.write("page_content: ")
@@ -311,7 +321,7 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
         # Handle other exceptions, possibly API related
         st.error(f"General exception - Button 2: {e}")
 
-st.write("prompt: ")
+st.write("Extracted note and Related Docs: ")
 st.markdown(st.session_state.note_inbox_extracted)
 
 if st.button("Button 3 - send prompt to OpenAI and visualize it on the screen"):
