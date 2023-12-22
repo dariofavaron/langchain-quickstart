@@ -301,9 +301,9 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
             st.session_state.note_inbox_prompt = ( 
                 prompt.first_prompt["first_prompt"]
                 + "\n" + page_name + " - " + page_content
-                + "\n" + areas_retrieved_df#.to_markdown()
-                + "\n" + projects_retrieved_df#.to_markdown()
-                + "\n" + tasks_retrieved_df#.to_markdown()
+                #+ "\n" + areas_retrieved_df#.to_markdown()
+                #+ "\n" + projects_retrieved_df#.to_markdown()
+                #+ "\n" + tasks_retrieved_df#.to_markdown()
             )
 
     except ValueError as e:
