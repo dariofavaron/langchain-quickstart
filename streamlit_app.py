@@ -109,8 +109,8 @@ if 'db_id_tasks' not in st.session_state:
     st.session_state.db_id_tasks = ""
 if 'db_id_note_inbox' not in st.session_state:
     st.session_state.db_id_note_inbox = ""
-if 'note_inbox_prompt' not in st.session_state:
-    st.session_state.note_inbox_prompt = ""
+if 'note_inbox_extracted' not in st.session_state:
+    st.session_state.note_inbox_extracted = ""
 
 st.session_state.only_areas = st.checkbox("Only Areas")
 st.session_state.only_4 = st.checkbox("Only 4")
@@ -298,13 +298,13 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
             # st.dataframe(projects_retrieved_df)
             # st.dataframe(tasks_retrieved_df)
 
-            st.session_state.note_inbox_prompt = ( 
-                prompt.first_prompt["first_prompt"]
-                + "\n" + page_name + " - " + page_content
+            st.session_state.note_inbox_extracted = (
+                page_name + " - " + page_content
                 + "\n" + areas_retrieved_df.to_string()
-                #+ "\n" + projects_retrieved_df#.to_markdown()
-                #+ "\n" + tasks_retrieved_df#.to_markdown()
+                + "\n" + projects_retrieved_df.to_string()
+                + "\n" + tasks_retrieved_df.to_string()
             )
+            st.write(st.session_state.note_inbox_extracted)
 
     except ValueError as e:
         st.error(f"Value Error: {e}")
@@ -313,7 +313,7 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
         st.error(f"General exception - Button 2: {e}")
 
 st.write("prompt: ")
-st.markdown(st.session_state.note_inbox_prompt)
+st.markdown(st.session_state.note_inbox_extracted)
 
 if st.button("Button 3 - send prompt to OpenAI and visualize it on the screen"):
 
@@ -321,11 +321,10 @@ if st.button("Button 3 - send prompt to OpenAI and visualize it on the screen"):
 
     try:
         with st.spinner('*sending data to OpenAI*'):
-            #st.write(st.session_state.note_inbox_prompt)
 
             messages=[
-                {"role": "system", "content": st.session_state.note_inbox_prompt},
-                {"role": "user", "content": "Add to the caledar the dentist appointment for tomorrow at 10am"}
+                {"role": "system", "content": prompt.first_prompt["first_prompt"]},
+                {"role": "user", "content": st.session_state.note_inbox_extracted}
             ]
 
             response = openAiClass.generate_text_completion(
