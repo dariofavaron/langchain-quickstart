@@ -251,8 +251,6 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
                 #st.write("page_name: ")
                 #st.text(page_name)
                 
-                st.json(inbox_note_to_review, expanded=False)
-                
                 if len(inbox_note_to_review["properties"]["URL"]) == 0 :
                     page_properties_url = None
                 else:
@@ -261,7 +259,6 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
                 #st.write("page_properties_url: ")
                 #st.text(page_properties_url)
                 
-
                 page_content = notionClass.get_page_content(st, note_inbox_id)
                 #st.write("page_content: ")
                 #st.text(page_content)
@@ -285,9 +282,9 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
 
                 with st.spinner('Extracting relevant docs from Pinecone'):
                     
-                    areas_response = pineconeClass.query(query_vector=input_notes_vectors[0]["values"], topK=10, namespace="areas", include_metadata=True)
-                    projects_response = pineconeClass.query(input_notes_vectors[0]["values"], topK=10, namespace="projects", include_metadata=True)
-                    tasks_response = pineconeClass.query(input_notes_vectors[0]["values"], topK=10, namespace="tasks", include_metadata=True)
+                    areas_response = pineconeClass.query(query_vector=input_notes_vectors[0]["values"], topK=50, namespace="areas", include_metadata=True)
+                    projects_response = pineconeClass.query(input_notes_vectors[0]["values"], topK=50, namespace="projects", include_metadata=True)
+                    tasks_response = pineconeClass.query(input_notes_vectors[0]["values"], topK=50, namespace="tasks", include_metadata=True)
 
                     #st.write("areas_response: ")
                     areas_retrieved_df = visualize_retrieved_vectors(areas_response)
@@ -315,11 +312,11 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
             st.write(page_name + " - " + page_properties_url.__str__() + " - " + page_content.__str__())
 
             st.write("Related Areas: ")
-            st.dataframe(areas_retrieved_df)
+            st.json(areas_retrieved_df.to_json(), expanded=False)
             st.write("Related Projects: ")
-            st.dataframe(projects_retrieved_df)
+            st.json(projects_retrieved_df.to_json(), expanded=False)
             st.write("Related Tasks: ")
-            st.dataframe(tasks_retrieved_df)
+            st.json(tasks_retrieved_df.to_json(), expanded=False)
 
             first_prompt = prompt.first_prompt
 
