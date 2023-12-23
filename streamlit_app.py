@@ -312,7 +312,7 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
 st.write("Extracted note and Related Docs: ")
 st.markdown(st.session_state.note_inbox_extracted)
 
-first_prompt = prompt.first_prompt["first_prompt"]
+first_prompt = prompt.first_prompt
 
 st.subheader("First prompt: ")
 st.markdown(first_prompt)
