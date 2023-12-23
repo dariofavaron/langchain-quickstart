@@ -341,7 +341,7 @@ if st.button("Button 3 - send prompt to OpenAI and visualize it on the screen"):
     try:
         with st.spinner('*sending data to OpenAI*'):
 
-            messages=[first_prompt,
+            messages=[st.session_state.first_prompt,
                 {"role": "user", "content": st.session_state.note_inbox_extracted}
             ]
 
@@ -355,8 +355,6 @@ if st.button("Button 3 - send prompt to OpenAI and visualize it on the screen"):
             st.write(response)
             st.success("communicated correctly with openai")
 
-    except ValueError as e:
-        st.error(f"Value Error Button 3: {e}")
     except Exception as e:
         # Handle other exceptions, possibly API related
         st.error(f"General exception Button 3: {e}")
