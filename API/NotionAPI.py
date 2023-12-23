@@ -60,7 +60,7 @@ class NotionAPI:
             body = {
                 "sorts": [
                     {
-                    "property": "last_edited_time",
+                    "timestamp": "last_edited_time",
                     "direction": "descending"
                     }
                 ]
