@@ -60,8 +60,8 @@ class NotionAPI:
             body = {
                 "sorts": [
                     {
-                    "property": "Last ordered",
-                    "direction": "ascending"
+                    "property": "last_edited_time",
+                    "direction": "descending"
                     }
                 ]
             }

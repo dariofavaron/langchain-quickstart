@@ -301,7 +301,7 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
 
                     st.success("Extracted relevant docs from Pinecone!")
             except Exception as e:
-                st.error (f"Error - retrieving inbox: {e}")
+                st.error (f"Error - Embedding the note inbox: {e}")
 
 
             st.session_state.note_inbox_extracted = (
