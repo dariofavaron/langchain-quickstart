@@ -232,8 +232,8 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
                 #ovewrite during development
                 inbox_content = notionClass.query_database(1, st.session_state.only_4, st.session_state.db_id_note_inbox)
 
-                #st.write("extracted data from note inbox: ")
-                #st.json(inbox_content, expanded=False)
+                st.write("extracted data from note inbox: ")
+                st.json(inbox_content, expanded=False)
 
                 # Get first element of the inbox
                 inbox_note_to_review = inbox_content["results"][0]
