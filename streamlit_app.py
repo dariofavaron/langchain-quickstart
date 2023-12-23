@@ -341,9 +341,9 @@ if st.button("Button 3 - send prompt to OpenAI and visualize it on the screen"):
     try:
         with st.spinner('*sending data to OpenAI*'):
 
-            messages=[st.session_state.first_prompt,
-                {"role": "user", "content": st.session_state.note_inbox_extracted}
-            ]
+            messages=[st.session_state.first_prompt]
+            messages.append[{"role": "user", "content": st.session_state.note_inbox_extracted}]
+            
 
             response = openAiClass.generate_text_completion(
                 model="gpt-3.5-turbo-1106",
