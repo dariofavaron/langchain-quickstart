@@ -228,8 +228,8 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
             try:
                 inbox_content = notionClass.query_database(1, st.session_state.only_4, st.session_state.db_id_note_inbox)
 
-                st.write("extracted data from note inbox: ")
-                st.json(inbox_content, expanded=False)
+                #st.write("extracted data from note inbox: ")
+                #st.json(inbox_content, expanded=False)
 
                 # Get first element of the inbox
                 inbox_note_to_review = inbox_content["results"][0]
@@ -247,18 +247,18 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
                 st.json(inbox_note_to_review, expanded=False)
                 
                 if len(inbox_note_to_review["properties"]["URL"]) == 0 :
-                    page_properties = None
+                    page_properties_url = None
                 else:
-                    page_properties = inbox_note_to_review["properties"]["URL"]
+                    page_properties_url = inbox_note_to_review["properties"]["URL"]["url"]
                 
-                st.write("page_properties: ")
-                st.text(page_properties)
+                #st.write("page_properties_url: ")
+                #st.text(page_properties_url)
 
                 page_content = notionClass.get_page_content(st, inbox_note_to_review["id"])
                 #st.write("page_content: ")
                 #st.text(page_content)
                 
-                dataframe_to_visualize = visualize_notion_database_row_object(page_name, page_content)
+                dataframe_to_visualize = visualize_notion_database_row_object(page_name, page_properties_url, page_content)
 
                 st.write("note_inbox_object: ")
                 st.dataframe(dataframe_to_visualize)
@@ -270,7 +270,7 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
             try:
                 with st.spinner('Embedding the note inbox'):
                     #st.json(inbox_note_to_review, expanded=False)
-                    vector = create_new_note_vector_with_extracted_data(inbox_note_to_review, page_name, page_content, openAiClass)
+                    vector = create_new_note_vector_with_extracted_data(inbox_note_to_review, page_name, page_properties_url, page_content, openAiClass)
 
                     input_notes_vectors=[vector]
                     st.text(f"- Number of rows embedded for inbox notes: {len(input_notes_vectors)}")
@@ -294,22 +294,10 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
                     st.success("Extracted relevant docs from Pinecone!")
             except Exception as e:
                 st.error (f"Error - retrieving inbox: {e}")
-        
-            # st.subheader("Create prompt for openAI and visualize it on the screen")
-            # #[note inbox]
-            # st.write("note inbox: ")
-            # st.write(page_name + " - " + page_content)
-            # #[prompt]
-            # prompt = Prompts()
-            # st.write(prompt.first_prompt["first_prompt"])
-            # #[relevant docs]
-            # st.write("relevant docs: ")
-            # st.dataframe(areas_retrieved_df)
-            # st.dataframe(projects_retrieved_df)
-            # st.dataframe(tasks_retrieved_df)
+
 
             st.session_state.note_inbox_extracted = (
-                page_name + " - " + page_content
+                page_name + " - " + page_properties_url + " - " + page_content
                 + "\n Related Areas: " + areas_retrieved_df.to_json()
                 + "\n Related Projects: " + projects_retrieved_df.to_json()
                 + "\n Related Tasks: " + tasks_retrieved_df.to_json()
@@ -324,6 +312,11 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
 st.write("Extracted note and Related Docs: ")
 st.markdown(st.session_state.note_inbox_extracted)
 
+first_prompt = prompt.first_prompt["first_prompt"]
+
+st.subheader("First prompt: ")
+st.markdown(first_prompt)
+
 if st.button("Button 3 - send prompt to OpenAI and visualize it on the screen"):
 
     st.subheader("send prompt to OpenAI and visualize it on the screen")
@@ -331,8 +324,7 @@ if st.button("Button 3 - send prompt to OpenAI and visualize it on the screen"):
     try:
         with st.spinner('*sending data to OpenAI*'):
 
-            messages=[
-                {"role": "system", "content": prompt.first_prompt["first_prompt"]},
+            messages=[first_prompt,
                 {"role": "user", "content": st.session_state.note_inbox_extracted}
             ]
 

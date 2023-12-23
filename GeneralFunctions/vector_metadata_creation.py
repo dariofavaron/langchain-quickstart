@@ -99,7 +99,7 @@ def create_task_vector_with_extracted_data(json_obj, embeddingClass):
         raise Exception(f"Error in create_task_vector_with_extracted_data: {str(e)}")
 
 
-def create_new_note_vector_with_extracted_data(json_obj, page_name, page_content, embeddingClass):
+def create_new_note_vector_with_extracted_data(json_obj, page_name, page_properties_url, page_content, embeddingClass):
     try:
         # Extracting data
         id_data = (page_name +
@@ -113,6 +113,7 @@ def create_new_note_vector_with_extracted_data(json_obj, page_name, page_content
         }
         content = {
             "Name": page_name,
+            "URL": page_properties_url if page_properties_url else None,
             "Content": page_content if page_content else None
         }
 

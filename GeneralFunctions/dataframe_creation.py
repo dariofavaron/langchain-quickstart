@@ -1,7 +1,7 @@
 import pandas as pd
 
 
-def visualize_notion_database_row_object(page_name, page_content):
+def visualize_notion_database_row_object(page_name, page_properties_url, page_content):
     """
     Function to visualize a Notion object.
     """
@@ -10,11 +10,12 @@ def visualize_notion_database_row_object(page_name, page_content):
 
         data_to_format = []
 
-        columns = ["Name", "Content"
+        columns = ["Name", "Url", "Content"
         ]
 
         data_to_format.append([
             page_name if page_name else None,
+            page_properties_url if page_properties_url else None,
             page_content if page_content else None
             ])
 
