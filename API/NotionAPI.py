@@ -43,7 +43,7 @@ class NotionAPI:
         except Exception as e:
             raise ValueError("Error - get_database_structure : {e}")
 
-    def query_database(self, amount, only_4, database_id, last_ordered):
+    def query_database(self, amount, only_4, database_id):
         """
         Queries a Notion database with optional filter and sort parameters.
 
@@ -57,16 +57,14 @@ class NotionAPI:
         """
         try:
 
-            body = {}
-            if last_ordered:
-                body = {
-                    "sorts": [
-                        {
-                        "property": "Last ordered",
-                        "direction": "ascending"
-                        }
-                    ]
-                }
+            body = {
+                "sorts": [
+                    {
+                    "property": "Last ordered",
+                    "direction": "ascending"
+                    }
+                ]
+            }
             
             if only_4:
                 body["page_size"] = 4
@@ -82,7 +80,7 @@ class NotionAPI:
             )
             return response.json()
         except Exception as e:
-            raise ValueError(f"Error - query_database: {e}")
+            raise Exception(f"Error - query_database: {e}")
 
     def get_page_content(self, st, page_id):
         """

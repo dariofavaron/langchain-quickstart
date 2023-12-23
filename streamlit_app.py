@@ -230,7 +230,7 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
                 #inbox_content = notionClass.query_database(1, st.session_state.only_4, st.session_state.db_id_note_inbox)
 
                 #ovewrite during development
-                inbox_content = notionClass.query_database(1, st.session_state.only_4, st.session_state.db_id_note_inbox, last_ordered=True)
+                inbox_content = notionClass.query_database(1, st.session_state.only_4, st.session_state.db_id_note_inbox)
 
                 #st.write("extracted data from note inbox: ")
                 #st.json(inbox_content, expanded=False)
