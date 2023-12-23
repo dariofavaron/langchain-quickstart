@@ -111,6 +111,9 @@ if 'db_id_note_inbox' not in st.session_state:
     st.session_state.db_id_note_inbox = ""
 if 'note_inbox_extracted' not in st.session_state:
     st.session_state.note_inbox_extracted = ""
+if 'first_prompt' not in st.session_state:
+    st.session_state.first_prompt = ""
+    
 
 st.session_state.only_areas = st.checkbox("Only Areas")
 st.session_state.only_4 = st.checkbox("Only 4")
@@ -318,10 +321,10 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
             st.write("Related Tasks: ")
             st.json(tasks_retrieved_df.to_json(), expanded=False)
 
-            first_prompt = prompt.first_prompt
+            st.session_state.first_prompt = prompt.first_prompt
 
             st.subheader("First prompt: ")
-            st.json(first_prompt)
+            st.json(st.session_state.first_prompt)
 
     except ValueError as e:
         st.error(f"Value Error: {e}")

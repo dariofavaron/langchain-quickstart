@@ -81,7 +81,7 @@ def visualize_retrieved_vectors(matches):
 
     try:
         data_to_format = []
-        columns = ["Name", "Score"]
+        columns = ["Name"]
 
         #if matches["matches"][0]["metadata"]["Type"]:
         #    columns.append("Type")
@@ -89,8 +89,8 @@ def visualize_retrieved_vectors(matches):
         for match in matches["matches"]:
 
             data_to_format.append([
-                match["metadata"]["Name"]if "Name" in match["metadata"] else None,
-                match["score"]
+                match["metadata"]["Name"]if "Name" in match["metadata"] else None
+                #,match["score"]
             #    ,match["metadata"]["Type"] if "Type" in match["metadata"] else None
             ])
 
