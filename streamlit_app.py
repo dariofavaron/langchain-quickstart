@@ -226,7 +226,11 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
 
         with st.spinner('retrieving inbox'):
             try:
-                inbox_content = notionClass.query_database(1, st.session_state.only_4, st.session_state.db_id_note_inbox)
+
+                #inbox_content = notionClass.query_database(1, st.session_state.only_4, st.session_state.db_id_note_inbox)
+
+                #ovewrite during development
+                inbox_content = notionClass.query_database(1, st.session_state.only_4, st.session_state.db_id_note_inbox, last_ordered=True)
 
                 #st.write("extracted data from note inbox: ")
                 #st.json(inbox_content, expanded=False)
@@ -235,6 +239,9 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
                 inbox_note_to_review = inbox_content["results"][0]
                 #st.write("inbox_note_to_review: ")
                 #st.json(inbox_note_to_review, expanded=False)
+
+                note_inbox_id = inbox_note_to_review["id"]
+                note_inbox_object = inbox_note_to_review["object"]
 
                 if len(inbox_note_to_review["properties"]["Name"]["title"]) == 0 :
                     page_name = None
@@ -253,8 +260,9 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
                 
                 #st.write("page_properties_url: ")
                 #st.text(page_properties_url)
+                
 
-                page_content = notionClass.get_page_content(st, inbox_note_to_review["id"])
+                page_content = notionClass.get_page_content(st, note_inbox_id)
                 #st.write("page_content: ")
                 #st.text(page_content)
                 
@@ -270,7 +278,7 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
             try:
                 with st.spinner('Embedding the note inbox'):
                     #st.json(inbox_note_to_review, expanded=False)
-                    vector = create_new_note_vector_with_extracted_data(inbox_note_to_review, page_name, page_properties_url, page_content, openAiClass)
+                    vector = create_new_note_vector_with_extracted_data(id=note_inbox_id, object= note_inbox_object, page_name, page_properties_url, page_content, openAiClass)
 
                     input_notes_vectors=[vector]
                     st.text(f"- Number of rows embedded for inbox notes: {len(input_notes_vectors)}")
