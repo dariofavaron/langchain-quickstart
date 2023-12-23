@@ -297,7 +297,7 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
 
 
             st.session_state.note_inbox_extracted = (
-                page_name + " - " + page_properties_url + " - " + page_content
+                page_name + " - " + page_properties_url.__str__() + " - " + page_content.__str__()
                 + "\n Related Areas: " + areas_retrieved_df.to_json()
                 + "\n Related Projects: " + projects_retrieved_df.to_json()
                 + "\n Related Tasks: " + tasks_retrieved_df.to_json()
