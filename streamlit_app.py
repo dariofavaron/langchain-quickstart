@@ -112,7 +112,7 @@ if 'db_id_note_inbox' not in st.session_state:
 if 'note_inbox_extracted' not in st.session_state:
     st.session_state.note_inbox_extracted = ""
 if 'first_prompt' not in st.session_state:
-    st.session_state.first_prompt = ""
+    st.session_state.first_prompt = []
     
 
 st.session_state.only_areas = st.checkbox("Only Areas")
