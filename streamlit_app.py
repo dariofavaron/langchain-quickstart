@@ -311,19 +311,28 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
                 + "\n Related Tasks: " + tasks_retrieved_df.to_json()
             )
 
+            st.subheader("Extracted note and Related Docs: ")
+            st.write(page_name + " - " + page_properties_url.__str__() + " - " + page_content.__str__())
+
+            st.write("Related Areas: ")
+            st.dataframe(areas_retrieved_df)
+            st.write("Related Projects: ")
+            st.dataframe(projects_retrieved_df)
+            st.write("Related Tasks: ")
+            st.dataframe(tasks_retrieved_df)
+
+            first_prompt = prompt.first_prompt
+
+            st.subheader("First prompt: ")
+            st.json(first_prompt)
+
     except ValueError as e:
         st.error(f"Value Error: {e}")
     except Exception as e:
         # Handle other exceptions, possibly API related
         st.error(f"General exception - Button 2: {e}")
 
-st.write("Extracted note and Related Docs: ")
-st.markdown(st.session_state.note_inbox_extracted)
 
-first_prompt = prompt.first_prompt
-
-st.subheader("First prompt: ")
-st.markdown(first_prompt)
 
 if st.button("Button 3 - send prompt to OpenAI and visualize it on the screen"):
 
