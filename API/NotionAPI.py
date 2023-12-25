@@ -37,7 +37,8 @@ class NotionAPI:
         try:
             response = requests.get(
                 f"https://api.notion.com/v1/databases/{database_id}",
-                headers=self.headers
+                headers=self.headers,
+                timeout=10
             )
             return response.json()
         except Exception as e:
@@ -76,7 +77,8 @@ class NotionAPI:
             response = requests.post(
                 f"https://api.notion.com/v1/databases/{database_id}/query",
                 headers=self.headers,
-                json=body
+                json=body,
+                timeout=10
             )
             return response.json()
         except Exception as e:
@@ -91,7 +93,8 @@ class NotionAPI:
             # get all the block for page associated with created_id
             response = requests.get(
                 f"https://api.notion.com/v1/blocks/{page_id}/children",
-                headers=self.headers
+                headers=self.headers,
+                timeout=10
             )
             #st.write("get_page_content request response: ")
             #st.json(response.json(), expanded=False)

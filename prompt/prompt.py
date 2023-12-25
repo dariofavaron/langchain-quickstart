@@ -42,6 +42,7 @@ class Prompts:
                 """
             },
             {"role": "user", "content": "Da avere una lista di cose da fare nei tempi morti, ogni settimana. "},
+            {"role": "user", "content": "Related Areas: Personal Planning, Personal Development. Related Projects: Weekly Planning. Related tasks: Weekly list of idle activities. "},
             {"role": "assistant", "content": """
                 Tasks:
 
