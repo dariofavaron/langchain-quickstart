@@ -351,7 +351,18 @@ if st.button("Button 3 - send prompt to OpenAI and visualize it on the screen"):
         with st.spinner('*sending data to OpenAI*'):
 
             messages=st.session_state.first_prompt
-            messages.append({"role": "user", "content": st.session_state.note_inbox_extracted})
+
+            # convert to string note_inbox_extracted
+            note_inbox_summary = f"""
+                Note Name: {st.session_state.note_inbox_extracted["note_name"]}\n
+                Note URL: {st.session_state.note_inbox_extracted["note_url"]}\n
+                Note Content: {st.session_state.note_inbox_extracted["note_content"]}\n
+                Areas Related: {st.session_state.note_inbox_extracted["areas_related"]}\n
+                Projects Related: {st.session_state.note_inbox_extracted["projects_related"]}\n
+                Tasks Related: {st.session_state.note_inbox_extracted["tasks_related"]}
+            """
+
+            messages.append({"role": "user", "content": note_inbox_summary})
             
             response = openAiClass.generate_text_completion(
                 model="gpt-3.5-turbo-1106",
