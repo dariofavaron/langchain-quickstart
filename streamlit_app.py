@@ -110,7 +110,7 @@ if 'db_id_tasks' not in st.session_state:
 if 'db_id_note_inbox' not in st.session_state:
     st.session_state.db_id_note_inbox = ""
 if 'note_inbox_extracted' not in st.session_state:
-    st.session_state.note_inbox_extracted = []
+    st.session_state.note_inbox_extracted = {}
 if 'first_prompt' not in st.session_state:
     st.session_state.first_prompt = []
 
@@ -304,21 +304,14 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
                 st.error (f"Error - Embedding the note inbox: {e}")
 
 
-            st.session_state.note_inbox_extracted = [
-                {"note_name": page_name},
-                {"note_url": page_properties_url.__str__()},
-                {"note_content": page_content.__str__()},
-                {"areas_related": areas_retrieved_df.to_json()},
-                {"projects_related": projects_retrieved_df.to_json()},
-                {"tasks_related": tasks_retrieved_df.to_json()}
-            ]
-
-            # st.write("Related Areas: ")
-            # st.json(areas_retrieved_df.to_json(), expanded=False)
-            # st.write("Related Projects: ")
-            # st.json(projects_retrieved_df.to_json(), expanded=False)
-            # st.write("Related Tasks: ")
-            # st.json(tasks_retrieved_df.to_json(), expanded=False)
+            st.session_state.note_inbox_extracted = {
+                "note_name": page_name,
+                "note_url": page_properties_url,
+                "note_content": page_content,
+                "areas_related": areas_retrieved_df.to_json(),
+                "projects_related": projects_retrieved_df.to_json(),
+                "tasks_related": tasks_retrieved_df.to_json()
+            }
 
             st.session_state.first_prompt = prompt.first_prompt
 
@@ -331,14 +324,14 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
             st.subheader("Example assistant: ")
             st.json(st.session_state.first_prompt[2]("content"))
             st.subheader("Note inbox: ")
-            st.write(st.session_state.note_inbox_extracted("note_name")
-                    + " - " + st.session_state.note_inbox_extracted("note_url")
-                    + " - " + st.session_state.note_inbox_extracted("note_content")
+            st.write(st.session_state.note_inbox_extracted["note_name"]
+                    + " - " + st.session_state.note_inbox_extracted["note_url"]
+                    + " - " + st.session_state.note_inbox_extracted["note_content"]
                     )
             st.subheader("Relevant docs: ")
-            st.json(st.session_state.note_inbox_extracted("areas_related"), expanded=False)
-            st.json(st.session_state.note_inbox_extracted("projects_related"), expanded=False)
-            st.json(st.session_state.note_inbox_extracted("tasks_related"), expanded=False)
+            st.json(st.session_state.note_inbox_extracted["areas_related"], expanded=False)
+            st.json(st.session_state.note_inbox_extracted["projects_related"], expanded=False)
+            st.json(st.session_state.note_inbox_extracted["tasks_related"], expanded=False)
 
 
 
