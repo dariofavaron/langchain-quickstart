@@ -318,11 +318,11 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
             # RESULT OF BUTTON 2
 
             st.subheader("Prompt system: ")
-            st.json(st.session_state.first_prompt[0]("content"))
+            st.json(st.session_state.first_prompt[0]["content"])
             st.subheader("Example user: ")
-            st.json(st.session_state.first_prompt[1]("content"))
+            st.json(st.session_state.first_prompt[1]["content"])
             st.subheader("Example assistant: ")
-            st.json(st.session_state.first_prompt[2]("content"))
+            st.json(st.session_state.first_prompt[2]["content"])
             st.subheader("Note inbox: ")
             st.write(st.session_state.note_inbox_extracted["note_name"]
                     + " - " + st.session_state.note_inbox_extracted["note_url"]
@@ -332,8 +332,6 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
             st.json(st.session_state.note_inbox_extracted["areas_related"], expanded=False)
             st.json(st.session_state.note_inbox_extracted["projects_related"], expanded=False)
             st.json(st.session_state.note_inbox_extracted["tasks_related"], expanded=False)
-
-
 
     except ValueError as e:
         st.error(f"Value Error: {e}")
