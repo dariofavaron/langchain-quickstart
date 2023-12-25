@@ -323,11 +323,13 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
             st.markdown(st.session_state.first_prompt[1]["content"])
             st.subheader("Example assistant: ")
             st.markdown(st.session_state.first_prompt[2]["content"])
-            st.subheader("Note inbox: ")
-            st.write(st.session_state.note_inbox_extracted["note_name"]
-                + " - " + st.session_state.note_inbox_extracted["note_url"]
-                + " - " + st.session_state.note_inbox_extracted["note_content"]
-                )
+            st.subheader("Note name: ")
+            st.write(st.session_state.note_inbox_extracted["note_name"])
+            st.subheader("Note url: ")
+            st.write(st.session_state.note_inbox_extracted["note_url"])
+            st.subheader("Note content: ")
+            st.write(st.session_state.note_inbox_extracted["note_content"])
+            
             st.subheader("Relevant docs: ")
             st.json(st.session_state.note_inbox_extracted["areas_related"], expanded=False)
             st.json(st.session_state.note_inbox_extracted["projects_related"], expanded=False)
