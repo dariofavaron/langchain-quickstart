@@ -255,7 +255,7 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
                 #st.text(page_name)
                 
                 if len(inbox_note_to_review["properties"]["URL"]) == 0 :
-                    page_properties_url = None
+                    page_properties_url = ""
                 else:
                     page_properties_url = inbox_note_to_review["properties"]["URL"]["url"]
                 
@@ -318,16 +318,16 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
             # RESULT OF BUTTON 2
 
             st.subheader("Prompt system: ")
-            st.json(st.session_state.first_prompt[0]["content"])
+            st.markdown(st.session_state.first_prompt[0]["content"])
             st.subheader("Example user: ")
-            st.json(st.session_state.first_prompt[1]["content"])
+            st.markdown(st.session_state.first_prompt[1]["content"])
             st.subheader("Example assistant: ")
-            st.json(st.session_state.first_prompt[2]["content"])
+            st.markdown(st.session_state.first_prompt[2]["content"])
             st.subheader("Note inbox: ")
             st.write(st.session_state.note_inbox_extracted["note_name"]
-                    + " - " + st.session_state.note_inbox_extracted["note_url"]
-                    + " - " + st.session_state.note_inbox_extracted["note_content"]
-                    )
+                + " - " + st.session_state.note_inbox_extracted["note_url"]
+                + " - " + st.session_state.note_inbox_extracted["note_content"]
+                )
             st.subheader("Relevant docs: ")
             st.json(st.session_state.note_inbox_extracted["areas_related"], expanded=False)
             st.json(st.session_state.note_inbox_extracted["projects_related"], expanded=False)
