@@ -41,8 +41,14 @@ class Prompts:
                     - Ensure no extraneous information is included.
                 """
             },
-            {"role": "user", "content": "Da avere una lista di cose da fare nei tempi morti, ogni settimana. "},
-            {"role": "user", "content": "Related Areas: Personal Planning, Personal Development. Related Projects: Weekly Planning. Related tasks: Weekly list of idle activities. "},
+            {"role": "user", "content": """
+                Note Name: Da avere una lista di cose da fare nei tempi morti, ogni settimana.
+                Note URL: None
+                Note Content: None
+                Already existing areas: {"Name":{"0":"National Holidays","1":"Holidays","2":"Food","3":"Shopping","4":"Personal Projects","5":"Social Events","6":"Plants","7":"Friends","8":"Dad","9":"Fitness","10":"Legal","11":"Mental Health","12":"Finance","13":"Digital Services","14":"Mom","15":"Organization","16":"Self Improvement","17":"Cleaning","18":"Transportation","19":"Sister","20":"Amazon","21":"Africa Pet","22":null,"23":null,"24":null,"25":null,"26":null,"27":null}}
+                Already existing Projects: {"Name":{"0":"Weekend Trips","1":"National Holidays","2":"Things to buy","3":"Encoder Stefano","4":"Learn Spanish","5":"lamicadellebambole","6":"Meditation","7":"Cleaning Schedule","8":"Digital Wishes","9":"Keep in touch","10":"Festivals","11":"Keep in touch","12":"Keep in touch","13":"Meal Planner","14":"Groceries","15":"Automatize reports","16":"Daily Training","17":"Christmas","18":"House Plants","19":"Drone","20":"Keep in Touch","21":"Friend Database","22":"Clothes","23":"Barcelona Food","24":"Identity cards","25":"Insurance","26":"Damasystem","27":"New Project","28":"Sports","29":"Barcelona Events","30":"Big Travel","31":"Blue Badge","32":"Boat","33":"Media Collection","34":"Communication and Empathy","35":"Christmas 23","36":"Empadronimiento in Spain","37":"Files on Cloud","38":"Define place for objects","39":"Review Art","40":"Morning Routine","41":"AI Task Manager App","42":"Shared Passions","43":"Veterinary","44":"Psychotherapy","45":"Networking","46":"Van","47":"Notion","48":"Storage Room","49":"Investments"}}
+                Already existing Tasks: {"Name":{"0":"Create Yearly report","1":"Defina all possible actions that an automated agent can do","2":"Find articles on the topic, new technology","3":"Update website","4":"Find best health insurance in Spain","5":"buy ticket plane to back Barcelona","6":"Create Backup schedule for all digital content","7":"Calculate amount to invest each month","8":"define automatically how to differentiate the income and expenses","9":"Setup automatic downloader of movie","10":"Define morning routine","11":"Create month summary","12":"Calesthenic challenge","13":"import in a single place all medias","14":"Import Keep notes","15":"buy return flight from it to bcn","16":"Set up plex","17":"Create excel file with one tab per bank accout","18":"Check logs for malitious actions","19":"define specs of new SERVER","20":"Updates the OS"}}
+            """},
             {"role": "assistant", "content": """
                 Tasks:
 

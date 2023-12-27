@@ -364,7 +364,7 @@ if st.button("Button 3 - send prompt to OpenAI and visualize it on the screen"):
             messages.append({"role": "user", "content": note_inbox_summary})
 
             st.write(" messages: ")
-            st.write(messages, expanded=False)
+            st.json(messages, expanded=False)
             
             response = openAiClass.generate_text_completion(
                 model="gpt-3.5-turbo-1106",
@@ -373,7 +373,7 @@ if st.button("Button 3 - send prompt to OpenAI and visualize it on the screen"):
                 temperature=0
             )
             st.write("response from openAi completition:")
-            st.write(response)
+            st.json(response, expanded=False)
             st.success("communicated correctly with openai")
 
     except Exception as e:
