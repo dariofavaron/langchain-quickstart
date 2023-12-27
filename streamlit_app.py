@@ -376,6 +376,8 @@ if st.button("Button 3 - send prompt to OpenAI and visualize it on the screen"):
             st.json(response, expanded=False)
             st.success("communicated correctly with openai")
 
+            st.markdown(response["choices"][0]["message"]["content"])
+
     except Exception as e:
         # Handle other exceptions, possibly API related
         st.error(f"General exception Button 3: {e}")
