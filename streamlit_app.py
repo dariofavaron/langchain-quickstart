@@ -378,6 +378,21 @@ if st.button("Button 3 - send prompt to OpenAI and visualize it on the screen"):
 
             st.markdown(response["choices"][0]["message"]["content"])
 
+
+
+            # Streamlit UI - Confirmation and Denial Buttons
+            confirmation = st.button('Confirm Task')
+            denial = st.button('Deny Task')
+
+            # Notion API Integration - Update on Confirmation
+            if confirmation:
+                try:
+                    # Code to update the object in Notion
+                    # Example: notionClass.update_object(notion_object_id, update_data)
+                    st.success("Update successful in Notion.")
+                except Exception as e:
+                    st.error(f"Update failed in Notion: {e}")
+
     except Exception as e:
         # Handle other exceptions, possibly API related
         st.error(f"General exception Button 3: {e}")
@@ -395,3 +410,10 @@ if st.button("Get Areas structure"):
     area_structure = notionClass.get_database_structure(st.session_state.db_id_areas)
     df_properties = visualize_notion_db_properties(area_structure)
     st.dataframe(df_properties)
+
+if st.button("Get Tasks structure"):
+    #fetch_and_display_notion_structure(st.session_state.notion_api_key, st.session_state.db_id_areas)
+    task_structure = notionClass.get_database_structure(st.session_state.db_id_tasks)
+    df_properties = visualize_notion_db_properties(task_structure)
+    st.dataframe(df_properties)
+

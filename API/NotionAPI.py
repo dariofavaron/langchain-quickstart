@@ -42,7 +42,7 @@ class NotionAPI:
             )
             return response.json()
         except Exception as e:
-            raise ValueError("Error - get_database_structure : {e}")
+            raise ValueError(f"Error - get_database_structure : {e}")
 
     def query_database(self, amount, only_4, database_id):
         """
@@ -125,3 +125,47 @@ class NotionAPI:
         except Exception as e:
             raise Exception(f"Error - get_page_content: {e}")
 
+    def create_page(self, database_id, properties, children=None, icon=None, cover=None):
+        """
+        Creates a new page in a Notion database.
+
+        Args:
+            database_id (str): The ID of the parent database.
+            properties (dict): The properties of the new page.
+            children (list, optional): A list of children blocks for page content. Defaults to None.
+            icon (dict, optional): Icon of the page. Defaults to None.
+            cover (dict, optional): Cover of the page. Defaults to None.
+
+        Returns:
+            dict: The response from the Notion API.
+        """
+
+        # Construct the request payload
+        data = {
+            "parent": {"database_id": database_id},
+            "properties": properties
+        }
+
+        if children:
+            data["children"] = children
+        if icon:
+            data["icon"] = icon
+        if cover:
+            data["cover"] = cover
+
+        try:
+            response = requests.post(
+                "https://api.notion.com/v1/pages",
+                headers=self.headers,
+                json=data,
+                timeout=10
+            )
+
+            # Check if the request was successful
+            if response.status_code != 200:
+                raise Exception(f"API request failed with status code: {response.status_code}")
+
+            return response.json()
+
+        except Exception as e:
+            raise Exception(f"Error - create_page: {e}")
