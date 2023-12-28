@@ -235,8 +235,8 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
                 #ovewrite during development
                 inbox_content = notionClass.query_database(1, st.session_state.only_4, st.session_state.db_id_note_inbox)
 
-                st.write("extracted data from note inbox: ")
-                st.json(inbox_content, expanded=False)
+                #st.write("extracted data from note inbox: ")
+                #st.json(inbox_content, expanded=False)
 
                 # Get first element of the inbox
                 inbox_note_to_review = inbox_content["results"][0]
@@ -268,8 +268,8 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
                 
                 dataframe_to_visualize = visualize_notion_database_row_object(page_name, page_properties_url, page_content)
 
-                st.write("note_inbox_object: ")
-                st.dataframe(dataframe_to_visualize)
+                #st.write("note_inbox_object: ")
+                #st.dataframe(dataframe_to_visualize)
                 
                 st.success("Extracted inbox note!")
             except Exception as e:
@@ -281,13 +281,13 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
                     vector = create_new_note_vector_with_extracted_data(note_inbox_id, note_inbox_object, page_name, page_properties_url, page_content, openAiClass)
 
                     input_notes_vectors=[vector]
-                    st.text(f"- Number of rows embedded for inbox notes: {len(input_notes_vectors)}")
+                    #st.text(f"- Number of rows embedded for inbox notes: {len(input_notes_vectors)}")
 
                 with st.spinner('Extracting relevant docs from Pinecone'):
                     
-                    areas_response = pineconeClass.query(query_vector=input_notes_vectors[0]["values"], topK=50, namespace="areas", include_metadata=True)
-                    projects_response = pineconeClass.query(input_notes_vectors[0]["values"], topK=50, namespace="projects", include_metadata=True)
-                    tasks_response = pineconeClass.query(input_notes_vectors[0]["values"], topK=50, namespace="tasks", include_metadata=True)
+                    areas_response = pineconeClass.query(query_vector=input_notes_vectors[0]["values"], topK=20, namespace="areas", include_metadata=True)
+                    projects_response = pineconeClass.query(input_notes_vectors[0]["values"], topK=20, namespace="projects", include_metadata=True)
+                    tasks_response = pineconeClass.query(input_notes_vectors[0]["values"], topK=20, namespace="tasks", include_metadata=True)
 
                     #st.write("areas_response: ")
                     areas_retrieved_df = visualize_retrieved_vectors(areas_response)
@@ -317,12 +317,12 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
 
             # RESULT OF BUTTON 2
 
-            st.subheader("Prompt system: ")
-            st.markdown(st.session_state.first_prompt[0]["content"])
-            st.subheader("Example user: ")
-            st.markdown(st.session_state.first_prompt[1]["content"])
-            st.subheader("Example assistant: ")
-            st.markdown(st.session_state.first_prompt[2]["content"])
+            # st.subheader("Prompt system: ")
+            # st.markdown(st.session_state.first_prompt[0]["content"])
+            # st.subheader("Example user: ")
+            # st.markdown(st.session_state.first_prompt[1]["content"])
+            # st.subheader("Example assistant: ")
+            # st.markdown(st.session_state.first_prompt[2]["content"])
             st.subheader("Note name: ")
             st.write(st.session_state.note_inbox_extracted["note_name"])
             st.subheader("Note url: ")
