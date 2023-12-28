@@ -52,19 +52,25 @@ Already existing Tasks: {"Name":{"0":"Create Yearly report","1":"Defina all poss
 ## Tasks:
 
 | Name | Area | Project | Description | Status |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Create a list of idle activities | Personal Planning | Weekly Planning | Create a list of activities for idle times | Not started |
-| Schedule the activities for the next week | Personal Planning | Weekly Planning | Create a schedule of activities for idle times in the following week | Not started |
+| --- | --- | --- | --- | --- |
+| Create a list of idle activities | Personal Planning| Weekly Planning | Create a list of activities for idle times | Not started |
+| Schedule the activities for the next week | Personal Planning| Weekly Planning | Create a schedule of activities for idle times in the following week | Not started |
 
 ### Comment:
 Operation:
 - New Task
+
 Areas:
-- Created "Personal Planning". could not fit in existing area "Personal Projects"
+- Created "Personal Planning". Could not fit in existing area "Personal Projects"
+
 Project:
-- Weekly planning: for organizing weekly activities
-Task: 2 tasks extracted, single and unique, no duplicate or similar found
+- Created "Weekly planning". For organizing weekly activities
+
+Task: 
+- 2 tasks extracted, single and unique, no duplicate or similar found
+
 Translated from Italian
+
                 """
             }
         ]
