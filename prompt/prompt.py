@@ -54,20 +54,16 @@ Already existing Tasks: {"Name":{"0":"Create Yearly report","1":"Defina all poss
 | Schedule the activities for the next week | Personal Planning| Weekly Planning | Create a schedule of activities for idle times in the following week | Not started |
 
 ### Comment:
-Operation:
-- New Task
 
-Areas:
-- Created "Personal Planning". Could not fit in existing area "Personal Projects"
+**Areas**: Created "Personal Planning". Could not fit in existing area "Personal Projects"
+**Project**: Created "Weekly planning". For organizing weekly activities
+**Task**: 2 tasks extracted, single and unique, no duplicate or similar found
 
-Project:
-- Created "Weekly planning". For organizing weekly activities
-
-Task: 
-- 2 tasks extracted, single and unique, no duplicate or similar found
-
-Translated from Italian
-
+Suggestions: 
+- **Flexibility**: Keep the schedule flexible to adapt to unexpected changes in the week.
+- **Review and Adjust**: At the end of each week, review what worked and what didn't, and adjust the list and schedule accordingly.
+- **Include Relaxation Time**: Ensure that some activities are purely for relaxation and don't require much mental or physical effort.
+- **Diversify Activities**: Include a mix of activities that cater to different aspects like physical health, mental well-being, and hobbies.
                 """
             }
         ]
