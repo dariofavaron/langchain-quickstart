@@ -53,13 +53,14 @@ Already existing Tasks: {"Name":{"0":"Create Yearly report","1":"Defina all poss
 | Create a list of idle activities | Personal Planning| Weekly Planning | Create a list of activities for idle times | Not started |
 | Schedule the activities for the next week | Personal Planning| Weekly Planning | Create a schedule of activities for idle times in the following week | Not started |
 
-### Comment:
+### Comments:
 
-**Areas**: Created "Personal Planning". Could not fit in existing area "Personal Projects"
-**Project**: Created "Weekly planning". For organizing weekly activities
-**Task**: 2 tasks extracted, single and unique, no duplicate or similar found
+- **Areas**: Created "Personal Planning". Could not fit in existing area "Personal Projects".
+- **Project**: Created "Weekly planning". For organizing weekly activities.
+- **Task**: 2 tasks extracted, single and unique, no duplicate or similar found.
 
-Suggestions: 
+### Suggestions:
+
 - **Flexibility**: Keep the schedule flexible to adapt to unexpected changes in the week.
 - **Review and Adjust**: At the end of each week, review what worked and what didn't, and adjust the list and schedule accordingly.
 - **Include Relaxation Time**: Ensure that some activities are purely for relaxation and don't require much mental or physical effort.
