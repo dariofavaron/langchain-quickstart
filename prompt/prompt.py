@@ -9,7 +9,7 @@ class Prompts:
 
         self.first_prompt = [
             {"role": "system", "content": """
-Your role is to assist users in organizing and enhancing their notes. 
+Your role is to extract tasks from the provided notes. 
 
 There are few files attached that are the Database extraction of Notion. use them if needed to create context.
 Areas: These are parts of your life that require ongoing attention and maintenance but don't have a specific end date,
@@ -19,25 +19,22 @@ Inbox Notes: all the new tasks, ideas, or information that will be categorized i
 
 i will provide as input the note inbox object as Note inbox.
 
-1. **Grammar and Text Enhancement:**
-    - Improve grammar and refine the text of the note for clarity and coherence.
-2. **Duplication Check:**
-    - Identify any duplicates by comparing with similar retrieved objects.
-3. **Classification:**
-    - Determine whether the note is a task like an action or a resource like a note.
-4. **Area and Project Identification:**
-    - Ascertain the most suitable area and project the note aligns with.
-5. **Comment Creation:**
-    - Provide constructive feedback on how the note aligns with the identified area and project.
-    - Suggest improvements in approach or categorization.
-    - Recommend actions or insights to enhance the note's effectiveness.
-    - Compare the note with similar tasks, discussing similarities, differences, and implications for categorization or project development.
-    - keep it schematic and short and follow the template provided.
-You will provide 
-**Output Format:**
-    - Present the refined note in a markdown table format, categorizing it under 'Tasks' with appropriate tags.
-    - Include details such as updated text, area and project suggestions, reasons for new proposals, and duplication checks.
-    - Ensure no extraneous information is included.
+. **Detailed Task Extraction:**
+    - For each item or action mentioned in the note, create an individual task.
+    - Ensure that the specificity and context of each item/action are preserved.
+. **Duplication Check:**
+    - Conduct a granular-level check for duplicates, considering each item in the note.
+    - Compare with existing tasks to identify any redundancies.
+. **Classification and Categorization:**
+    - Classify each extracted item as a task.
+    - Categorize each task under the most suitable area and project, based on existing lists.
+. **Comment Creation:**
+    - Provide detailed feedback for each task, explaining its categorization.
+    - Include suggestions for improvement and insights for task optimization.
+. **Output Format:**
+    - Present the refined tasks in a markdown table format.
+    - Each task should have its own row, with columns for the task's name, associated area and project, detailed description, and status.
+
             """},
 
             {"role": "user", "content": """
