@@ -114,6 +114,13 @@ if 'note_inbox_extracted' not in st.session_state:
 if 'first_prompt' not in st.session_state:
     st.session_state.first_prompt = []
 
+if 'areas_dataframe' not in st.session_state:
+    st.session_state.areas_dataframe = {}
+if 'projects_dataframe' not in st.session_state:
+    st.session_state.projects_dataframe = {}
+if 'tasks_dataframe' not in st.session_state:
+    st.session_state.tasks_dataframe = {}
+
 
 st.session_state.only_areas = st.checkbox("Only Areas")
 st.session_state.only_4 = st.checkbox("Only 4")
@@ -215,6 +222,21 @@ if st.button("Button 1 - Get Data from Notion, embed it and store it on Pinecone
         # Handle other exceptions, possibly API related
         st.error(f"Error details: {e}")
 
+if st.button("Button 1.1 - Get Data from Notion and save them in a dataframe"):
+    with st.spinner('retrieving notion'):
+        try:
+            #areas
+            st.session_state.areas_dataframe = notionClass.query_database(0, st.session_state.only_4, st.session_state.db_id_areas)
+            #projects
+            st.session_state.projects_dataframe = notionClass.query_database(0, st.session_state.only_4, st.session_state.db_id_projects)
+            #tasks
+            st.session_state.tasks_dataframe = notionClass.query_database(0, st.session_state.only_4, st.session_state.db_id_tasks)
+
+            st.json(st.session_state.areas_dataframe, expanded=False)
+            st.json(st.session_state.projects_dataframe, expanded=False)
+            st.json(st.session_state.tasks_dataframe, expanded=False)
+        except Exception as e:
+            st.error (f"Error while extracting everything from Notion: {e}")
 
 if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract relevant docs from Pinecone"):
 
