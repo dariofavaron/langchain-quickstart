@@ -425,3 +425,9 @@ if st.button("Get Tasks structure"):
     task_structure = notionClass.get_database_structure(st.session_state.db_id_tasks)
     df_properties = visualize_notion_db_properties(task_structure)
     st.dataframe(df_properties)
+
+if st.button("extract one task"):
+    single_task = notionClass.query_database(1, st.session_state.only_4, st.session_state.db_id_tasks)
+
+    st.write("extracted data from task: ")
+    st.json(single_task, expanded=False)
