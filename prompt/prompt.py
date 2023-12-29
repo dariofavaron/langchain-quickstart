@@ -7,7 +7,7 @@ class Prompts:
     """
     def __init__(self):
 
-        self.first_prompt = [
+        self.task_extraction_from_note_inbox = [
             {"role": "system", "content": """
 Your role is to extract tasks from the provided notes. 
 
@@ -69,5 +69,38 @@ Already existing Tasks: {"Name":{"0":"Create Yearly report","1":"Defina all poss
             }
         ]
 
+    self.parse_extracted_task_to_notion = [
+        {"role": "system", "content": """
+Your role is to parse the extracted tasks and format them to be aligned with the Notion Database.
+            """},
+
+            {"role": "user", "content": """
+
+## Tasks:
+
+| Name | Area | Project | Description | Status |
+| --- | --- | --- | --- | --- |
+| Create a list of idle activities | Personal Planning| Weekly Planning | Create a list of activities for idle times | Not started |
+| Schedule the activities for the next week | Personal Planning| Weekly Planning | Create a schedule of activities for idle times in the following week | Not started |
+
+### Comments:
+
+- **Areas**: Created "Personal Planning". Could not fit in existing area "Personal Projects".
+- **Project**: Created "Weekly planning". For organizing weekly activities.
+- **Task**: 2 tasks extracted, single and unique, no duplicate or similar found.
+
+### Suggestions:
+
+- **Flexibility**: Keep the schedule flexible to adapt to unexpected changes in the week.
+- **Review and Adjust**: At the end of each week, review what worked and what didn't, and adjust the list and schedule accordingly.
+- **Include Relaxation Time**: Ensure that some activities are purely for relaxation and don't require much mental or physical effort.
+- **Diversify Activities**: Include a mix of activities that cater to different aspects like physical health, mental well-being, and hobbies.
+
+            """},
+            {"role": "assistant", "content": """
+
+"""}
+        ]
+
     def update_prompt(self, new_prompt):
-        self.first_prompt = new_prompt
+        self.task_extraction_from_note_inbox = new_prompt

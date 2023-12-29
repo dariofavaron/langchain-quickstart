@@ -235,8 +235,8 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
                 #ovewrite during development
                 inbox_content = notionClass.query_database(1, st.session_state.only_4, st.session_state.db_id_note_inbox)
 
-                #st.write("extracted data from note inbox: ")
-                #st.json(inbox_content, expanded=False)
+                st.write("extracted data from note inbox: ")
+                st.json(inbox_content, expanded=False)
 
                 # Get first element of the inbox
                 inbox_note_to_review = inbox_content["results"][0]
@@ -313,7 +313,7 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
                 "tasks_related": tasks_retrieved_df.to_json()
             }
 
-            st.session_state.first_prompt = prompt.first_prompt
+            st.session_state.task_extraction_from_note_inbox = prompt.task_extraction_from_note_inbox
 
             # RESULT OF BUTTON 2
 
@@ -349,7 +349,7 @@ if st.button("Button 3 - send prompt to OpenAI and visualize it on the screen"):
     try:
         with st.spinner('*sending data to OpenAI*'):
 
-            messages=st.session_state.first_prompt
+            messages=st.session_state.task_extraction_from_note_inbox
 
             # convert to string note_inbox_extracted
             note_inbox_summary = f"""
@@ -387,8 +387,17 @@ if st.button("Button 3 - send prompt to OpenAI and visualize it on the screen"):
             # Notion API Integration - Update on Confirmation
             if confirmation:
                 try:
-                    # Code to update the object in Notion
-                    # Example: notionClass.update_object(notion_object_id, update_data)
+                    # parse the answer to a format for notion
+                    # Extract the chat content
+                    chat_content = response["choices"][0]["message"]["content"]
+
+                    # Prepare the prompt for GPT to parse the response
+                    parse_prompt = f"Parse the following information into structured data for Notion:\n\n{chat_content}\n\nThe properties are Name, Areas, Projects, Description, Status. Provide the information in a structured format suitable for updating a Notion database."
+
+
+
+
+
                     st.success("Update successful in Notion.")
                 except Exception as e:
                     st.error(f"Update failed in Notion: {e}")
@@ -416,4 +425,3 @@ if st.button("Get Tasks structure"):
     task_structure = notionClass.get_database_structure(st.session_state.db_id_tasks)
     df_properties = visualize_notion_db_properties(task_structure)
     st.dataframe(df_properties)
-
