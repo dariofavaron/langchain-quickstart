@@ -16,7 +16,6 @@ def create_task_table(st, area_json, project_json, task_json):
     # Extracting information
     area_info = {item["id"]: item["properties"]["Name"]["title"][0]["plain_text"]
                     for item in area_json["results"]}
-    st.write(area_info)
     project_info = {item["id"]: item["properties"]["Name"]["title"][0]["plain_text"]
                     for item in project_json["results"]}
     task_info = {item["id"]: item["properties"]["Name"]["title"][0]["plain_text"]
@@ -37,10 +36,13 @@ def create_task_table(st, area_json, project_json, task_json):
                         if relation["id"] == project_id), None)
         area_name = area_info.get(area_id, "Unknown")
 
+        area_type = next((relation["properties"]["Type"]["select"]["name"] for relation in area_json["results"]
+                        if relation["id"] == area_id), None)
+
         # Append to the final data
-        final_data.append([task_name, project_name, area_name])
+        final_data.append([task_name, project_name, area_name, area_type])
 
     # Create DataFrame
-    df = pd.DataFrame(final_data, columns=["Task Name", "Project Related", "Area Related"])
+    df = pd.DataFrame(final_data, columns=["Task Name", "Project Related", "Area Related", "Area Type"])
     return df
 
