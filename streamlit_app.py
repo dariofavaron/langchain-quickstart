@@ -6,6 +6,7 @@ import pandas as pd
 # import helper files to scrape Notion API
 from GeneralFunctions.vector_metadata_creation import create_area_vector_with_extracted_data, create_project_vector_with_extracted_data, create_task_vector_with_extracted_data, create_new_note_vector_with_extracted_data
 from GeneralFunctions.dataframe_creation import visualize_notion_db_properties, visualize_notion_database_row_object, visualize_retrieved_vectors
+from GeneralFunctions.CreateTaskDataframe import create_task_table
 
 # import and define the input file md with the prompt ans import it as a json
 from prompt.prompt import Prompts
@@ -114,10 +115,12 @@ if 'note_inbox_extracted' not in st.session_state:
 if 'first_prompt' not in st.session_state:
     st.session_state.first_prompt = []
 
-if 'areas_dataframe' not in st.session_state:
-    st.session_state.areas_dataframe = {}
-if 'projects_dataframe' not in st.session_state:
-    st.session_state.projects_dataframe = {}
+if 'areas_json' not in st.session_state:
+    st.session_state.areas_json = {}
+if 'projects_json' not in st.session_state:
+    st.session_state.projects_json = {}
+if 'tasks_json' not in st.session_state:
+    st.session_state.tasks_json = {}
 if 'tasks_dataframe' not in st.session_state:
     st.session_state.tasks_dataframe = {}
 
@@ -226,19 +229,23 @@ if st.button("Button 1.1 - Get Data from Notion and save them in a dataframe"):
     with st.spinner('retrieving notion'):
         try:
             #areas
-            st.session_state.areas_dataframe = notionClass.query_database(0, st.session_state.only_4, st.session_state.db_id_areas)
+            st.session_state.areas_json = notionClass.query_database(0, st.session_state.only_4, st.session_state.db_id_areas)
             #projects
-            st.session_state.projects_dataframe = notionClass.query_database(0, st.session_state.only_4, st.session_state.db_id_projects)
+            st.session_state.projects_json = notionClass.query_database(0, st.session_state.only_4, st.session_state.db_id_projects)
             #tasks
-            st.session_state.tasks_dataframe = notionClass.query_database(0, st.session_state.only_4, st.session_state.db_id_tasks)
+            st.session_state.tasks_json = notionClass.query_database(0, st.session_state.only_4, st.session_state.db_id_tasks)
 
-            st.json(st.session_state.areas_dataframe, expanded=False)
-            st.json(st.session_state.projects_dataframe, expanded=False)
-            st.json(st.session_state.tasks_dataframe, expanded=False)
+            st.json(st.session_state.areas_json, expanded=False)
+            st.json(st.session_state.projects_json, expanded=False)
+            st.json(st.session_state.tasks_json, expanded=False)
 
-            area_dataframe = pd.DataFrame(st.session_state.areas_dataframe["results"])
+            st.session_state.tasks_dataframe = create_task_table(
+                st.session_state.areas_json["results"],
+                st.session_state.projects_json["results"],
+                st.session_state.tasks_json["results"]
+            )
 
-            st.dataframe(area_dataframe)
+            st.dataframe(st.session_state.tasks_dataframe)
 
         except Exception as e:
             st.error (f"Error while extracting everything from Notion: {e}")
