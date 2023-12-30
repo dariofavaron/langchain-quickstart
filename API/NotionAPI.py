@@ -113,7 +113,7 @@ class NotionAPI:
             for block in blocks:
                 block_type = block.get("type")
 
-                if block[block_type]["rich_text"]:
+                if block_type == "paragraph":
                     content = block[block_type]["rich_text"][0]["text"]["content"]
                     page_content += content + "\n"  # Append content with a newline
                 else:
