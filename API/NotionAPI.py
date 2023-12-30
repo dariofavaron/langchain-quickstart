@@ -163,7 +163,7 @@ class NotionAPI:
 
             # Check if the request was successful
             if response.status_code != 200:
-                raise Exception(f"API request failed with status code: {response.status_code}")
+                raise Exception(f"API request failed : {response}")
 
             return response.json()
 
