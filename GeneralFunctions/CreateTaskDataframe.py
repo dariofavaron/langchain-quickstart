@@ -2,10 +2,6 @@ import pandas as pd
 import json
 
 def create_task_table(area_json, project_json, task_json):
-    # Parse JSON data
-    areas_data = json.loads(area_json)
-    projects_data = json.loads(project_json)
-    tasks_data = json.loads(task_json)
 
     # Extracting information
     area_info = {item["id"]: item["properties"]["Name"]["title"][0]["plain_text"] for item in areas_data["results"]}
