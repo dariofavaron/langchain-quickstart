@@ -143,13 +143,14 @@ class NotionAPI:
         # Construct the request payload
         data = {
             "parent": {"database_id": database_id},
+            "icon": {"external":  {"url": icon}},
             "properties": properties
         }
 
         if children:
             data["children"] = children
-        if icon:
-            data["icon"] = icon
+        # if icon:
+        #     data["icon"] = icon
         if cover:
             data["cover"] = cover
 
