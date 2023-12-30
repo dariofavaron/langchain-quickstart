@@ -26,7 +26,7 @@ def create_task_table(st, area_json, project_json, task_json):
     final_data = []
 
     # Matching task IDs with corresponding project and area IDs
-    for task_id, task_name in task_info:
+    for task_id, task_name in task_info.items():
         # Find project related to the task
         project_id = next((relation["properties"]["Projects"]["relation"][0]["id"] for relation in task_json["results"]
                         if relation["id"] == task_id), None)

@@ -239,7 +239,7 @@ if st.button("Button 1.1 - Get Data from Notion and save them in a dataframe"):
             st.json(st.session_state.projects_json, expanded=False)
             st.json(st.session_state.tasks_json, expanded=False)
 
-            st.session_state.tasks_dataframe = create_task_table(st, 
+            st.session_state.tasks_dataframe = create_task_table(st,
                 st.session_state.areas_json,
                 st.session_state.projects_json,
                 st.session_state.tasks_json
