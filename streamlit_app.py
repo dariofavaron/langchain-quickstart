@@ -235,6 +235,11 @@ if st.button("Button 1.1 - Get Data from Notion and save them in a dataframe"):
             st.json(st.session_state.areas_dataframe, expanded=False)
             st.json(st.session_state.projects_dataframe, expanded=False)
             st.json(st.session_state.tasks_dataframe, expanded=False)
+
+            area_dataframe = pd.DataFrame(st.session_state.areas_dataframe["results"])
+
+            st.dataframe(area_dataframe)
+
         except Exception as e:
             st.error (f"Error while extracting everything from Notion: {e}")
 
