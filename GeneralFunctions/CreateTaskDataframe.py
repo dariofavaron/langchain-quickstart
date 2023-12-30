@@ -46,3 +46,49 @@ def create_task_table(st, area_json, project_json, task_json):
     df = pd.DataFrame(final_data, columns=["Task Name", "Project Related", "Area Related", "Area Type"])
     return df
 
+
+def create_task_row_properties(task_name, project_id, description, status):
+    """
+    Create properties for a new task row.
+
+    Args:
+        task_name (str): Name of the task.
+        project_id (str): ID of the project related to the task.
+        description (str): Description of the task.
+        status (str): Status of the task.
+
+    Returns:
+        dict: Properties for the new task row.
+    """
+    return {
+        "Name": {
+            "title": [
+                {
+                    "text": {
+                        "content": task_name
+                    }
+                }
+            ]
+        },
+        "Projects": {
+            "relation": [
+                {
+                    "id": project_id
+                }
+            ]
+        },
+        "Description": {
+            "rich_text": [
+                {
+                    "text": {
+                        "content": description
+                    }
+                }
+            ]
+        },
+        "Status": {
+            "status": {
+                "name": status
+            }
+        }
+    }

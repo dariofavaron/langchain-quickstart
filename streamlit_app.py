@@ -6,7 +6,7 @@ import pandas as pd
 # import helper files to scrape Notion API
 from GeneralFunctions.vector_metadata_creation import create_area_vector_with_extracted_data, create_project_vector_with_extracted_data, create_task_vector_with_extracted_data, create_new_note_vector_with_extracted_data
 from GeneralFunctions.dataframe_creation import visualize_notion_db_properties, visualize_notion_database_row_object, visualize_retrieved_vectors
-from GeneralFunctions.CreateTaskDataframe import create_task_table
+from GeneralFunctions.CreateTaskDataframe import create_task_table, create_task_row_properties
 
 # import and define the input file md with the prompt ans import it as a json
 from prompt.prompt import Prompts
@@ -468,38 +468,13 @@ if st.button("upload a new task"):
     
     try:
         with st.spinner('uploading a new task'):
-            new_task_properties = {
-                "Name": {
-                    "title": [
-                        {
-                            "text": {
-                                "content": "This is a test task uploaded from streamlit"
-                            }
-                        }
-                    ]
-                },
-                "Projects": {
-                    "relation": [
-                        {
-                            "id": "a2476530-b182-4c9b-b9ca-356b0b7196d8"
-                        }
-                    ]
-                },
-                "Description": {
-                    "rich_text": [
-                        {
-                            "text": {
-                                "content": "test test"
-                            }
-                        }
-                    ]
-                },
-                "Status": {
-                    "status": {
-                        "name": "Not started"
-                    }
-                }
-            }
+
+            new_task_properties = create_task_row_properties(
+                "This is a test task uploaded from streamlit",
+                "a2476530-b182-4c9b-b9ca-356b0b7196d8",
+                "test test",
+                "Not started"
+            )
 
             response = notionClass.create_page(st.session_state.db_id_tasks, new_task_properties)
             st.write("response from notion:")
