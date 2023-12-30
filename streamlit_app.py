@@ -476,7 +476,7 @@ if st.button("upload a new task"):
                 "Not started"
             )
 
-            response = notionClass.create_page(st.session_state.db_id_tasks, new_task_properties)
+            response = notionClass.create_page(st.session_state.db_id_tasks, new_task_properties, icon="https://www.notion.so/icons/checkmark_gray.svg")
             st.write("response from notion:")
             st.json(response, expanded=False)
             st.success("communicated correctly with notion")
