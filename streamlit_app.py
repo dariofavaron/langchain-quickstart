@@ -225,7 +225,7 @@ if st.button("Button 1 - Get Data from Notion, embed it and store it on Pinecone
         # Handle other exceptions, possibly API related
         st.error(f"Error details: {e}")
 
-if st.button("Button 1.1 - Get Data from Notion and save them in a dataframe"):
+if st.button("Button 1.1 - Get Data from Notion and save them in a dataframe. one line per Task"):
     with st.spinner('retrieving notion'):
         try:
             #areas
@@ -235,9 +235,9 @@ if st.button("Button 1.1 - Get Data from Notion and save them in a dataframe"):
             #tasks
             st.session_state.tasks_json = notionClass.query_database(0, st.session_state.only_4, st.session_state.db_id_tasks)
 
-            st.json(st.session_state.areas_json, expanded=False)
-            st.json(st.session_state.projects_json, expanded=False)
-            st.json(st.session_state.tasks_json, expanded=False)
+            #st.json(st.session_state.areas_json, expanded=False)
+            #st.json(st.session_state.projects_json, expanded=False)
+            #st.json(st.session_state.tasks_json, expanded=False)
 
             st.session_state.tasks_dataframe = create_task_table(st,
                 st.session_state.areas_json,
