@@ -6,7 +6,7 @@ import pandas as pd
 # import helper files to scrape Notion API
 from GeneralFunctions.vector_metadata_creation import create_area_vector_with_extracted_data, create_project_vector_with_extracted_data, create_task_vector_with_extracted_data, create_new_note_vector_with_extracted_data
 from GeneralFunctions.dataframe_creation import visualize_notion_db_properties, visualize_notion_database_row_object, visualize_retrieved_vectors
-from GeneralFunctions.CreateTaskDataframe import create_task_table, create_task_row_properties
+from GeneralFunctions.CreateTaskDataframe import create_task_table, create_task_row_properties, create_full_task_vector
 
 # import and define the input file md with the prompt ans import it as a json
 from prompt.prompt import Prompts
@@ -244,8 +244,17 @@ if st.button("Button 1.1 - Get Data from Notion and save them in a dataframe. on
                 st.session_state.projects_json,
                 st.session_state.tasks_json
             )
+            #dataframes column: "Task Name", "Project Related", "Area Related", "Area Type", "Task ID", "Project ID", "Area ID", "Task Description"
 
-            st.dataframe(st.session_state.tasks_dataframe)
+            #embed all the tasks from the dataframe
+            full_tasks_vectors = create_full_task_vector(st.session_state.tasks_dataframe, openAiClass)
+            
+            try:
+                vectors_upserted = pineconeClass.upsert(full_tasks_vectors, "fulltasks")
+                st.text(f"- Number of rows upserted for full tasks: {(vectors_upserted)}")
+            except Exception as e:
+                st.error(f"Failed to upsert vectors for projects: {e}")
+
 
         except Exception as e:
             st.error (f"Error while extracting everything from Notion: {e}")

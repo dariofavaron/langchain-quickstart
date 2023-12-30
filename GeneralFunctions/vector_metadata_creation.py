@@ -98,6 +98,60 @@ def create_task_vector_with_extracted_data(json_obj, embeddingClass):
     except Exception as e:
         raise Exception(f"Error in create_task_vector_with_extracted_data: {str(e)}")
 
+def create_full_task_vector(tasks_dataframe, embeddingClass):
+    """
+        - id: Area - Project - Task
+        - metadata: "Task Name", "Project Related", "Area Related", "Area Type", "Task ID", "Project ID", "Area ID"
+        - content: "Task Name", "Project Related", "Area Related", "Area Type", “Task Description”
+
+        df = pd.DataFrame(final_data, columns=["Task Name", "Project Related", "Area Related", "Area Type", "Task ID", "Project ID", "Area ID", "Task Description"])
+
+    """
+    try:
+
+        vectors = []
+        for task in tasks_dataframe:
+
+            # Extracting data
+            id_data = (
+                task["Area Related"] +
+                " - " +
+                task["Project Related"] +
+                " - " +
+                task["Task Name"]
+                )
+            
+            metadata = {
+                "Task Name": task["Task Name"],
+                "Project Related": task["Project Related"],
+                "Area Related": task["Area Related"],
+                "Area Type": task["Area Type"],
+                "Task ID": task["Task ID"],
+                "Project ID": task["Project ID"],
+                "Area ID": task["Area ID"]
+            }
+
+            content = {
+                "Task Name": task["Task Name"],
+                "Project Related": task["Project Related"],
+                "Area Related": task["Area Related"],
+                "Area Type": task["Area Type"],
+                "Task Description": task["Task Description"]
+            }
+
+            # Creating vector
+            embedded_content = embeddingClass.generate_embedding(str(content))
+            vector = {
+                'id': str(id_data),
+                'values': embedded_content,
+                'metadata': metadata,
+            }
+            vectors.append(vector)
+        
+        return vectors
+    except Exception as e:
+        raise Exception(f"Error in create_task_vector_with_extracted_data: {str(e)}")
+
 
 def create_new_note_vector_with_extracted_data(id, object, page_name, page_properties_url, page_content, embeddingClass):
     try:
