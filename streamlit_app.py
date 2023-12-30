@@ -4,9 +4,9 @@ import json
 import pandas as pd
 
 # import helper files to scrape Notion API
-from GeneralFunctions.vector_metadata_creation import create_area_vector_with_extracted_data, create_project_vector_with_extracted_data, create_task_vector_with_extracted_data, create_new_note_vector_with_extracted_data
+from GeneralFunctions.vector_metadata_creation import create_area_vector_with_extracted_data, create_project_vector_with_extracted_data, create_task_vector_with_extracted_data, create_new_note_vector_with_extracted_data, create_full_task_vector
 from GeneralFunctions.dataframe_creation import visualize_notion_db_properties, visualize_notion_database_row_object, visualize_retrieved_vectors
-from GeneralFunctions.CreateTaskDataframe import create_task_table, create_task_row_properties, create_full_task_vector
+from GeneralFunctions.CreateTaskDataframe import create_task_table, create_task_row_properties
 
 # import and define the input file md with the prompt ans import it as a json
 from prompt.prompt import Prompts
