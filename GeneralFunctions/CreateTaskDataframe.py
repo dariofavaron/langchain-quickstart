@@ -29,12 +29,12 @@ def create_task_table(st, area_json, project_json, task_json):
     for task_id, task_name in task_info:
         # Find project related to the task
         project_id = next((relation["properties"]["Projects"]["relation"][0]["id"] for relation in task_json["results"]
-                        if relation["properties"]["Projects"]["relation"][0]["id"] == task_id), None)
+                        if relation["id"] == task_id), None)
         project_name = project_info.get(project_id, "Unknown")
 
         # Find area related to the project
         area_id = next((relation["properties"]["Areas"]["relation"][0]["id"] for relation in project_json["results"]
-                        if relation["properties"]["Areas"]["relation"][0]["id"] == project_id), None)
+                        if relation["id"] == project_id), None)
         area_name = area_info.get(area_id, "Unknown")
 
         # Append to the final data
