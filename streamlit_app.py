@@ -430,8 +430,6 @@ if st.button("Button 3 - send prompt to OpenAI and visualize it on the screen"):
 
 
 
-
-
                     st.success("Update successful in Notion.")
                 except Exception as e:
                     st.error(f"Update failed in Notion: {e}")
@@ -465,3 +463,48 @@ if st.button("extract one task"):
 
     st.write("extracted data from task: ")
     st.json(single_task, expanded=False)
+
+if st.button("upload a new task"):
+    
+    try:
+        with st.spinner('uploading a new task'):
+            new_task_properties = {
+                "Name": {
+                    "title": [
+                        {
+                            "text": {
+                                "content": "This is a test task uploaded from streamlit"
+                            }
+                        }
+                    ]
+                },
+                "Projects": {
+                    "relation": [
+                        {
+                            "id": "a2476530-b182-4c9b-b9ca-356b0b7196d8"
+                        }
+                    ]
+                },
+                "Description": {
+                    "rich_text": [
+                        {
+                            "text": {
+                                "content": "test test"
+                            }
+                        }
+                    ]
+                },
+                "Status": {
+                    "status": {
+                        "name": "Not started"
+                    }
+                }
+            }
+
+            response = notionClass.create_page(st.session_state.db_id_tasks, new_task_properties)
+            st.write("response from notion:")
+            st.json(response, expanded=False)
+            st.success("communicated correctly with notion")
+    except Exception as e:
+        # Handle other exceptions, possibly API related
+        st.error(f"General exception - upload a new task: {e}")

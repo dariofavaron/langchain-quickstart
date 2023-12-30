@@ -73,9 +73,9 @@ Already existing Tasks: {"Name":{"0":"Create Yearly report","1":"Defina all poss
         {"role": "system", "content": """
 Your role is to parse the extracted tasks and format them to be aligned with the Notion Database.
 
-         properties:
-         ignore the rollups type
-                     """},
+properties:
+ignore the rollups type
+            """},
 
             {"role": "user", "content": """
 
