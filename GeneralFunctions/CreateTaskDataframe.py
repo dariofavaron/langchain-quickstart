@@ -4,9 +4,9 @@ import json
 def create_task_table(area_json, project_json, task_json):
 
     # Extracting information
-    area_info = {item["id"]: item["properties"]["Name"]["title"][0]["plain_text"] for item in areas_data["results"]}
-    project_info = {item["id"]: item["properties"]["Name"]["title"][0]["plain_text"] for item in projects_data["results"]}
-    task_info = [(item["id"], item["properties"]["Name"]["title"][0]["plain_text"]) for item in tasks_data["results"]]
+    area_info = {item["id"]: item["properties"]["Name"]["title"][0]["plain_text"] for item in area_json["results"]}
+    project_info = {item["id"]: item["properties"]["Name"]["title"][0]["plain_text"] for item in project_json["results"]}
+    task_info = [(item["id"], item["properties"]["Name"]["title"][0]["plain_text"]) for item in task_json["results"]]
 
     # Create a list to hold our final data
     final_data = []
