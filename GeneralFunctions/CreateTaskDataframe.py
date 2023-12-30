@@ -1,34 +1,33 @@
 import pandas as pd
+import json
 
-def create_task_table(areas_json, projects_json, tasks_json):
-    # Parse the JSON data
-    areas = areas_json["results"]
-    projects = projects_json["results"]
-    tasks = tasks_json["results"]
+def process_json(area_json, project_json, task_json):
+    # Parse JSON data
+    areas_data = json.loads(area_json)
+    projects_data = json.loads(project_json)
+    tasks_data = json.loads(task_json)
 
-    # Create dictionaries for quick ID to name mapping
-    area_id_to_name = {area["id"]: area["properties"]["Name"]["title"][0]["plain_text"] for area in areas}
-    project_id_to_name = {project["id"]: project["properties"]["Name"]["title"][0]["plain_text"] for project in projects}
+    # Extracting information
+    area_info = {item["id"]: item["properties"]["Name"]["title"][0]["plain_text"] for item in areas_data["results"]}
+    project_info = {item["id"]: item["properties"]["Name"]["title"][0]["plain_text"] for item in projects_data["results"]}
+    task_info = [(item["id"], item["properties"]["Name"]["title"][0]["plain_text"]) for item in tasks_data["results"]]
 
-    # List to hold the task data
-    task_data = []
+    # Create a list to hold our final data
+    final_data = []
 
-    # Iterate through tasks to build the task data
-    for task in tasks:
-        task_name = task["properties"]["Name"]["title"][0]["plain_text"]
-        project_ids = [relation["id"] for relation in task["properties"]["Projects"]["relation"]]
-        area_ids = [relation["id"] for relation in task["properties"]["Areas"]["rollup"]["array"][0]["relation"]]
+    # Matching task IDs with corresponding project and area IDs
+    for task_id, task_name in task_info:
+        # Find project related to the task
+        project_id = next((relation["id"] for relation in tasks_data["results"] if relation["id"] == task_id), None)
+        project_name = project_info.get(project_id, "Unknown")
 
-        # Find corresponding project and area names
-        project_names = [project_id_to_name.get(pid, "Unknown") for pid in project_ids]
-        area_names = [area_id_to_name.get(aid, "Unknown") for aid in area_ids]
+        # Find area related to the project
+        area_id = next((relation["id"] for relation in projects_data["results"] if relation["id"] == project_id), None)
+        area_name = area_info.get(area_id, "Unknown")
 
-        # Create a record for each project-area combination
-        for project_name in project_names:
-            for area_name in area_names:
-                task_data.append([task_name, project_name, area_name])
+        # Append to the final data
+        final_data.append([task_name, project_name, area_name])
 
-    # Convert the list to a DataFrame
-    df = pd.DataFrame(task_data, columns=["Task Name", "Project Related to the Task", "Area Related to the Task"])
+    # Create DataFrame
+    df = pd.DataFrame(final_data, columns=["Task Name", "Project Related", "Area Related"])
     return df
-
