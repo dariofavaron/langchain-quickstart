@@ -301,13 +301,10 @@ if st.button(" Button 1.1 - Full Project "):
             #extract the relevant docs of the note from Pinecone
             relevant_docs = pineconeClass.query(note_inbox_vector[0]["values"], topK=20, namespace="fulltasks", include_metadata=True)
 
-            st.write("relevant docs: ")
-            st.json(relevant_docs, expanded=False)
-
-            #create a dataframe with the relevant docs
-            data_to_format = []
+            #create a dictonary with the relevant docs
+            relevant_tasks = []
             for doc in relevant_docs["matches"]:
-                data_to_format.append([
+                relevant_tasks.append([
                     doc["metadata"]["Task Name"] if "Task Name" in doc["metadata"] else None,
                     doc["metadata"]["Project Related"] if "Project Related" in doc["metadata"] else None,
                     doc["metadata"]["Area Related"] if "Area Related" in doc["metadata"] else None,
@@ -317,10 +314,23 @@ if st.button(" Button 1.1 - Full Project "):
                     doc["metadata"]["Area ID"] if "Area ID" in doc["metadata"] else None,
                     doc["metadata"]["Task Description"] if "Task Description" in doc["metadata"] else None
                 ])
-            relevant_docs_df = pd.DataFrame(data_to_format, columns=["Task Name", "Project Related", "Area Related", "Area Type", "Task ID", "Project ID", "Area ID", "Task Description"])
-
+            
+            relevant_tasks_df = pd.DataFrame(relevant_tasks, columns=["Task Name", "Project Related", "Area Related", "Area Type", "Task ID", "Project ID", "Area ID", "Task Description"])
             st.write("relevant docs dataframe: ")
-            st.dataframe(relevant_docs_df)
+            st.dataframe(relevant_tasks_df)
+
+            #create a dictonary with all the projects
+            # dataframes columns: "Project Name", "Area Related", "Area Type", "Project ID", "Area ID", "Project Description"
+            all_projects = []
+            for doc in st.session_state.projects_dataframe.iterrows():
+                all_projects.append([
+                    doc["Project Name"] if "Project Name" in doc["metadata"] else None,
+                    doc["Area Related"] if "Area Related" in doc["metadata"] else None,
+                    doc["Area Type"] if "Area Type" in doc["metadata"] else None,
+                    doc["Project ID"] if "Project ID" in doc["metadata"] else None,
+                    doc["Area ID"] if "Area ID" in doc["metadata"] else None,
+                    doc["Project Description"] if "Project Description" in doc["metadata"] else None
+                ])
 
             #prepare the message
             #the prompt and examples (new task dataframe)
@@ -334,8 +344,8 @@ if st.button(" Button 1.1 - Full Project "):
 Note Name: {note["Note Name"]}\n
 Note URL: {note["Note URL"]}\n
 Note Content: {note["Note Content"]}\n
-Relevant tasks: {data_to_format}\n
-All Project: {st.session_state.projects_dataframe.to_json()}
+Relevant tasks: columns: ["Task Name", "Project Related", "Area Related", "Area Type", "Task ID", "Project ID", "Area ID", "Task Description"] {relevant_tasks}\n
+All Project: columns: ["Project Name", "Area Related", "Area Type", "Project ID", "Area ID", "Project Description"] {all_projects}
 """
                 })
             
