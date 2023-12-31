@@ -301,6 +301,9 @@ if st.button(" Button 1.1 - Full Project "):
             #extract the relevant docs of the note from Pinecone
             relevant_docs = pineconeClass.query(note_inbox_vector[0]["values"], topK=20, namespace="fulltasks", include_metadata=True)  
 
+            st.write("relevant docs: ")
+            st.json(relevant_docs, expanded=False)
+
             #create a dataframe with the relevant docs
             data_to_format = []
             for doc in relevant_docs["matches"]:
@@ -315,6 +318,9 @@ if st.button(" Button 1.1 - Full Project "):
                     doc["metadata"]["Task Description"] if "Task Description" in doc["metadata"] else None
                 ])
             relevant_docs_df = pd.DataFrame(data_to_format, columns=["Task Name", "Project Related", "Area Related", "Area Type", "Task ID", "Project ID", "Area ID", "Task Description"])
+
+            st.write("relevant docs dataframe: ")
+            st.dataframe(relevant_docs_df)
 
             #prepare the message
             #the prompt and examples (new task dataframe)
