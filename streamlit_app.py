@@ -299,7 +299,7 @@ if st.button(" Button 1.1 - Full Project "):
             ]
 
             #extract the relevant docs of the note from Pinecone
-            relevant_docs = pineconeClass.query(note_inbox_vector[0]["values"], topK=20, namespace="fulltasks", include_metadata=True)  
+            relevant_docs = pineconeClass.query(note_inbox_vector[0]["values"], topK=20, namespace="fulltasks", include_metadata=True)
 
             st.write("relevant docs: ")
             st.json(relevant_docs, expanded=False)
@@ -334,8 +334,8 @@ if st.button(" Button 1.1 - Full Project "):
 Note Name: {note["Note Name"]}\n
 Note URL: {note["Note URL"]}\n
 Note Content: {note["Note Content"]}\n
-Relevant tasks dataframe: {relevant_docs_df}\n
-Project dataframe: {st.session_state.projects_dataframe.to_json()}
+Relevant tasks: {data_to_format}\n
+All Project: {st.session_state.projects_dataframe.to_json()}
 """
                 })
             
