@@ -129,7 +129,7 @@ def create_full_task_vector(tasks_dataframe, embeddingClass):
                 "Task ID": task["Task ID"],
                 "Project ID": task["Project ID"],
                 "Area ID": task["Area ID"],
-                "Task Description": task["Task Description"]
+                "Task Description": task["Task Description"] if task["Task Description"] else ""
             }
 
             content = {
