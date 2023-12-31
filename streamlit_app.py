@@ -331,19 +331,6 @@ if st.button(" Button 1.1 - Full Project "):
                     doc["Area ID"] if "Area ID" in doc else None,
                     doc["Project Description"] if "Project Description" in doc else None
                 ])
-            #all_projects = st.session_state.projects_dataframe.to_dict(orient='records')
-
-            # all_projects = [
-            #     {
-            #         "Project Name": row["Project Name"] if "Project Name" in row else None,
-            #         "Area Related": row["Area Related"] if "Area Related" in row else None,
-            #         "Area Type": row["Area Type"] if "Area Type" in row else None,
-            #         "Project ID": row["Project ID"] if "Project ID" in row else None,
-            #         "Area ID": row["Area ID"] if "Area ID" in row else None,
-            #         "Project Description": row["Project Description"] if "Project Description" in row else None
-            #     } 
-            #     for index, row in st.session_state.projects_dataframe.iterrows()
-            # ]
 
             #prepare the message
             #the prompt and examples (new task dataframe)
@@ -371,7 +358,7 @@ All Project: columns: ["Project Name", "Area Related", "Area Type", "Project ID"
                 model="gpt-3.5-turbo-1106",
                 messages=messages,
                 max_tokens=400,
-                temperature=0
+                temperature=0.5
             )
 
             st.write("response from openAi completition:")
