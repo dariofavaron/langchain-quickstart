@@ -140,98 +140,7 @@ st.session_state.db_id_tasks = "72c034d6343f4d1e926048b7dcbcbc2b"
 st.session_state.db_id_note_inbox = "50d49cabe62146689b61932004d5687c"
 
 prompt = Prompts()
-
-
-if st.button("Button 1 - Get Data from Notion, embed it and store it on Pinecone "):
-    '''
-    First step: Get Data from Notion
-    - Streamlit UI - click button 1
-    - Notion API - Get Tasks, Project, Areas, and Knowledge DB content
-    - Open API - embed each row with OpenAI embeddings
-    - Pinecone API - Store it in a Pinecone DB
-    '''
-    try:
-        # Notion API - Get Areas DB content
-        st.subheader("Retrieve data from Notion:")
-
-        with st.spinner('Areas'):
-            try:
-                areas_content = notionClass.query_database(0, st.session_state.only_4, st.session_state.db_id_areas)
-
-                st.text(f"- Number of rows retrieved for areas: {len(areas_content['results'])}")
-            except Exception as e:
-                st.error (f"Area ready query notion: {e}")
-        # Skip projects and tasks if "Only Areas" is checked
-        if not st.session_state.only_areas:
-            with st.spinner('Projects'):
-                projects_content = notionClass.query_database(0, st.session_state.only_4, st.session_state.db_id_projects)
-                st.text(f"- Number of rows retrieved for projects: {len(projects_content['results'])}")
-
-            with st.spinner('Tasks'):
-                tasks_content = notionClass.query_database(0, st.session_state.only_4, st.session_state.db_id_tasks)
-                st.text(f"- Number of rows retrieved for tasks: {len(tasks_content['results'])}")
-
-        # Open AI API - Embed each row with OpenAI embeddings
-        st.subheader("Open API - embed each row with OpenAI embeddings")
-
-        with st.spinner('Areas'):
-            areas_vectors = []
-            for result in areas_content["results"]:
-                vector = create_area_vector_with_extracted_data(result, openAiClass)
-                areas_vectors.append(vector)
-            st.text(f"- Number of rows embedded for areas: {len(areas_vectors)}")
-
-        if not st.session_state.only_areas:
-            with st.spinner('Projects'):
-                projects_vectors = []
-                for result in projects_content["results"]:
-                    vector = create_project_vector_with_extracted_data(result, openAiClass)
-                    projects_vectors.append(vector)
-                st.text(f"- Number of rows embedded for projects: {len(projects_vectors)}")
-
-            with st.spinner('Tasks'):
-                tasks_vectors = []
-                for result in tasks_content["results"]:
-                    vector = create_task_vector_with_extracted_data(result, openAiClass)
-                    tasks_vectors.append(vector)
-                st.text(f"- Number of rows embedded for tasks: {len(tasks_vectors)}")
-
-        # Pinecone API - Store it in a Pinecone DB
-        st.subheader("Pinecone API - Store it in a Pinecone DB")
-
-        # Upsert AREAS vectors into Pinecone index
-        with st.spinner('Areas'):
-            try:
-                vectors_upserted = pineconeClass.upsert(areas_vectors, "areas")
-                st.text(f"- Number of rows upserted for areas: {(vectors_upserted)}")
-
-            except Exception as e:
-                st.error(f"Failed to upsert vectors for areas: {e}")
-
-        if not st.session_state.only_areas:
-            with st.spinner('Projects'):
-                try:
-                    vectors_upserted = pineconeClass.upsert(projects_vectors, "projects")
-                    st.text(f"- Number of rows upserted for projects: {(vectors_upserted)}")
-                except Exception as e:
-                    st.error(f"Failed to upsert vectors for projects: {e}")
-            
-        if not st.session_state.only_areas:
-            with st.spinner('Tasks'):
-                try:
-                    vectors_upserted = pineconeClass.upsert(tasks_vectors, "tasks")
-                    st.text(f"- Number of rows upserted for tasks: {(vectors_upserted)}")
-                except Exception as e:
-                    st.error(f"Failed to upsert vectors for tasks: {e}")
-
-        st.success("Data from Notion extracted, embedded with OpenAI, and uploaded to Pinecone successfully!")
-    except ValueError as e:
-        st.error(f"Error: {e}")
-    except Exception as e:
-        # Handle other exceptions, possibly API related
-        st.error(f"Error details: {e}")
-
-if st.button(" Button 1.1 - Full Project "):
+if st.button(" Create a new task draft from a note in the inbox "):
             # Get Data from Notion and save them in a dataframe. one line per Task, 
             # upsert in Pinecone, 
             # extract the notes and save them in a dataframe,
@@ -379,10 +288,8 @@ Relevant tasks: columns: ["Task Name", "Project Related", "Area Related", "Area 
         except Exception as e:
             st.error (f"Error while extracting everything from Notion: {e}")
 
-
 st.subheader("TASK DRAFT: ")
 st.json(st.session_state.new_task_draft, expanded=True)
-
 
 if st.button("Accept and load the task to notion"):
     with st.spinner('Uploading a new task'):
@@ -409,6 +316,102 @@ if st.button("Accept and load the task to notion"):
         except Exception as e:
             st.error (f"Error while loading new task to Notion: {e}")
 
+
+
+
+# add space in the UI
+st.text("")
+st.text("")
+st.text("")
+
+if st.button("Button 1 - Get Data from Notion, embed it and store it on Pinecone "):
+    '''
+    First step: Get Data from Notion
+    - Streamlit UI - click button 1
+    - Notion API - Get Tasks, Project, Areas, and Knowledge DB content
+    - Open API - embed each row with OpenAI embeddings
+    - Pinecone API - Store it in a Pinecone DB
+    '''
+    try:
+        # Notion API - Get Areas DB content
+        st.subheader("Retrieve data from Notion:")
+
+        with st.spinner('Areas'):
+            try:
+                areas_content = notionClass.query_database(0, st.session_state.only_4, st.session_state.db_id_areas)
+
+                st.text(f"- Number of rows retrieved for areas: {len(areas_content['results'])}")
+            except Exception as e:
+                st.error (f"Area ready query notion: {e}")
+        # Skip projects and tasks if "Only Areas" is checked
+        if not st.session_state.only_areas:
+            with st.spinner('Projects'):
+                projects_content = notionClass.query_database(0, st.session_state.only_4, st.session_state.db_id_projects)
+                st.text(f"- Number of rows retrieved for projects: {len(projects_content['results'])}")
+
+            with st.spinner('Tasks'):
+                tasks_content = notionClass.query_database(0, st.session_state.only_4, st.session_state.db_id_tasks)
+                st.text(f"- Number of rows retrieved for tasks: {len(tasks_content['results'])}")
+
+        # Open AI API - Embed each row with OpenAI embeddings
+        st.subheader("Open API - embed each row with OpenAI embeddings")
+
+        with st.spinner('Areas'):
+            areas_vectors = []
+            for result in areas_content["results"]:
+                vector = create_area_vector_with_extracted_data(result, openAiClass)
+                areas_vectors.append(vector)
+            st.text(f"- Number of rows embedded for areas: {len(areas_vectors)}")
+
+        if not st.session_state.only_areas:
+            with st.spinner('Projects'):
+                projects_vectors = []
+                for result in projects_content["results"]:
+                    vector = create_project_vector_with_extracted_data(result, openAiClass)
+                    projects_vectors.append(vector)
+                st.text(f"- Number of rows embedded for projects: {len(projects_vectors)}")
+
+            with st.spinner('Tasks'):
+                tasks_vectors = []
+                for result in tasks_content["results"]:
+                    vector = create_task_vector_with_extracted_data(result, openAiClass)
+                    tasks_vectors.append(vector)
+                st.text(f"- Number of rows embedded for tasks: {len(tasks_vectors)}")
+
+        # Pinecone API - Store it in a Pinecone DB
+        st.subheader("Pinecone API - Store it in a Pinecone DB")
+
+        # Upsert AREAS vectors into Pinecone index
+        with st.spinner('Areas'):
+            try:
+                vectors_upserted = pineconeClass.upsert(areas_vectors, "areas")
+                st.text(f"- Number of rows upserted for areas: {(vectors_upserted)}")
+
+            except Exception as e:
+                st.error(f"Failed to upsert vectors for areas: {e}")
+
+        if not st.session_state.only_areas:
+            with st.spinner('Projects'):
+                try:
+                    vectors_upserted = pineconeClass.upsert(projects_vectors, "projects")
+                    st.text(f"- Number of rows upserted for projects: {(vectors_upserted)}")
+                except Exception as e:
+                    st.error(f"Failed to upsert vectors for projects: {e}")
+            
+        if not st.session_state.only_areas:
+            with st.spinner('Tasks'):
+                try:
+                    vectors_upserted = pineconeClass.upsert(tasks_vectors, "tasks")
+                    st.text(f"- Number of rows upserted for tasks: {(vectors_upserted)}")
+                except Exception as e:
+                    st.error(f"Failed to upsert vectors for tasks: {e}")
+
+        st.success("Data from Notion extracted, embedded with OpenAI, and uploaded to Pinecone successfully!")
+    except ValueError as e:
+        st.error(f"Error: {e}")
+    except Exception as e:
+        # Handle other exceptions, possibly API related
+        st.error(f"Error details: {e}")
 if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract relevant docs from Pinecone"):
 
 # - Analyze one Note Inbox
@@ -530,8 +533,6 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
     except Exception as e:
         # Handle other exceptions, possibly API related
         st.error(f"General exception - Button 2: {e}")
-
-
 if st.button("Button 3 - send prompt to OpenAI and visualize it on the screen"):
 
     st.subheader("send prompt to OpenAI and visualize it on the screen")
