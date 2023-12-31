@@ -334,20 +334,27 @@ if st.button(" Button 1.1 - Full Project "):
 
             #prepare the message
             #the prompt and examples (new task dataframe)
-            messages = prompt.task_extraction_from_note_inbox_new
+            messages = prompt.task_extraction_from_note_inbox_system
 
             # note, relevant docs and projects
             messages.append({
+                "role": "user",
+                "content":
+                    f"""
+All Projects for context: columns: ["Project Name", "Area Related", "Area Type", "Project ID", "Area ID", "Project Description"] {all_projects}
+            """})
+
+            messages.append(prompt.task_extraction_from_note_inbox_example)
+
+            messages.append({  
                 "role": "user",
                 "content": 
                     f"""
 Note Name: {note["Note Name"]}\n
 Note URL: {note["Note URL"]}\n
 Note Content: {note["Note Content"]}\n
-Relevant tasks: columns: ["Task Name", "Project Related", "Area Related", "Area Type", "Task ID", "Project ID", "Area ID", "Task Description"] {relevant_tasks}\n
-All Project: columns: ["Project Name", "Area Related", "Area Type", "Project ID", "Area ID", "Project Description"] {all_projects}
-"""
-                })
+Relevant tasks: columns: ["Task Name", "Project Related", "Area Related", "Area Type", "Task ID", "Project ID", "Area ID", "Task Description"] {relevant_tasks}
+"""})
             
             st.write(" messages: ")
             st.json(messages, expanded=False)
