@@ -101,7 +101,7 @@ def create_task_vector_with_extracted_data(json_obj, embeddingClass):
 def create_full_task_vector(tasks_dataframe, embeddingClass):
     """
         - id: Area - Project - Task
-        - metadata: "Task Name", "Project Related", "Area Related", "Area Type", "Task ID", "Project ID", "Area ID"
+        - metadata: "Task Name", "Project Related", "Area Related", "Area Type", "Task ID", "Project ID", "Area ID", “Task Description”
         - content: "Task Name", "Project Related", "Area Related", "Area Type", “Task Description”
 
         df = pd.DataFrame(final_data, columns=["Task Name", "Project Related", "Area Related", "Area Type", "Task ID", "Project ID", "Area ID", "Task Description"])
@@ -128,7 +128,8 @@ def create_full_task_vector(tasks_dataframe, embeddingClass):
                 "Area Type": task["Area Type"],
                 "Task ID": task["Task ID"],
                 "Project ID": task["Project ID"],
-                "Area ID": task["Area ID"]
+                "Area ID": task["Area ID"],
+                "Task Description": task["Task Description"]
             }
 
             content = {
