@@ -298,11 +298,23 @@ if st.button(" Button 1.1 - Full Project "):
                 )
             ]
 
-            #extract the relevant docs from Pinecone
+            #extract the relevant docs of the note from Pinecone
             relevant_docs = pineconeClass.query(note_inbox_vector[0]["values"], topK=20, namespace="fulltasks", include_metadata=True)  
-            st.write("relevant_docs: ")
-            st.json(relevant_docs, expanded=False)
-            #relevant_docs_df = visualize_retrieved_vectors(relevant_docs)
+
+            #create a dataframe with the relevant docs
+            data_to_format = []
+            for doc in relevant_docs["matches"]:
+                data_to_format.append([
+                    doc["metadata"]["Task Name"] if "Task Name" in doc["metadata"] else None,
+                    doc["metadata"]["Project Related"] if "Project Related" in doc["metadata"] else None,
+                    doc["metadata"]["Area Related"] if "Area Related" in doc["metadata"] else None,
+                    doc["metadata"]["Area Type"] if "Area Type" in doc["metadata"] else None,
+                    doc["metadata"]["Task ID"] if "Task ID" in doc["metadata"] else None,
+                    doc["metadata"]["Project ID"] if "Project ID" in doc["metadata"] else None,
+                    doc["metadata"]["Area ID"] if "Area ID" in doc["metadata"] else None,
+                    doc["metadata"]["Task Description"] if "Task Description" in doc["metadata"] else None
+                ])
+            relevant_docs_df = pd.DataFrame(data_to_format, columns=["Task Name", "Project Related", "Area Related", "Area Type", "Task ID", "Project ID", "Area ID", "Task Description"])
 
             #prepare the message
             #the prompt and examples (new task dataframe)
@@ -316,8 +328,8 @@ if st.button(" Button 1.1 - Full Project "):
 Note Name: {note["Note Name"]}\n
 Note URL: {note["Note URL"]}\n
 Note Content: {note["Note Content"]}\n
-Relevant tasks: {relevant_docs}\n
-Projects: {st.session_state.projects_dataframe.to_json()}
+Relevant tasks dataframe: {relevant_docs_df}\n
+Project dataframe: {st.session_state.projects_dataframe.to_json()}
 """
                 })
             
