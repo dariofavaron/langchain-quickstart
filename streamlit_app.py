@@ -334,7 +334,8 @@ if st.button(" Button 1.1 - Full Project "):
 
             #prepare the message
             #the prompt and examples (new task dataframe)
-            messages = prompt.task_extraction_from_note_inbox_system
+            messages = []
+            messages.append(prompt.task_extraction_from_note_inbox_system)
 
             # note, relevant docs and projects
             messages.append({
@@ -344,9 +345,10 @@ if st.button(" Button 1.1 - Full Project "):
 All Projects for context: columns: ["Project Name", "Area Related", "Area Type", "Project ID", "Area ID", "Project Description"] {all_projects}
             """})
 
-            messages.append(prompt.task_extraction_from_note_inbox_example)
+            messages.append(prompt.task_extraction_from_note_inbox_example_request)
+            messages.append(prompt.task_extraction_from_note_inbox_example_assistant)
 
-            messages.append({  
+            messages.append({
                 "role": "user",
                 "content": 
                     f"""
