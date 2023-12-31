@@ -50,8 +50,8 @@ Already existing Tasks: {"Name":{"0":"Create Yearly report","1":"Defina all poss
 
 | Name | Area | Project | Description | Status |
 | --- | --- | --- | --- | --- |
-| Create a list of idle activities | Personal Planning| Weekly Planning | Create a list of activities for idle times | Not started |
-| Schedule the activities for the next week | Personal Planning| Weekly Planning | Create a schedule of activities for idle times in the following week | Not started |
+| Create a list of idle activities | Personal Planning| Weekly Planning | Create a list of activities for idle times | Ai Generated |
+| Schedule the activities for the next week | Personal Planning| Weekly Planning | Create a schedule of activities for idle times in the following week | Ai Generated |
 
 ### Comments:
 
@@ -69,6 +69,51 @@ Already existing Tasks: {"Name":{"0":"Create Yearly report","1":"Defina all poss
             }
         ]
 
+        self.task_extraction_from_note_inbox_new = [
+            {"role": "system", "content": """
+Your role is to extract tasks from the provided notes. 
+
+There are few files attached that are the Database extraction of Notion. use them if needed to create context.
+Areas: These are parts of your life that require ongoing attention and maintenance but don't have a specific end date,
+Projects: These are defined as a series of tasks that have a goal or outcome.
+Tasks: single operations that require an action. connected to a project.
+Inbox Notes: all the new tasks, ideas, or information that will be categorized in the Task list.
+
+i will provide as input the note inbox object as Note inbox.
+
+. **Detailed Task Extraction:**
+    - For each item or action mentioned in the note, create an individual task.
+    - Ensure that the specificity and context of each item/action are preserved.
+. **Duplication Check:**
+    - Conduct a granular-level check for duplicates, considering each item in the note.
+    - Compare with existing tasks to identify any redundancies.
+. **Classification and Categorization:**
+    - Classify each extracted item as a task.
+    - Categorize each task under the most suitable area and project, based on existing lists.
+. **Comment Creation:**
+    - Provide detailed feedback for each task, explaining its categorization.
+    - Include suggestions for improvement and insights for task optimization.
+. **Output Format:**
+    - Present the refined tasks in a markdown table format.
+    - Each task should have its own row, with columns for the task's name, associated area and project, detailed description, and status.
+
+            """},
+
+            {"role": "user", "content": """
+Note Name: Da avere una lista di cose da fare nei tempi morti, ogni settimana.
+Note URL: None
+Note Content: Create a list of idle activities, Schedule the activities for the next week
+Relevant tasks: 
+Projects:
+"""},
+            {"role": "assistant", "content": """
+"task_name": "Create a list of idle activities",
+"project_id": "b3f5f5f0-5b9a-4b9e-9f4a-5f5f0b3f5f0b",
+"task_description": "Start from reading a book, then go for a walk, then do some meditation",
+"""
+            }
+        ]
+
         self.parse_extracted_task_to_notion = [
         {"role": "system", "content": """
 Your role is to parse the extracted tasks and format them to be aligned with the Notion Database.
@@ -83,8 +128,8 @@ ignore the rollups type
 
 | Name | Area | Project | Description | Status |
 | --- | --- | --- | --- | --- |
-| Create a list of idle activities | Personal Planning| Weekly Planning | Create a list of activities for idle times | Not started |
-| Schedule the activities for the next week | Personal Planning| Weekly Planning | Create a schedule of activities for idle times in the following week | Not started |
+| Create a list of idle activities | Personal Planning| Weekly Planning | Create a list of activities for idle times | Ai Generated |
+| Schedule the activities for the next week | Personal Planning| Weekly Planning | Create a schedule of activities for idle times in the following week | Ai Generated |
 
 ### Comments:
 

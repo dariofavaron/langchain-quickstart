@@ -4,9 +4,9 @@ import json
 import pandas as pd
 
 # import helper files to scrape Notion API
-from GeneralFunctions.vector_metadata_creation import create_area_vector_with_extracted_data, create_project_vector_with_extracted_data, create_task_vector_with_extracted_data, create_new_note_vector_with_extracted_data, create_full_task_vector
+from GeneralFunctions.vector_metadata_creation import create_area_vector_with_extracted_data, create_project_vector_with_extracted_data, create_task_vector_with_extracted_data, create_new_note_vector, create_full_task_vector
 from GeneralFunctions.dataframe_creation import visualize_notion_db_properties, visualize_notion_database_row_object, visualize_retrieved_vectors
-from GeneralFunctions.CreateTaskDataframe import create_task_table, create_task_row_properties
+from GeneralFunctions.CreateTaskDataframe import create_task_table, create_project_table, create_task_row_properties, create_note_table
 
 # import and define the input file md with the prompt ans import it as a json
 from prompt.prompt import Prompts
@@ -121,8 +121,12 @@ if 'projects_json' not in st.session_state:
     st.session_state.projects_json = {}
 if 'tasks_json' not in st.session_state:
     st.session_state.tasks_json = {}
+if 'new_notes_json' not in st.session_state:
+    st.session_state.new_notes_json = {}
 if 'tasks_dataframe' not in st.session_state:
     st.session_state.tasks_dataframe = {}
+if 'projects_dataframe' not in st.session_state:
+    st.session_state.projects_dataframe = {}
 
 
 st.session_state.only_areas = st.checkbox("Only Areas")
@@ -225,36 +229,132 @@ if st.button("Button 1 - Get Data from Notion, embed it and store it on Pinecone
         # Handle other exceptions, possibly API related
         st.error(f"Error details: {e}")
 
-if st.button("Button 1.1 - Get Data from Notion and save them in a dataframe. one line per Task"):
+if st.button("""
+            Button 1.1 - 
+            Get Data from Notion and save them in a dataframe. one line per Task, 
+            upsert in Pinecone, 
+            extract the notes and save them in a dataframe,
+            extract the projects and save them in a dataframe,
+            For each note of the dataframe,
+                embed it in OpenAI,
+                extract from Pinecone the most relevant docs
+                send to open AI function 
+                    the prompt and examples (new task dataframe)
+                    the note and the relevant docs
+                    the full list of projects with related areas and type, as a dataframe
+                extract the answer as a dataframe
+                load the dataframe to Notion as a new task
+            """):
     with st.spinner('retrieving notion'):
         try:
-            #areas
+            #Retrieve Databases of areas, projects, tasks, and notes
             st.session_state.areas_json = notionClass.query_database(0, st.session_state.only_4, st.session_state.db_id_areas)
-            #projects
             st.session_state.projects_json = notionClass.query_database(0, st.session_state.only_4, st.session_state.db_id_projects)
-            #tasks
             st.session_state.tasks_json = notionClass.query_database(0, st.session_state.only_4, st.session_state.db_id_tasks)
+            st.session_state.new_notes_json = notionClass.query_database(0, st.session_state.only_4, st.session_state.db_id_note_inbox)
 
-            #st.json(st.session_state.areas_json, expanded=False)
-            #st.json(st.session_state.projects_json, expanded=False)
-            #st.json(st.session_state.tasks_json, expanded=False)
+        #create Dataframes
 
+            #create a dataframe with all the tasks
+            #TASKS dataframe columns: "Task Name", "Project Related", "Area Related", "Area Type", "Task ID", "Project ID", "Area ID", "Task Description"
             st.session_state.tasks_dataframe = create_task_table(st,
                 st.session_state.areas_json,
                 st.session_state.projects_json,
                 st.session_state.tasks_json
             )
-            #dataframes column: "Task Name", "Project Related", "Area Related", "Area Type", "Task ID", "Project ID", "Area ID", "Task Description"
+                        
+            #create a dataframe with all the projects
+            #dataframes columns: "Project Name", "Area Related", "Area Type", "Project ID", "Area ID", "Project Description"
+            st.session_state.projects_dataframe = create_project_table(st,
+                st.session_state.areas_json,
+                st.session_state.projects_json
+            )
+
+            #create a dataframe with all the notes
+            #dataframes columns: "Note Name", "Note URL", "Note Content", "Note ID"
+            st.session_state.notes_dataframe = create_note_table(
+                st,
+                notionClass,
+                st.session_state.new_notes_json
+            )
 
             #embed all the tasks from the dataframe
             full_tasks_vectors = create_full_task_vector(st.session_state.tasks_dataframe, openAiClass)
             
-            try:
-                vectors_upserted = pineconeClass.upsert(full_tasks_vectors, "fulltasks")
-                st.text(f"- Number of rows upserted for full tasks: {(vectors_upserted)}")
-            except Exception as e:
-                st.error(f"Failed to upsert vectors for projects: {e}")
+            #upload the tasks to pinecone
+            vectors_upserted = pineconeClass.upsert(full_tasks_vectors, "fulltasks")
 
+
+            #extract a note from the note dataframe
+            note= st.session_state.notes_dataframe.iloc[0]
+
+            #create new note inbox vector and embed it
+            note_inbox_vector = [
+                create_new_note_vector(
+                    note["Note ID"],
+                    note["Note Name"],
+                    note["Note URL"],
+                    note["Note Content"],
+                    openAiClass
+                )
+            ]
+
+            #extract the relevant docs from Pinecone
+            relevant_docs = pineconeClass.query(note_inbox_vector[0]["values"], topK=20, namespace="fulltasks", include_metadata=True)  
+
+            #prepare the message
+            #the prompt and examples (new task dataframe)
+            messages = prompt.task_extraction_from_note_inbox_new
+
+            # note, relevant docs and projects
+            messages.append({
+                "role": "user",
+                "content": 
+                    f"""
+                    Note Name: {note["Note Name"]}\n
+                    Note URL: {note["Note URL"]}\n
+                    Note Content: {note["Note Content"]}\n
+                    Relevant tasks: {relevant_docs}\n
+                    Projects: {st.session_state.projects_dataframe.to_json()}
+                    """
+                })
+            
+            st.write(" messages: ")
+            st.json(messages, expanded=False)
+
+
+            #send to open AI
+            response = openAiClass.generate_text_completion(
+                model="gpt-3.5-turbo-1106",
+                messages=messages,
+                max_tokens=400,
+                temperature=0
+            )
+
+            st.write("response from openAi completition:")
+            st.json(response, expanded=False)
+
+            if st.button("Button 1.1.1 - accept and load the task"):
+
+                #extract the answer
+                task_name = response["choices"][0]["message"]["content"]["task_name"]
+                project_id = response["choices"][0]["message"]["content"]["project_id"]
+                task_description = response["choices"][0]["message"]["content"]["task_description"]
+
+                #load the dataframe to Notion as a new task
+                response = notionClass.create_page(
+                    st.session_state.db_id_tasks,
+                    create_task_row_properties(
+                        task_name = task_name,
+                        project_id = project_id,
+                        description = task_description,
+                        status = "Ai Generated"
+                    ),
+                    icon="https://www.notion.so/icons/checkmark_gray.svg"
+                )
+
+                st.write("response from notion: ")
+                st.json(response, expanded=False)
 
         except Exception as e:
             st.error (f"Error while extracting everything from Notion: {e}")
@@ -273,8 +373,6 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
         with st.spinner('retrieving inbox'):
             try:
 
-                #inbox_content = notionClass.query_database(1, st.session_state.only_4, st.session_state.db_id_note_inbox)
-
                 #ovewrite during development
                 inbox_content = notionClass.query_database(1, st.session_state.only_4, st.session_state.db_id_note_inbox)
 
@@ -286,7 +384,6 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
                 #st.write("inbox_note_to_review: ")
                 #st.json(inbox_note_to_review, expanded=False)
 
-                note_inbox_id = inbox_note_to_review["id"]
                 note_inbox_object = inbox_note_to_review["object"]
 
                 if len(inbox_note_to_review["properties"]["Name"]["title"]) == 0 :
@@ -305,7 +402,7 @@ if st.button("Button 2 - Get one element from Note Inbox, embed it, and extract 
                 #st.write("page_properties_url: ")
                 #st.text(page_properties_url)
                 
-                page_content = notionClass.get_page_content(st, note_inbox_id)
+                page_content = notionClass.get_page_content(st, inbox_content["results"][0]["id"])
                 #st.write("page_content: ")
                 #st.text(page_content)
                 
@@ -482,7 +579,7 @@ if st.button("upload a new task"):
                 "This is a test task uploaded from streamlit",
                 "a2476530-b182-4c9b-b9ca-356b0b7196d8",
                 "test test",
-                "Not started"
+                "Ai Generated"
             )
 
             response = notionClass.create_page(st.session_state.db_id_tasks, new_task_properties, icon="https://www.notion.so/icons/checkmark_gray.svg")

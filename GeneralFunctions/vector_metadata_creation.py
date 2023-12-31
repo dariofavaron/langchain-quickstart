@@ -154,22 +154,26 @@ def create_full_task_vector(tasks_dataframe, embeddingClass):
         raise Exception(f"Error in create_full_task_vector: {str(e)}")
 
 
-def create_new_note_vector_with_extracted_data(id, object, page_name, page_properties_url, page_content, embeddingClass):
+def create_new_note_vector(id, page_name, page_properties_url, page_content, embeddingClass):
     try:
         # Extracting data
-        id_data = (page_name +
+        id_data = (
+            page_name +
             " - " +
-            str(id))
+            id
+        )
 
         metadata = {
-            "object": object,
-            "id": id,
-            "Name": page_name
+            "Note Name": page_name if page_name else None,
+            "Note ID": id if id else None,
+            "Note URL": page_properties_url if page_properties_url else None,
+            "Note Content": page_content if page_content else None
         }
+
         content = {
-            "Name": page_name,
-            "URL": page_properties_url if page_properties_url else None,
-            "Content": page_content if page_content else None
+            "Note Name": page_name if page_name else None,
+            "Note URL": page_properties_url if page_properties_url else None,
+            "Note Content": page_content if page_content else None
         }
 
         # Creating vector
