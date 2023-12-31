@@ -324,12 +324,12 @@ if st.button(" Button 1.1 - Full Project "):
             all_projects = []
             for doc in st.session_state.projects_dataframe.iterrows():
                 all_projects.append([
-                    doc["Project Name"] if "Project Name" in doc["metadata"] else None,
-                    doc["Area Related"] if "Area Related" in doc["metadata"] else None,
-                    doc["Area Type"] if "Area Type" in doc["metadata"] else None,
-                    doc["Project ID"] if "Project ID" in doc["metadata"] else None,
-                    doc["Area ID"] if "Area ID" in doc["metadata"] else None,
-                    doc["Project Description"] if "Project Description" in doc["metadata"] else None
+                    doc["Project Name"] if "Project Name" in doc else None,
+                    doc["Area Related"] if "Area Related" in doc else None,
+                    doc["Area Type"] if "Area Type" in doc else None,
+                    doc["Project ID"] if "Project ID" in doc else None,
+                    doc["Area ID"] if "Area ID" in doc else None,
+                    doc["Project Description"] if "Project Description" in doc else None
                 ])
 
             #prepare the message
