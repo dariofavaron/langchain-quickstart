@@ -131,13 +131,13 @@ def create_note_table(st, notionClass, note_json, only_one_note):
     st.dataframe(df)
     return df
 
-def create_task_row_properties(task_name, project_id, description, status):
+def create_task_row_properties(task_name, related_project_id, description, status):
     """
     Create properties for a new task row.
 
     Args:
         task_name (str): Name of the task.
-        project_id (str): ID of the project related to the task.
+        related_project_id (str): ID of the project related to the task.
         description (str): Description of the task.
         status (str): Status of the task.
 
@@ -157,7 +157,7 @@ def create_task_row_properties(task_name, project_id, description, status):
         "Projects": {
             "relation": [
                 {
-                    "id": project_id
+                    "id": related_project_id
                 }
             ]
         },

@@ -361,7 +361,6 @@ Relevant tasks: columns: ["Task Name", "Project Related", "Area Related", "Area 
             st.write(" messages: ")
             st.json(messages, expanded=False)
 
-
             #send to open AI
             response = openAiClass.generate_text_completion(
                 model="gpt-3.5-turbo-1106",
@@ -373,19 +372,25 @@ Relevant tasks: columns: ["Task Name", "Project Related", "Area Related", "Area 
             st.write("response from openAi completition:")
             st.json(response, expanded=False)
 
-            if st.button("Button 1.1.1 - accept and load the task"):
+            content = response["choices"][0]["message"]["content"]
+            parsed_content = json.loads(content)
 
-                #extract the answer
-                task_name = response["choices"][0]["message"]["content"]["task_name"]
-                project_id = response["choices"][0]["message"]["content"]["project_id"]
-                task_description = response["choices"][0]["message"]["content"]["task_description"]
+            task_name = parsed_content["task_name"]
+            related_project_id = parsed_content["related_project_id"]
+            task_description = parsed_content["task_description"]
+            comment = parsed_content["comment"]
+
+            st.write("parsed content: ")
+            st.json(parsed_content, expanded=False)
+
+            if st.button("Button 1.1.1 - accept and load the task"):
 
                 #load the dataframe to Notion as a new task
                 response = notionClass.create_page(
                     st.session_state.db_id_tasks,
                     create_task_row_properties(
                         task_name = task_name,
-                        project_id = project_id,
+                        related_project_id = related_project_id,
                         description = task_description,
                         status = "Ai Generated"
                     ),
@@ -394,6 +399,7 @@ Relevant tasks: columns: ["Task Name", "Project Related", "Area Related", "Area 
 
                 st.write("response from notion: ")
                 st.json(response, expanded=False)
+                st.success("uploaded task to with notion")
 
         except Exception as e:
             st.error (f"Error while extracting everything from Notion: {e}")
