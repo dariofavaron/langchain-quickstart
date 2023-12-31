@@ -96,7 +96,7 @@ def create_project_table(st, area_json, project_json):
     st.dataframe(df)
     return df
 
-def create_note_table(st, notionClass, note_json):
+def create_note_table(st, notionClass, note_json, only_one_note):
     """
     Create a project table based on area, and the project JSON data.
 
@@ -123,6 +123,8 @@ def create_note_table(st, notionClass, note_json):
         
         # Append to the final data
         final_data.append([note_name, note_url, note_content, note_id])
+        if only_one_note:
+            break
 
     # Create DataFrame
     df = pd.DataFrame(final_data, columns=["Note Name", "Note URL", "Note Content", "Note ID"])

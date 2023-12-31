@@ -274,7 +274,8 @@ if st.button(" Button 1.1 - Full Project "):
             st.session_state.notes_dataframe = create_note_table(
                 st,
                 notionClass,
-                st.session_state.new_notes_json
+                st.session_state.new_notes_json,
+                only_one_note=True
             )
 
             #embed all the tasks from the dataframe
@@ -299,8 +300,9 @@ if st.button(" Button 1.1 - Full Project "):
 
             #extract the relevant docs from Pinecone
             relevant_docs = pineconeClass.query(note_inbox_vector[0]["values"], topK=20, namespace="fulltasks", include_metadata=True)  
-
-            relevant_docs_df = visualize_retrieved_vectors(relevant_docs)        
+            st.write("relevant_docs: ")
+            st.json(relevant_docs, expanded=False)
+            #relevant_docs_df = visualize_retrieved_vectors(relevant_docs)
 
             #prepare the message
             #the prompt and examples (new task dataframe)
@@ -314,7 +316,7 @@ if st.button(" Button 1.1 - Full Project "):
 Note Name: {note["Note Name"]}\n
 Note URL: {note["Note URL"]}\n
 Note Content: {note["Note Content"]}\n
-Relevant tasks: {relevant_docs_df}\n
+Relevant tasks: {relevant_docs}\n
 Projects: {st.session_state.projects_dataframe.to_json()}
 """
                 })
