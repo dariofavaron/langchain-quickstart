@@ -321,17 +321,29 @@ if st.button(" Button 1.1 - Full Project "):
 
             #create a dictonary with all the projects
             # dataframes columns: "Project Name", "Area Related", "Area Type", "Project ID", "Area ID", "Project Description"
-            # all_projects = []
-            # for doc in st.session_state.projects_dataframe.iterrows():
-            #     all_projects.append([
-            #         doc["Project Name"] if "Project Name" in doc else None,
-            #         doc["Area Related"] if "Area Related" in doc else None,
-            #         doc["Area Type"] if "Area Type" in doc else None,
-            #         doc["Project ID"] if "Project ID" in doc else None,
-            #         doc["Area ID"] if "Area ID" in doc else None,
-            #         doc["Project Description"] if "Project Description" in doc else None
-            #     ])
-            all_projects = st.session_state.projects_dataframe.to_dict(orient='records')
+            all_projects = []
+            for _,doc in st.session_state.projects_dataframe.iterrows():
+                all_projects.append([
+                    doc["Project Name"] if "Project Name" in doc else None,
+                    doc["Area Related"] if "Area Related" in doc else None,
+                    doc["Area Type"] if "Area Type" in doc else None,
+                    doc["Project ID"] if "Project ID" in doc else None,
+                    doc["Area ID"] if "Area ID" in doc else None,
+                    doc["Project Description"] if "Project Description" in doc else None
+                ])
+            #all_projects = st.session_state.projects_dataframe.to_dict(orient='records')
+
+            # all_projects = [
+            #     {
+            #         "Project Name": row["Project Name"] if "Project Name" in row else None,
+            #         "Area Related": row["Area Related"] if "Area Related" in row else None,
+            #         "Area Type": row["Area Type"] if "Area Type" in row else None,
+            #         "Project ID": row["Project ID"] if "Project ID" in row else None,
+            #         "Area ID": row["Area ID"] if "Area ID" in row else None,
+            #         "Project Description": row["Project Description"] if "Project Description" in row else None
+            #     } 
+            #     for index, row in st.session_state.projects_dataframe.iterrows()
+            # ]
 
             #prepare the message
             #the prompt and examples (new task dataframe)
