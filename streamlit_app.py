@@ -300,6 +300,8 @@ if st.button(" Button 1.1 - Full Project "):
             #extract the relevant docs from Pinecone
             relevant_docs = pineconeClass.query(note_inbox_vector[0]["values"], topK=20, namespace="fulltasks", include_metadata=True)  
 
+            relevant_docs_df = visualize_retrieved_vectors(relevant_docs)        
+
             #prepare the message
             #the prompt and examples (new task dataframe)
             messages = prompt.task_extraction_from_note_inbox_new
@@ -312,7 +314,7 @@ if st.button(" Button 1.1 - Full Project "):
 Note Name: {note["Note Name"]}\n
 Note URL: {note["Note URL"]}\n
 Note Content: {note["Note Content"]}\n
-Relevant tasks: {relevant_docs}\n
+Relevant tasks: {relevant_docs_df}\n
 Projects: {st.session_state.projects_dataframe.to_json()}
 """
                 })
