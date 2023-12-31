@@ -92,7 +92,7 @@ def create_project_table(st, area_json, project_json):
         final_data.append([project_name, area_name, area_type, project_id, area_id, project_description])
 
     # Create DataFrame
-    df = pd.DataFrame(final_data, columns=["Task Name", "Project Related", "Area Related", "Area Type", "Task ID", "Project ID", "Area ID", "Task Description"])
+    df = pd.DataFrame(final_data, columns=["Project Related", "Area Related", "Area Type", "Project ID", "Area ID", "Project Description"])
     st.dataframe(df)
     return df
 

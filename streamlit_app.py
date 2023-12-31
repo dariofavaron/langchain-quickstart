@@ -229,22 +229,21 @@ if st.button("Button 1 - Get Data from Notion, embed it and store it on Pinecone
         # Handle other exceptions, possibly API related
         st.error(f"Error details: {e}")
 
-if st.button("""
-            Button 1.1 - 
-            Get Data from Notion and save them in a dataframe. one line per Task, 
-            upsert in Pinecone, 
-            extract the notes and save them in a dataframe,
-            extract the projects and save them in a dataframe,
-            For each note of the dataframe,
-                embed it in OpenAI,
-                extract from Pinecone the most relevant docs
-                send to open AI function 
-                    the prompt and examples (new task dataframe)
-                    the note and the relevant docs
-                    the full list of projects with related areas and type, as a dataframe
-                extract the answer as a dataframe
-                load the dataframe to Notion as a new task
-            """):
+if st.button(" Button 1.1 - Full Project "):
+            # Get Data from Notion and save them in a dataframe. one line per Task, 
+            # upsert in Pinecone, 
+            # extract the notes and save them in a dataframe,
+            # extract the projects and save them in a dataframe,
+            # For each note of the dataframe,
+            #     embed it in OpenAI,
+            #     extract from Pinecone the most relevant docs
+            #     send to open AI function 
+            #         the prompt and examples (new task dataframe)
+            #         the note and the relevant docs
+            #         the full list of projects with related areas and type, as a dataframe
+            #     extract the answer as a dataframe
+            #     load the dataframe to Notion as a new task
+
     with st.spinner('retrieving notion'):
         try:
             #Retrieve Databases of areas, projects, tasks, and notes
