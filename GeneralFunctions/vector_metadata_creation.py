@@ -110,7 +110,7 @@ def create_full_task_vector(tasks_dataframe, embeddingClass):
     try:
 
         vectors = []
-        for task in tasks_dataframe:
+        for _,task in tasks_dataframe.iterrows():
 
             # Extracting data
             id_data = (
@@ -150,7 +150,7 @@ def create_full_task_vector(tasks_dataframe, embeddingClass):
         
         return vectors
     except Exception as e:
-        raise Exception(f"Error in create_task_vector_with_extracted_data: {str(e)}")
+        raise Exception(f"Error in create_full_task_vector: {str(e)}")
 
 
 def create_new_note_vector_with_extracted_data(id, object, page_name, page_properties_url, page_content, embeddingClass):
