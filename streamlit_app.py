@@ -283,7 +283,6 @@ if st.button(" Button 1.1 - Full Project "):
             #upload the tasks to pinecone
             vectors_upserted = pineconeClass.upsert(full_tasks_vectors, "fulltasks")
 
-
             #extract a note from the note dataframe
             note= st.session_state.notes_dataframe.iloc[0]
 
@@ -310,12 +309,12 @@ if st.button(" Button 1.1 - Full Project "):
                 "role": "user",
                 "content": 
                     f"""
-                    Note Name: {note["Note Name"]}\n
-                    Note URL: {note["Note URL"]}\n
-                    Note Content: {note["Note Content"]}\n
-                    Relevant tasks: {relevant_docs}\n
-                    Projects: {st.session_state.projects_dataframe.to_json()}
-                    """
+Note Name: {note["Note Name"]}\n
+Note URL: {note["Note URL"]}\n
+Note Content: {note["Note Content"]}\n
+Relevant tasks: {relevant_docs}\n
+Projects: {st.session_state.projects_dataframe.to_json()}
+"""
                 })
             
             st.write(" messages: ")

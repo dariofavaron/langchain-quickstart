@@ -96,8 +96,8 @@ class NotionAPI:
                 headers=self.headers,
                 timeout=10
             )
-            st.write("get_page_content request response: ")
-            st.json(response.json(), expanded=False)
+            #st.write("get_page_content request response: ")
+            #st.json(response.json(), expanded=False)
 
             # Check if the request was successful
             if response.status_code != 200:
@@ -119,8 +119,8 @@ class NotionAPI:
                 else:
                     # Skip the block if it doesn't contain the expected keys
                     continue
-            st.write("page_content: ")
-            st.write(page_content)
+            #st.write("page_content: ")
+            #st.write(page_content)
             # return the page content
             return page_content
         
