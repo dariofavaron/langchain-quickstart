@@ -129,6 +129,8 @@ if 'projects_dataframe' not in st.session_state:
     st.session_state.projects_dataframe = {}
 if 'new_task_draft' not in st.session_state:
     st.session_state.new_task_draft = {}
+if 'note_in_analysis' not in st.session_state:
+    st.session_state.note_in_analysis = {}
 
 
 st.session_state.only_areas = st.checkbox("Only Areas")
@@ -196,15 +198,15 @@ if st.button(" Create a new task draft from a note in the inbox "):
             vectors_upserted = pineconeClass.upsert(full_tasks_vectors, "fulltasks")
 
             #extract a note from the note dataframe
-            note= st.session_state.notes_dataframe.iloc[0]
+            st.session_state.note_in_analysis= st.session_state.notes_dataframe.iloc[0]
 
             #create new note inbox vector and embed it
             note_inbox_vector = [
                 create_new_note_vector(
-                    note["Note ID"],
-                    note["Note Name"],
-                    note["Note URL"],
-                    note["Note Content"],
+                    st.session_state.note_in_analysis["Note ID"],
+                    st.session_state.note_in_analysis["Note Name"],
+                    st.session_state.note_in_analysis["Note URL"],
+                    st.session_state.note_in_analysis["Note Content"],
                     openAiClass
                 )
             ]
@@ -263,9 +265,9 @@ All Projects for context: columns: ["Project Name", "Area Related", "Area Type",
                 "role": "user",
                 "content": 
                     f"""
-Note Name: {note["Note Name"]}\n
-Note URL: {note["Note URL"]}\n
-Note Content: {note["Note Content"]}\n
+Note Name: {st.session_state.note_in_analysis["Note Name"]}\n
+Note URL: {st.session_state.note_in_analysis["Note URL"]}\n
+Note Content: {st.session_state.note_in_analysis["Note Content"]}\n
 Relevant tasks: columns: ["Task Name", "Project Related", "Area Related", "Area Type", "Task ID", "Project ID", "Area ID", "Task Description"] {relevant_tasks}
 """})
 
@@ -292,9 +294,13 @@ try:
     draftColumn1, draftColumn2 = st.columns(2)
 
     draftColumn1.subheader("Note Inbox: ")
+    if st.session_state.note_in_analysis:
+        draftColumn1.text("NOTE NAME: " + st.session_state.note_in_analysis["Note Name"])
+        draftColumn1.text("NOTE URL: " + st.session_state.note_in_analysis["Note URL"])
+        draftColumn1.text("NOTE CONTENT: " + st.session_state.note_in_analysis["Note Content"])
 
     draftColumn2.subheader("TASK DRAFT: ")
-    if st.session_state.note_inbox_extracted:
+    if st.session_state.new_task_draft:
         
         draftColumn2.json(st.session_state.new_task_draft, expanded=False)
 
