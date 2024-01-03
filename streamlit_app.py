@@ -289,7 +289,11 @@ Relevant tasks: columns: ["Task Name", "Project Related", "Area Related", "Area 
             st.error (f"Error while extracting everything from Notion: {e}")
 
 st.subheader("TASK DRAFT: ")
-st.json(st.session_state.new_task_draft, expanded=True)
+st.json(st.session_state.new_task_draft, expanded=False)
+
+#print on the screen all different objects of the draft
+st.text("TASK NAME: " + st.session_state.new_task_draft["task_name"])
+
 
 if st.button("Accept and load the task to notion"):
     with st.spinner('Uploading a new task'):
