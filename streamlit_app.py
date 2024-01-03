@@ -292,7 +292,25 @@ st.subheader("TASK DRAFT: ")
 st.json(st.session_state.new_task_draft, expanded=False)
 
 #print on the screen all different objects of the draft
+# "task_name": "Create a list of idle activities",
+# "related_area_name": "Personal Planning",
+# "related_project_name": "Weekly Planning",
+# "related_project_id": "d1cadfcb-5d92-4e35-93af-b8dd22e4baba",
+# "task_description": "Start from reading a book, then go for a walk, then do some meditation",
+# "comment": "duplication check results for task: No duplicate task found.",
+# "project_selection_results": "No new project needed, the existing project 'Weekly Planning' in Area 'Personal Planning' is appropriate.",
+# "Suggestions": "Include a mix of activities that cater to different aspects like physical health, mental well-being, and hobbies.",
+# "Insights": "Ensure that some activities are purely for relaxation and don't require much mental or physical effort."
+
 st.text("TASK NAME: " + st.session_state.new_task_draft["task_name"])
+st.text("RELATED AREA NAME: " + st.session_state.new_task_draft["related_area_name"])
+st.text("RELATED PROJECT NAME: " + st.session_state.new_task_draft["related_project_name"])
+st.text("RELATED PROJECT ID: " + st.session_state.new_task_draft["related_project_id"])
+st.text("TASK DESCRIPTION: " + st.session_state.new_task_draft["task_description"])
+st.text("COMMENT: " + st.session_state.new_task_draft["comment"])
+st.text("PROJECT SELECTION RESULTS: " + st.session_state.new_task_draft["project_selection_results"])
+st.text("SUGGESTIONS: " + st.session_state.new_task_draft["Suggestions"])
+st.text("INSIGHTS: " + st.session_state.new_task_draft["Insights"])
 
 
 if st.button("Accept and load the task to notion"):

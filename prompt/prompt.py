@@ -107,12 +107,14 @@ Relevant tasks: columns: ["Task Name", "Project Related", "Area Related", "Area 
 """}
         self.task_extraction_from_note_inbox_example_assistant = {"role": "assistant", "content": """
 {"task_name": "Create a list of idle activities",
+"related_area_name": "Personal Planning",
+"related_project_name": "Weekly Planning",
 "related_project_id": "d1cadfcb-5d92-4e35-93af-b8dd22e4baba",
 "task_description": "Start from reading a book, then go for a walk, then do some meditation",
 "comment": "duplication check results for task: No duplicate task found.",
-"project_selection_results": "No new project needed, the existing project 'Weekly Planning' is appropriate. Area 'Personal Planning'.",
-"Suggestions": "Consider researching the best insurance options and comparing current coverage with market standards.",
-"Insights": "This task is critical for ensuring adequate insurance coverage and may lead to cost savings or improved protection."
+"project_selection_results": "No new project needed, the existing project 'Weekly Planning' in Area 'Personal Planning' is appropriate.",
+"Suggestions": "Include a mix of activities that cater to different aspects like physical health, mental well-being, and hobbies.",
+"Insights": "Ensure that some activities are purely for relaxation and don't require much mental or physical effort."
 }"""}
 
 
