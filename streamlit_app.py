@@ -303,9 +303,9 @@ try:
     note_url = safe_str(st.session_state.note_in_analysis.get("Note URL"))
     note_content = safe_str(st.session_state.note_in_analysis.get("Note Content"))
 
-    draftColumn1.text(f"NOTE NAME: {note_name}")
-    draftColumn1.text(f"NOTE URL: {note_url}")
-    draftColumn1.text(f"NOTE CONTENT: {note_content}")
+    draftColumn1.markdown(f"NOTE NAME: {note_name}")
+    draftColumn1.markdown(f"NOTE URL: {note_url}")
+    draftColumn1.markdown(f"NOTE CONTENT: {note_content}")
     draftColumn2.subheader("TASK DRAFT: ")
     if len(st.session_state.new_task_draft) != 0:
 
@@ -315,9 +315,9 @@ try:
         def safe_text(column, key, label):
             value = st.session_state.new_task_draft.get(key)
             if value is not None:
-                column.text(f"{label}: {value}")
+                column.markdown(f"{label}: {value}")
             else:
-                column.text(f"{label}: N/A")
+                column.markdown(f"{label}: N/A")
 
         safe_text(draftColumn2, "task_name", "TASK NAME")
         safe_text(draftColumn2, "related_project_name", "RELATED PROJECT NAME")
