@@ -293,12 +293,19 @@ Relevant tasks: columns: ["Task Name", "Project Related", "Area Related", "Area 
 try:
     draftColumn1, draftColumn2 = st.columns(2)
 
+    # Define a function to safely convert values to strings
+    def safe_str(value):
+        return str(value) if value is not None else "N/A"
+    
     draftColumn1.subheader("Note Inbox: ")
-    if len(st.session_state.note_in_analysis) != 0:
-        draftColumn1.text(f"""NOTE NAME: {st.session_state.note_in_analysis.get("Note Name", "N/A")}""")
-        draftColumn1.text(f"""NOTE URL: {st.session_state.note_in_analysis.get("Note URL", "N/A")}""")
-        draftColumn1.text(f"""NOTE CONTENT: {st.session_state.note_in_analysis.get("Note Content", "N/A")}""")
+    # Safely get and display values for Note Inbox
+    note_name = safe_str(st.session_state.note_in_analysis.get("Note Name"))
+    note_url = safe_str(st.session_state.note_in_analysis.get("Note URL"))
+    note_content = safe_str(st.session_state.note_in_analysis.get("Note Content"))
 
+    draftColumn1.text(f"NOTE NAME: {note_name}")
+    draftColumn1.text(f"NOTE URL: {note_url}")
+    draftColumn1.text(f"NOTE CONTENT: {note_content}")
     draftColumn2.subheader("TASK DRAFT: ")
     if len(st.session_state.new_task_draft) != 0:
 
