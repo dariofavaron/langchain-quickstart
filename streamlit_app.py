@@ -295,28 +295,36 @@ try:
 
     draftColumn1.subheader("Note Inbox: ")
     if len(st.session_state.note_in_analysis) != 0:
-        draftColumn1.text(f"""NOTE NAME: {st.session_state.note_in_analysis["Note Name"]}""")
-        draftColumn1.text(f"""NOTE URL: {st.session_state.note_in_analysis["Note URL"]}""")
-        draftColumn1.text(f"""NOTE CONTENT: {st.session_state.note_in_analysis["Note Content"]}""")
+        draftColumn1.text(f"""NOTE NAME: {st.session_state.note_in_analysis.get("Note Name", "N/A")}""")
+        draftColumn1.text(f"""NOTE URL: {st.session_state.note_in_analysis.get("Note URL", "N/A")}""")
+        draftColumn1.text(f"""NOTE CONTENT: {st.session_state.note_in_analysis.get("Note Content", "N/A")}""")
 
     draftColumn2.subheader("TASK DRAFT: ")
-    if len(st.session_state.new_task_draft)!=0:
-        
+    if len(st.session_state.new_task_draft) != 0:
+
         draftColumn2.json(st.session_state.new_task_draft, expanded=False)
 
-        #print on the screen all different objects of the draft
-        draftColumn2.text("TASK NAME: " + st.session_state.new_task_draft["task_name"])
-        draftColumn2.text("RELATED PROJECT NAME: " + st.session_state.new_task_draft["related_project_name"])
-        draftColumn2.text("RELATED PROJECT ID: " + st.session_state.new_task_draft["related_project_id"])
-        draftColumn2.text("RELATED AREA NAME: " + st.session_state.new_task_draft["related_area_name"])
-        draftColumn2.text("TASK DESCRIPTION: " + st.session_state.new_task_draft["task_description"])
-        draftColumn2.text("COMMENT: " + st.session_state.new_task_draft["comment"])
-        draftColumn2.text("PROJECT SELECTION RESULTS: " + st.session_state.new_task_draft["project_selection_results"])
-        draftColumn2.text("SUGGESTIONS: " + st.session_state.new_task_draft["Suggestions"])
-        draftColumn2.text("INSIGHTS: " + st.session_state.new_task_draft["Insights"])
+        # Use a helper function to safely get and display values
+        def safe_text(column, key, label):
+            value = st.session_state.new_task_draft.get(key)
+            if value is not None:
+                column.text(f"{label}: {value}")
+            else:
+                column.text(f"{label}: N/A")
+
+        safe_text(draftColumn2, "task_name", "TASK NAME")
+        safe_text(draftColumn2, "related_project_name", "RELATED PROJECT NAME")
+        safe_text(draftColumn2, "related_project_id", "RELATED PROJECT ID")
+        safe_text(draftColumn2, "related_area_name", "RELATED AREA NAME")
+        safe_text(draftColumn2, "task_description", "TASK DESCRIPTION")
+        safe_text(draftColumn2, "comment", "COMMENT")
+        safe_text(draftColumn2, "project_selection_results", "PROJECT SELECTION RESULTS")
+        safe_text(draftColumn2, "Suggestions", "SUGGESTIONS")
+        safe_text(draftColumn2, "Insights", "INSIGHTS")
 
 except Exception as e:
-    st.error (f"Error printing the draft: {e}")
+    st.error(f"Error printing the draft: {e}")
+
 
 
 if st.button("Accept and load the task to notion"):
