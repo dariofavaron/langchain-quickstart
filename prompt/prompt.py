@@ -90,9 +90,15 @@ When you receive the input - consisting of the note name, URL, content, relevant
 5. **Output Format:**
     - Present the organized tasks in a structured json following this example:
         {"task_name": "",
-        "related_project_id": "",
-        "task_description": "",
-        "comment": "duplication check results for task, project selection results, suggestions, and insights"} 
+"related_project_name": "",
+"related_project_id": "",
+"related_area_name": "",
+"task_description": "",
+"comment": "",
+"project_selection_results": "",
+"Suggestions": "",
+"Insights": ""
+} 
     - Each task should be clearly listed with its name, associated project id, a detailed description, and the comment.
 
 Your goal is to transform the raw input into a well-organized and easily navigable set of tasks, aiding in effective task management and planning.
@@ -107,9 +113,9 @@ Relevant tasks: columns: ["Task Name", "Project Related", "Area Related", "Area 
 """}
         self.task_extraction_from_note_inbox_example_assistant = {"role": "assistant", "content": """
 {"task_name": "Create a list of idle activities",
-"related_area_name": "Personal Planning",
 "related_project_name": "Weekly Planning",
 "related_project_id": "d1cadfcb-5d92-4e35-93af-b8dd22e4baba",
+"related_area_name": "Personal Planning",
 "task_description": "Start from reading a book, then go for a walk, then do some meditation",
 "comment": "duplication check results for task: No duplicate task found.",
 "project_selection_results": "No new project needed, the existing project 'Weekly Planning' in Area 'Personal Planning' is appropriate.",

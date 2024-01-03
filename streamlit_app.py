@@ -303,9 +303,9 @@ st.json(st.session_state.new_task_draft, expanded=False)
 # "Insights": "Ensure that some activities are purely for relaxation and don't require much mental or physical effort."
 
 st.text("TASK NAME: " + st.session_state.new_task_draft["task_name"])
-st.text("RELATED AREA NAME: " + st.session_state.new_task_draft["related_area_name"])
 st.text("RELATED PROJECT NAME: " + st.session_state.new_task_draft["related_project_name"])
 st.text("RELATED PROJECT ID: " + st.session_state.new_task_draft["related_project_id"])
+st.text("RELATED AREA NAME: " + st.session_state.new_task_draft["related_area_name"])
 st.text("TASK DESCRIPTION: " + st.session_state.new_task_draft["task_description"])
 st.text("COMMENT: " + st.session_state.new_task_draft["comment"])
 st.text("PROJECT SELECTION RESULTS: " + st.session_state.new_task_draft["project_selection_results"])
