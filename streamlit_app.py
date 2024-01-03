@@ -227,8 +227,8 @@ if st.button(" Create a new task draft from a note in the inbox "):
                 ])
             
             relevant_tasks_df = pd.DataFrame(relevant_tasks, columns=["Task Name", "Project Related", "Area Related", "Area Type", "Task ID", "Project ID", "Area ID", "Task Description"])
-            st.write("relevant docs dataframe: ")
-            st.dataframe(relevant_tasks_df)
+            #st.write("relevant docs dataframe: ")
+            #st.dataframe(relevant_tasks_df)
 
             #create a dictonary with all the projects
             # dataframes columns: "Project Name", "Area Related", "Area Type", "Project ID", "Area ID", "Project Description"
