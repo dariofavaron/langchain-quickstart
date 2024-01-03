@@ -294,13 +294,13 @@ try:
     draftColumn1, draftColumn2 = st.columns(2)
 
     draftColumn1.subheader("Note Inbox: ")
-    if len(st.session_state.note_in_analysis) == 0:
+    if len(st.session_state.note_in_analysis) != 0:
         draftColumn1.text("NOTE NAME: " + st.session_state.note_in_analysis["Note Name"])
         draftColumn1.text("NOTE URL: " + st.session_state.note_in_analysis["Note URL"])
         draftColumn1.text("NOTE CONTENT: " + st.session_state.note_in_analysis["Note Content"])
 
     draftColumn2.subheader("TASK DRAFT: ")
-    if len(st.session_state.new_task_draft)==0:
+    if len(st.session_state.new_task_draft)!=0:
         
         draftColumn2.json(st.session_state.new_task_draft, expanded=False)
 
