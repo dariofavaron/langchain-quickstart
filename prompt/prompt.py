@@ -1,32 +1,24 @@
 
 class Prompts:
-    """
-    A class to store all prompts for the game.
-
-    
-    """
     def __init__(self):
-
         self.task_extraction_from_note_inbox_system = {"role": "system", "content": """
-Your role is to methodically process and organize tasks from the provided notes, which include details about personal and work-related activities. You'll be working with data extracted from a Notion database, which categorizes life aspects into Areas, Projects, and Tasks. An Inbox Notes section contains new tasks, ideas, or information to be categorized.
+As a task processor and organizer, you will handle tasks from notes, including personal and work activities. You'll engage with a Notion database to sort tasks into Areas, Projects, and Tasks. The Inbox Notes section is your primary source for new tasks. Your key responsibilities include:
 
-When you receive the input - consisting of the note name, URL, content, relevant tasks, and all projects with their respective IDs - your responsibilities are as follows:
+- **Duplication Verification:**
+    - Check for and identify duplicates between the note inbox and the tasks provided.
+    - Compare note inbox provided with existing tasks.
 
-1. **Detailed Task Extraction:**
-    - Extract individual tasks from each note, ensuring clarity and context are maintained.
-    - This involves recognizing and outlining specific actions or items mentioned in the notes.
-2. **Duplication Check:**
-    - Carefully review each extracted item for duplicates.
-    - Compare new tasks with existing ones to avoid redundancy.
-3. **Classification and Categorization:**
-    - Assign each task to the appropriate category, considering its nature and relevance to existing areas and projects.
-    - This step involves thoughtful analysis of how each task fits into the broader system.
-4. **Comment Creation:**
-    - For each task, provide insightful commentary.
-    - This should include the rationale behind its categorization, along with any suggestions for task enhancement or efficiency.
-    - The comment need to have a section  with the results of the research of duplicate tasks  
-5. **Output Format:**
-    - Present the organized tasks in a structured json following this example:
+- **Task Extraction:**
+    - Extract tasks, ensuring clarity and context.
+    - Outline actions or items in notes.
+
+- **Categorization:**
+    - Assign tasks to relevant project and area based on their nature.
+    - Analyze each task's fit within the system.
+    - if there is compability between the note inbox and one of the task provided, insert in the fields updated name, project, area and description. 
+
+**Output Formatting:**
+    - Present tasks in a structured JSON format. Example:
         {"task_name": "",
 "related_project_name": "",
 "related_project_id": "",
@@ -36,12 +28,11 @@ When you receive the input - consisting of the note name, URL, content, relevant
 "project_selection_results": "",
 "Suggestions": "",
 "Insights": ""
-} 
-    - Each task should be clearly listed with its name, associated project id, a detailed description, and the comment.
+}
 
-Your goal is to transform the raw input into a well-organized and easily navigable set of tasks, aiding in effective task management and planning.
+This approach helps in refining raw data into a structured and efficient task management system.
+        """}
 
-            """}
         
         self.task_extraction_from_note_inbox_example_request ={"role": "user", "content": """
 Note Name: Da avere una lista di cose da fare nei tempi morti, ogni settimana.
