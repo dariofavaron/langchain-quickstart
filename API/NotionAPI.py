@@ -172,3 +172,49 @@ class NotionAPI:
 
         except Exception as e:
             raise Exception(f"Error - create_page: {e}")
+        
+
+
+    def update_page(self, page_id, properties, children=None, icon=None, cover=None):
+        """
+        Updates an existing page in a Notion database.
+
+        Args:
+            page_id (str): The ID of the page to update.
+            properties (dict): The properties of the page.
+            children (list, optional): A list of children blocks for page content. Defaults to None.
+            icon (dict, optional): Icon of the page. Defaults to None.
+            cover (dict, optional): Cover of the page. Defaults to None.
+
+        Returns:
+            dict: The response from the Notion API.
+        """
+
+        # Construct the request payload
+        data = {
+            "properties": properties
+        }
+
+        if children:
+            data["children"] = children
+        if icon:
+            data["icon"] = icon
+        if cover:
+            data["cover"] = cover
+
+        try:
+            response = requests.patch(
+                f"https://api.notion.com/v1/pages/{page_id}",
+                headers=self.headers,
+                json=data,
+                timeout=10
+            )
+
+            # Check if the request was successful
+            if response.status_code != 200:
+                raise Exception(f"API request failed : {response}")
+
+            return response.json()
+
+        except Exception as e:
+            raise Exception(f"Error - update_page: {e}")

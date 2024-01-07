@@ -353,8 +353,26 @@ if st.button("Accept and load the task to notion"):
                 icon="https://www.notion.so/icons/checkmark_gray.svg"
             )
 
-            st.write("response from notion: ")
+            st.write("response from notion create_page: ")
             st.json(response, expanded=False)
+
+            #update the note inbox
+            response = notionClass.update_page(
+                st.session_state.note_in_analysis["Note ID"],
+                {
+                    "properties": {
+                        "Task Status": {
+                            "select": {
+                                "name": "Imported"
+                            }
+                        }
+                    }
+                }
+            )
+            st.write("response from notion update_page: ")
+            st.json(response, expanded=False)
+
+
             st.success("uploaded task to with notion")
         except Exception as e:
             st.error (f"Error while loading new task to Notion: {e}")
