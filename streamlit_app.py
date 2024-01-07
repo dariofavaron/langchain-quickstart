@@ -164,7 +164,6 @@ if st.button(" Create a new task draft from a note in the inbox "):
             st.session_state.projects_json = notionClass.query_database(0, st.session_state.only_4, st.session_state.db_id_projects)
             st.session_state.tasks_json = notionClass.query_database(0, st.session_state.only_4, st.session_state.db_id_tasks)
             st.session_state.new_notes_json = notionClass.query_database(0, st.session_state.only_4, st.session_state.db_id_note_inbox)
-            st.write("- Notion data retrieved successfully")
 
             #create Dataframes
 
@@ -191,14 +190,14 @@ if st.button(" Create a new task draft from a note in the inbox "):
                 st.session_state.new_notes_json,
                 only_one_note=True
             )
-            st.write("- Notion dataframes created successfully")
+            st.write("- Notion data retrieved and dataframes created successfully")
 
             #embed all the tasks from the dataframe
             full_tasks_vectors = create_full_task_vector(st.session_state.tasks_dataframe, openAiClass)
             
             #upload the tasks to pinecone
             vectors_upserted = pineconeClass.upsert(full_tasks_vectors, "fulltasks")
-            st.write(f"- Number of rows upserted: {(vectors_upserted)}")
+            st.write(f"- Number of tasks upserted: {(vectors_upserted)}")
 
             #extract a note from the note dataframe
             st.session_state.note_in_analysis= st.session_state.notes_dataframe.iloc[0]

@@ -119,6 +119,8 @@ class NotionAPI:
                 else:
                     # Skip the block if it doesn't contain the expected keys
                     continue
+            if page_content == "":
+                page_content = None
             #st.write("page_content: ")
             #st.write(page_content)
             # return the page content
