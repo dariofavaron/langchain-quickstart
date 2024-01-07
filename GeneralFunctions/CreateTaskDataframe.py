@@ -28,23 +28,39 @@ def create_task_table(st, area_json, project_json, task_json):
 
         # Matching task IDs with corresponding project and area IDs
         for task_id, task_name in task_info.items():
-            # Find project related to the task
-            project_id = next((relation["properties"]["Projects"]["relation"][0]["id"] for relation in task_json["results"]
-                            if relation["id"] == task_id), None)
-            task_description = next((relation["properties"]["Description"]["rich_text"][0]["text"]["content"] for relation in task_json["results"]
-                            if relation["id"] == task_id and relation["properties"]["Description"]["rich_text"]), None)
-            project_name = project_info.get(project_id, "Unknown")
+            try:
+                # Find project related to the task
+                project_id = next((relation["properties"]["Projects"]["relation"][0]["id"] for relation in task_json["results"]
+                                if relation["id"] == task_id), None)
+                if project_id is None:
+                    print(f"No project ID found for task ID {task_id}")
+                
+                task_description = next((relation["properties"]["Description"]["rich_text"][0]["text"]["content"] for relation in task_json["results"]
+                                if relation["id"] == task_id and relation["properties"]["Description"]["rich_text"]), None)
+                if task_description is None:
+                    print(f"No task description found for task ID {task_id}")
+                
+                project_name = project_info.get(project_id, "Unknown")
 
-            # Find area related to the project
-            area_id = next((relation["properties"]["Areas"]["relation"][0]["id"] for relation in project_json["results"]
-                            if relation["id"] == project_id), None)
-            area_name = area_info.get(area_id, "Unknown")
+                # Find area related to the project
+                area_id = next((relation["properties"]["Areas"]["relation"][0]["id"] for relation in project_json["results"]
+                                if relation["id"] == project_id), None)
+                if area_id is None:
+                    print(f"No area ID found for project ID {project_id}")
+                
+                area_name = area_info.get(area_id, "Unknown")
 
-            area_type = next((relation["properties"]["Type"]["select"]["name"] for relation in area_json["results"]
-                            if relation["id"] == area_id), None)
+                area_type = next((relation["properties"]["Type"]["select"]["name"] for relation in area_json["results"]
+                                if relation["id"] == area_id), None)
+                if area_type is None:
+                    print(f"No area type found for area ID {area_id}")
 
-            # Append to the final data
-            final_data.append([task_name, project_name, area_name, area_type, task_id, project_id, area_id, task_description])
+                # Append to the final data
+                final_data.append([task_name, project_name, area_name, area_type, task_id, project_id, area_id, task_description])
+            
+            except IndexError as e:
+                print(f"IndexError occurred for task ID {task_id}: {e}")
+
 
         st.write("2")
         
