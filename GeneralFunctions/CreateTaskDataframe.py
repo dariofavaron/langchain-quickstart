@@ -13,40 +13,45 @@ def create_task_table(st, area_json, project_json, task_json):
     Returns:
         pd.DataFrame: DataFrame containing the task table.
     """
-    # Extracting information
-    area_info = {item["id"]: item["properties"]["Name"]["title"][0]["plain_text"]
-                    for item in area_json["results"]}
-    project_info = {item["id"]: item["properties"]["Name"]["title"][0]["plain_text"]
-                    for item in project_json["results"]}
-    task_info = {item["id"]: item["properties"]["Name"]["title"][0]["plain_text"]
-                    for item in task_json["results"]}
+    try:
+        # Extracting information
+        area_info = {item["id"]: item["properties"]["Name"]["title"][0]["plain_text"]
+                        for item in area_json["results"]}
+        project_info = {item["id"]: item["properties"]["Name"]["title"][0]["plain_text"]
+                        for item in project_json["results"]}
+        task_info = {item["id"]: item["properties"]["Name"]["title"][0]["plain_text"]
+                        for item in task_json["results"]}
 
-    # Create a list to hold our final data
-    final_data = []
+        # Create a list to hold our final data
+        final_data = []
 
-    # Matching task IDs with corresponding project and area IDs
-    for task_id, task_name in task_info.items():
-        # Find project related to the task
-        project_id = next((relation["properties"]["Projects"]["relation"][0]["id"] for relation in task_json["results"]
-                        if relation["id"] == task_id), None)
-        task_description = next((relation["properties"]["Description"]["rich_text"][0]["text"]["content"] for relation in task_json["results"]
-                        if relation["id"] == task_id and relation["properties"]["Description"]["rich_text"]), None)
-        project_name = project_info.get(project_id, "Unknown")
+        # Matching task IDs with corresponding project and area IDs
+        for task_id, task_name in task_info.items():
+            # Find project related to the task
+            project_id = next((relation["properties"]["Projects"]["relation"][0]["id"] for relation in task_json["results"]
+                            if relation["id"] == task_id), None)
+            task_description = next((relation["properties"]["Description"]["rich_text"][0]["text"]["content"] for relation in task_json["results"]
+                            if relation["id"] == task_id and relation["properties"]["Description"]["rich_text"]), None)
+            project_name = project_info.get(project_id, "Unknown")
 
-        # Find area related to the project
-        area_id = next((relation["properties"]["Areas"]["relation"][0]["id"] for relation in project_json["results"]
-                        if relation["id"] == project_id), None)
-        area_name = area_info.get(area_id, "Unknown")
+            # Find area related to the project
+            area_id = next((relation["properties"]["Areas"]["relation"][0]["id"] for relation in project_json["results"]
+                            if relation["id"] == project_id), None)
+            area_name = area_info.get(area_id, "Unknown")
 
-        area_type = next((relation["properties"]["Type"]["select"]["name"] for relation in area_json["results"]
-                        if relation["id"] == area_id), None)
+            area_type = next((relation["properties"]["Type"]["select"]["name"] for relation in area_json["results"]
+                            if relation["id"] == area_id), None)
 
-        # Append to the final data
-        final_data.append([task_name, project_name, area_name, area_type, task_id, project_id, area_id, task_description])
+            # Append to the final data
+            final_data.append([task_name, project_name, area_name, area_type, task_id, project_id, area_id, task_description])
 
-    # Create DataFrame
-    df = pd.DataFrame(final_data, columns=["Task Name", "Project Related", "Area Related", "Area Type", "Task ID", "Project ID", "Area ID", "Task Description"])
-    st.dataframe(df)
+        # Create DataFrame
+        df = pd.DataFrame(final_data, columns=["Task Name", "Project Related", "Area Related", "Area Type", "Task ID", "Project ID", "Area ID", "Task Description"])
+        st.dataframe(df)
+    
+    except Exception as e:
+        raise Exception(f"Error - create_task_table: {e}")
+
     return df
 
 
