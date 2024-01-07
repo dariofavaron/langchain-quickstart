@@ -707,3 +707,16 @@ if st.button("upload a new task"):
     except Exception as e:
         # Handle other exceptions, possibly API related
         st.error(f"General exception - upload a new task: {e}")
+
+
+
+if st.button("delete all vector in a namespace"):
+    try:
+        with st.spinner('deleting all vectors in a namespace'):
+            response = pineconeClass.delete("fulltasks")
+            st.write("response from pinecone:")
+            st.json(response, expanded=False)
+            st.success("communicated correctly with pinecone")
+    except Exception as e:
+        # Handle other exceptions, possibly API related
+        st.error(f"General exception - delete all vector in a namespace: {e}")

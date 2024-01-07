@@ -106,3 +106,27 @@ class PineconeAPI:
             return response.json()
         except ValueError as e:
             raise ValueError(f"Error in query: {str(e)}")
+
+    def delete_all(self, namespace: str):
+        """
+        Deletes vectors from the Pinecone database in the specified namespace.
+
+        Args:
+            index_name (str): The name of the index to delete vectors from.
+            ids (list): The list of ids to delete.
+            deleteAll (bool): Whether to delete all vectors in the namespace.
+            namespace (str): The namespace of the index.
+
+        Returns:
+            dict: The response JSON containing the delete result.
+        """
+        try:
+            url = f"https://{self.index_name}-{self.project_id}.svc.{self.environment}.pinecone.io/vectors/delete"
+            payload = {
+                "deleteAll": True,
+                "namespace": namespace
+            }
+            response = requests.post(url, headers=self.headers, json=payload, timeout=10)
+            return response.json()
+        except ValueError as e:
+            raise ValueError(f"Error in query: {str(e)}")
