@@ -21,6 +21,7 @@ def create_task_table(st, area_json, project_json, task_json):
                         for item in project_json["results"]}
         task_info = {item["id"]: item["properties"]["Name"]["title"][0]["plain_text"]
                         for item in task_json["results"]}
+        st.write("1")
 
         # Create a list to hold our final data
         final_data = []
@@ -45,6 +46,8 @@ def create_task_table(st, area_json, project_json, task_json):
             # Append to the final data
             final_data.append([task_name, project_name, area_name, area_type, task_id, project_id, area_id, task_description])
 
+        st.write("2")
+        
         # Create DataFrame
         df = pd.DataFrame(final_data, columns=["Task Name", "Project Related", "Area Related", "Area Type", "Task ID", "Project ID", "Area ID", "Task Description"])
         st.dataframe(df)
