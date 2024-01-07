@@ -166,7 +166,7 @@ if st.button(" Create a new task draft from a note in the inbox "):
             st.session_state.new_notes_json = notionClass.query_database(0, st.session_state.only_4, st.session_state.db_id_note_inbox)
             st.write("- Notion data retrieved successfully")
 
-        #create Dataframes
+            #create Dataframes
 
             #create a dataframe with all the tasks
             #TASKS dataframe columns: "Task Name", "Project Related", "Area Related", "Area Type", "Task ID", "Project ID", "Area ID", "Task Description"

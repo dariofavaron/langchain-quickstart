@@ -46,7 +46,7 @@ def create_task_table(st, area_json, project_json, task_json):
 
     # Create DataFrame
     df = pd.DataFrame(final_data, columns=["Task Name", "Project Related", "Area Related", "Area Type", "Task ID", "Project ID", "Area ID", "Task Description"])
-    #st.dataframe(df)
+    st.dataframe(df)
     return df
 
 
