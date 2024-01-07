@@ -210,11 +210,12 @@ class NotionAPI:
                 timeout=10
             )
 
+            return response.json()
+        
             # Check if the request was successful
             if response.status_code != 200:
+                return response.json()
                 raise Exception(f"API request failed : {response}")
-
-            return response.json()
 
         except Exception as e:
             raise Exception(f"Error - update_page: {e}")
