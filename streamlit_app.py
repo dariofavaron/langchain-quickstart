@@ -331,7 +331,7 @@ try:
         safe_text(draftColumn2, "related_project_id", "RELATED PROJECT ID")
         safe_text(draftColumn2, "related_area_name", "RELATED AREA NAME")
         safe_text(draftColumn2, "task_description", "TASK DESCRIPTION")
-        safe_text(draftColumn2, "comment", "COMMENT")
+        safe_text(draftColumn2, "duplication_check", "DUPLICATION CHECK")
         safe_text(draftColumn2, "project_selection_results", "PROJECT SELECTION RESULTS")
         safe_text(draftColumn2, "Suggestions", "SUGGESTIONS")
         safe_text(draftColumn2, "Insights", "INSIGHTS")
@@ -367,11 +367,9 @@ if st.button("Accept and load the task to notion"):
             response = notionClass.update_page(
                 st.session_state.note_in_analysis["Note ID"],
                 {
-                    "properties": {
-                        "Task Status": {
-                            "select": {
-                                "name": "Imported"
-                            }
+                    "Task Status": {
+                        "select": {
+                            "name": "Imported"
                         }
                     }
                 }

@@ -94,7 +94,7 @@ When you receive the input - consisting of the note name, URL, content, relevant
 "related_project_id": "",
 "related_area_name": "",
 "task_description": "",
-"comment": "",
+"duplication_check": "",
 "project_selection_results": "",
 "Suggestions": "",
 "Insights": ""
@@ -117,7 +117,7 @@ Relevant tasks: columns: ["Task Name", "Project Related", "Area Related", "Area 
 "related_project_id": "d1cadfcb-5d92-4e35-93af-b8dd22e4baba",
 "related_area_name": "Personal Planning",
 "task_description": "Start from reading a book, then go for a walk, then do some meditation",
-"comment": "duplication check results for task: No duplicate task found.",
+"duplication_check": "No duplicate tasks found in the provided ones.",
 "project_selection_results": "No new project needed, the existing project 'Weekly Planning' in Area 'Personal Planning' is appropriate.",
 "Suggestions": "Include a mix of activities that cater to different aspects like physical health, mental well-being, and hobbies.",
 "Insights": "Ensure that some activities are purely for relaxation and don't require much mental or physical effort."
