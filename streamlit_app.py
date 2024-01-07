@@ -265,6 +265,8 @@ All Projects for context: columns: ["Project Name", "Area Related", "Area Type",
 
             messages.append(prompt.task_extraction_from_note_inbox_example_request)
             messages.append(prompt.task_extraction_from_note_inbox_example_assistant)
+            messages.append(prompt.task_extraction_from_note_inbox_example_request_2)
+            messages.append(prompt.task_extraction_from_note_inbox_example_assistant_2)
 
             messages.append({
                 "role": "user",
