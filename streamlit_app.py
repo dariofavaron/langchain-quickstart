@@ -713,7 +713,7 @@ if st.button("upload a new task"):
 if st.button("delete all vector in a namespace"):
     try:
         with st.spinner('deleting all vectors in a namespace'):
-            response = pineconeClass.delete("fulltasks")
+            response = pineconeClass.delete_all("fulltasks")
             st.write("response from pinecone:")
             st.json(response, expanded=False)
             st.success("communicated correctly with pinecone")
