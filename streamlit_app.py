@@ -164,6 +164,7 @@ if st.button(" Create a new task draft from a note in the inbox "):
             st.session_state.projects_json = notionClass.query_database(0, st.session_state.only_4, st.session_state.db_id_projects)
             st.session_state.tasks_json = notionClass.query_database(0, st.session_state.only_4, st.session_state.db_id_tasks)
             st.session_state.new_notes_json = notionClass.query_database(0, st.session_state.only_4, st.session_state.db_id_note_inbox)
+            st.write("- Notion data retrieved successfully")
 
         #create Dataframes
 
@@ -190,12 +191,14 @@ if st.button(" Create a new task draft from a note in the inbox "):
                 st.session_state.new_notes_json,
                 only_one_note=True
             )
+            st.write("- Notion dataframes created successfully")
 
             #embed all the tasks from the dataframe
             full_tasks_vectors = create_full_task_vector(st.session_state.tasks_dataframe, openAiClass)
             
             #upload the tasks to pinecone
             vectors_upserted = pineconeClass.upsert(full_tasks_vectors, "fulltasks")
+            st.write(f"- Number of rows upserted: {(vectors_upserted)}")
 
             #extract a note from the note dataframe
             st.session_state.note_in_analysis= st.session_state.notes_dataframe.iloc[0]
@@ -213,6 +216,8 @@ if st.button(" Create a new task draft from a note in the inbox "):
 
             #extract the relevant docs of the note from Pinecone
             relevant_docs = pineconeClass.query(note_inbox_vector[0]["values"], topK=20, namespace="fulltasks", include_metadata=True)
+
+            st.write("Extracted relevant docs from Pinecone")
 
             #create a dictonary with the relevant docs
             relevant_tasks = []
@@ -289,6 +294,8 @@ Relevant tasks: columns: ["Task Name", "Project Related", "Area Related", "Area 
 
         except Exception as e:
             st.error (f"Error while extracting everything from Notion: {e}")
+
+# Visualize the draft and the note inbox
 
 try:
     draftColumn1, draftColumn2 = st.columns(2)
