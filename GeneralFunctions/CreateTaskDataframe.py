@@ -93,7 +93,7 @@ def create_project_table(st, area_json, project_json):
 
     # Create DataFrame
     df = pd.DataFrame(final_data, columns=["Project Name", "Area Related", "Area Type", "Project ID", "Area ID", "Project Description"])
-    #st.dataframe(df)
+    st.dataframe(df)
     return df
 
 def create_note_table(st, notionClass, note_json, only_one_note):
@@ -128,7 +128,7 @@ def create_note_table(st, notionClass, note_json, only_one_note):
 
     # Create DataFrame
     df = pd.DataFrame(final_data, columns=["Note Name", "Note URL", "Note Content", "Note ID"])
-    #st.dataframe(df)
+    st.dataframe(df)
     return df
 
 def create_task_row_properties(task_name, related_project_id, description, status):
