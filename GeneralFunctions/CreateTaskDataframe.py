@@ -30,7 +30,7 @@ def create_task_table(st, area_json, project_json, task_json):
             try:
                 # Find project related to the task
                 project_id = next((relation["properties"]["Projects"]["relation"][0]["id"] for relation in task_json["results"]
-                                if relation["id"] == task_id), None)
+                                if relation["id"] == task_id and relation["properties"]["Projects"]["relation"]), None)
                 #if project_id is None:
                 #    st.write(f"No project ID found for task ID {task_id}")
                 
@@ -43,7 +43,7 @@ def create_task_table(st, area_json, project_json, task_json):
 
                 # Find area related to the project
                 area_id = next((relation["properties"]["Areas"]["relation"][0]["id"] for relation in project_json["results"]
-                                if relation["id"] == project_id), None)
+                                if relation["id"] == project_id and relation["properties"]["Areas"]["relation"]), None)
                 #if area_id is None:
                 #    st.write(f"No area ID found for project ID {project_id}")
                 

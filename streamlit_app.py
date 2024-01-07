@@ -273,7 +273,7 @@ All Projects for context: columns: ["Project Name", "Area Related", "Area Type",
 Note Name: {st.session_state.note_in_analysis["Note Name"]}\n
 Note URL: {st.session_state.note_in_analysis["Note URL"]}\n
 Note Content: {st.session_state.note_in_analysis["Note Content"]}\n
-Relevant tasks: columns: ["Task Name", "Project Related", "Area Related", "Area Type", "Task ID", "Project ID", "Area ID", "Task Description"] {relevant_tasks}
+Relevant tasks: columns:["Task Name", "Project Related", "Area Related", "Area Type", "Task ID", "Project ID", "Area ID", "Task Description"] {relevant_tasks}
 """})
 
             st.write(" messages: ")
@@ -368,7 +368,7 @@ if st.button("Accept and load the task to notion"):
                 st.session_state.note_in_analysis["Note ID"],
                 {
                     "Task Status": {
-                        "select": {
+                        "status": {
                             "name": "Imported"
                         }
                     }
