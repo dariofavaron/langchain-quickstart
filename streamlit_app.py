@@ -310,7 +310,8 @@ st.write(st.session_state.note_in_analysis.get("Note Name") is not None)
 
 
 prompt = Prompts()
-if st.button(" Create a new task draft from a note in the inbox "):
+#if st.button(" Create a new task draft from a note in the inbox "):
+if st.session_state.note_in_analysis.get("Note Name") is None and st.session_state.note_in_analysis.get("Note URL") is None and st.session_state.note_in_analysis.get("Note Content") is None:
     new_task_draft()
 
 # Visualize the draft and the note inbox
