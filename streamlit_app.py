@@ -308,6 +308,26 @@ st.write("st.session_state.note_in_analysis: ")
 st.write(st.session_state.note_in_analysis)
 st.write(st.session_state.note_in_analysis.get("Note Name") is not None)
 
+#add the management of the note to analyze with a button to discard the note input and set it with Status "Deleted";
+if st.button("Discard the note input and set it with Status 'Deleted'"):
+    with st.spinner('Discarding the note input and set it with Status "Deleted"'):
+        try:
+            response = notionClass.update_page(
+                st.session_state.note_in_analysis["Note ID"],
+                {
+                    "Task Status": {
+                        "status": {
+                            "name": "Deleted"
+                        }
+                    }
+                }
+            )
+            st.write("response from notion update_page: ")
+            st.json(response, expanded=False)
+            st.session_state.note_in_analysis = {}
+            st.success("Note discarded")
+        except Exception as e:
+            st.error (f"Error while discarding the note: {e}")
 
 prompt = Prompts()
 #if st.button(" Create a new task draft from a note in the inbox "):
