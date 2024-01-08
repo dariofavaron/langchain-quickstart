@@ -137,7 +137,7 @@ def create_note_table(st, notionClass, note_json, only_one_note):
         note_id = note_item["id"]
         note_name = note_item["properties"]["Name"]["title"][0]["plain_text"]
         note_url = note_item["properties"]["URL"]["url"] if "URL" in note_item["properties"] else None
-        note_status = note_item["properties"]["Status"]["status"]["name"] if "Status" in note_item["properties"] else None
+        note_status = note_item["properties"]["Task Status"]["status"]["name"] if "Task Status" in note_item["properties"] else None
 
         # Extract note content
         note_content = notionClass.get_page_content(st, note_id)
