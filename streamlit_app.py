@@ -16,16 +16,174 @@ from API.NotionAPI import NotionAPI
 from API.OpenAiAPI import OpenAiAPI
 from API.PineconeAPI import PineconeAPI
 
+def new_task_draft():
+    """
+    Get Data from Notion and save them in a dataframe. one line per Task, 
+    upsert in Pinecone, 
+    extract the notes and save them in a dataframe,
+    extract the projects and save them in a dataframe,
+    For each note of the dataframe,
+        embed it in OpenAI,
+        extract from Pinecone the most relevant docs
+        send to open AI function 
+            the prompt and examples (new task dataframe)
+            the note and the relevant docs
+            the full list of projects with related areas and type, as a dataframe
+        extract the answer as a dataframe
+        load the dataframe to Notion as a new task
+    """
+        
+    with st.spinner('retrieving notion'):
+        try:
+            #Retrieve Databases of areas, projects, tasks, and notes
+            st.session_state.areas_json = notionClass.query_database(0, st.session_state.only_4, st.session_state.db_id_areas)
+            st.session_state.projects_json = notionClass.query_database(0, st.session_state.only_4, st.session_state.db_id_projects)
+            st.session_state.tasks_json = notionClass.query_database(0, st.session_state.only_4, st.session_state.db_id_tasks)
+            st.session_state.new_notes_json = notionClass.query_database(0, st.session_state.only_4, st.session_state.db_id_note_inbox)
+
+            #create Dataframes
+
+            #create a dataframe with all the tasks
+            #TASKS dataframe columns: "Task Name", "Project Related", "Area Related", "Area Type", "Task ID", "Project ID", "Area ID", "Task Description"
+            st.session_state.tasks_dataframe = create_task_table(st,
+                st.session_state.areas_json,
+                st.session_state.projects_json,
+                st.session_state.tasks_json
+            )
+                        
+            #create a dataframe with all the projects
+            #dataframes columns: "Project Name", "Area Related", "Area Type", "Project ID", "Area ID", "Project Description"
+            st.session_state.projects_dataframe = create_project_table(st,
+                st.session_state.areas_json,
+                st.session_state.projects_json
+            )
+
+            #create a dataframe with all the notes
+            #dataframes columns: "Note Name", "Note URL", "Note Content", "Note ID"
+            st.session_state.notes_dataframe = create_note_table(
+                st,
+                notionClass,
+                st.session_state.new_notes_json,
+                only_one_note=False
+            )
+
+            #extract a note from the note dataframe
+            st.session_state.note_in_analysis= st.session_state.notes_dataframe.iloc[0]
+
+            st.write("- Notion data retrieved and dataframes created successfully")
+
+
+
+            #embed all the tasks from the dataframe
+            full_tasks_vectors = create_full_task_vector(st.session_state.tasks_dataframe, openAiClass)
+            
+            #deleting all vectors in the namespace
+            response = pineconeClass.delete_all("fulltasks")
+            #st.write("response from pinecone:")
+            #st.json(response, expanded=False)
+
+            #upload the tasks to pinecone
+            vectors_upserted = pineconeClass.upsert(full_tasks_vectors, "fulltasks")
+            st.write(f"- Number of tasks upserted: {(vectors_upserted)}")
+
+            #create new note inbox vector and embed it
+            note_inbox_vector = [
+                create_new_note_vector(
+                    st.session_state.note_in_analysis["Note ID"],
+                    st.session_state.note_in_analysis["Note Name"],
+                    st.session_state.note_in_analysis["Note URL"],
+                    st.session_state.note_in_analysis["Note Content"],
+                    openAiClass
+                )
+            ]
+
+            #extract the relevant docs of the note from Pinecone
+            relevant_docs = pineconeClass.query(note_inbox_vector[0]["values"], topK=20, namespace="fulltasks", include_metadata=True)
+
+            st.write("Extracted relevant docs from Pinecone")
+
+            #create a dictonary with the relevant docs
+            relevant_tasks = []
+            for doc in relevant_docs["matches"]:
+                relevant_tasks.append([
+                    doc["metadata"]["Task Name"] if "Task Name" in doc["metadata"] else None,
+                    doc["metadata"]["Project Related"] if "Project Related" in doc["metadata"] else None,
+                    doc["metadata"]["Area Related"] if "Area Related" in doc["metadata"] else None,
+                    doc["metadata"]["Area Type"] if "Area Type" in doc["metadata"] else None,
+                    doc["metadata"]["Task ID"] if "Task ID" in doc["metadata"] else None,
+                    doc["metadata"]["Project ID"] if "Project ID" in doc["metadata"] else None,
+                    doc["metadata"]["Area ID"] if "Area ID" in doc["metadata"] else None,
+                    doc["metadata"]["Task Description"] if "Task Description" in doc["metadata"] else None
+                ])
+            
+            relevant_tasks_df = pd.DataFrame(relevant_tasks, columns=["Task Name", "Project Related", "Area Related", "Area Type", "Task ID", "Project ID", "Area ID", "Task Description"])
+            #st.write("relevant docs dataframe: ")
+            #st.dataframe(relevant_tasks_df)
+
+            #create a dictonary with all the projects
+            # dataframes columns: "Project Name", "Area Related", "Area Type", "Project ID", "Area ID", "Project Description"
+            all_projects = []
+            for _,doc in st.session_state.projects_dataframe.iterrows():
+                all_projects.append([
+                    doc["Project Name"] if "Project Name" in doc else None,
+                    doc["Area Related"] if "Area Related" in doc else None,
+                    doc["Area Type"] if "Area Type" in doc else None,
+                    doc["Project ID"] if "Project ID" in doc else None,
+                    doc["Area ID"] if "Area ID" in doc else None,
+                    doc["Project Description"] if "Project Description" in doc else None
+                ])
+
+            #prepare the message
+            #the prompt and examples (new task dataframe)
+            messages = []
+            messages.append(prompt.task_extraction_from_note_inbox_system)
+
+            # note, relevant docs and projects
+            messages.append({
+                "role": "user",
+                "content":
+                    f"""
+All Projects for context: columns: ["Project Name", "Area Related", "Area Type", "Project ID", "Area ID", "Project Description"] {all_projects}
+            """})
+
+            messages.append(prompt.task_extraction_from_note_inbox_example_request)
+            messages.append(prompt.task_extraction_from_note_inbox_example_assistant)
+            messages.append(prompt.task_extraction_from_note_inbox_example_request_2)
+            messages.append(prompt.task_extraction_from_note_inbox_example_assistant_2)
+
+            messages.append({
+                "role": "user",
+                "content": 
+                    f"""
+Note Name: {st.session_state.note_in_analysis["Note Name"]}\n
+Note URL: {st.session_state.note_in_analysis["Note URL"]}\n
+Note Content: {st.session_state.note_in_analysis["Note Content"]}\n
+Relevant tasks: columns:["Task Name", "Project Related", "Area Related", "Area Type", "Task ID", "Project ID", "Area ID", "Task Description"] {relevant_tasks}
+"""})
+
+            st.write(" messages: ")
+            st.json(messages, expanded=False)
+
+            #send to open AI
+            response = openAiClass.generate_text_completion(
+                model="gpt-3.5-turbo-1106",
+                messages=messages,
+                max_tokens=400,
+                temperature=0.5
+            )
+
+            st.write("response from openAi completition:")
+            st.json(response, expanded=False)
+
+            st.session_state.new_task_draft = json.loads(response["choices"][0]["message"]["content"])
+
+        except Exception as e:
+            st.error (f"Error while extracting everything from Notion: {e}")
+
+
 # Set page title and favicon.
 st.set_page_config(page_title="Home", page_icon="🦜️🔗")
 st.title('Notion Database Explorer')
-
-st.markdown(
-    """
-    the goal of this app is to explore the notion database and create a knowledge graph
-
-    """
-)
 
 # Initialize session state variables
 if 'openai_api_key' not in st.session_state:
@@ -141,165 +299,18 @@ st.session_state.db_id_projects = "c20d87c181634f18bcd14c2649ba6e06"
 st.session_state.db_id_tasks = "72c034d6343f4d1e926048b7dcbcbc2b"
 st.session_state.db_id_note_inbox = "50d49cabe62146689b61932004d5687c"
 
+
+#add the management of the note to analyze with a button to discard the note input and set it with Status "Deleted";
+#the note inbox to be analyzed are the one tagged "New". 
+#every time that there is no note inbox imported, start the script of the button "Create a new task draft from a note in the inbox" 
+
+st.write("st.session_state.note_in_analysis.empty: ")
+st.write(st.session_state.note_in_analysis.empty)
+
+
 prompt = Prompts()
 if st.button(" Create a new task draft from a note in the inbox "):
-            # Get Data from Notion and save them in a dataframe. one line per Task, 
-            # upsert in Pinecone, 
-            # extract the notes and save them in a dataframe,
-            # extract the projects and save them in a dataframe,
-            # For each note of the dataframe,
-            #     embed it in OpenAI,
-            #     extract from Pinecone the most relevant docs
-            #     send to open AI function 
-            #         the prompt and examples (new task dataframe)
-            #         the note and the relevant docs
-            #         the full list of projects with related areas and type, as a dataframe
-            #     extract the answer as a dataframe
-            #     load the dataframe to Notion as a new task
-
-    with st.spinner('retrieving notion'):
-        try:
-            #Retrieve Databases of areas, projects, tasks, and notes
-            st.session_state.areas_json = notionClass.query_database(0, st.session_state.only_4, st.session_state.db_id_areas)
-            st.session_state.projects_json = notionClass.query_database(0, st.session_state.only_4, st.session_state.db_id_projects)
-            st.session_state.tasks_json = notionClass.query_database(0, st.session_state.only_4, st.session_state.db_id_tasks)
-            st.session_state.new_notes_json = notionClass.query_database(0, st.session_state.only_4, st.session_state.db_id_note_inbox)
-
-            #create Dataframes
-
-            #create a dataframe with all the tasks
-            #TASKS dataframe columns: "Task Name", "Project Related", "Area Related", "Area Type", "Task ID", "Project ID", "Area ID", "Task Description"
-            st.session_state.tasks_dataframe = create_task_table(st,
-                st.session_state.areas_json,
-                st.session_state.projects_json,
-                st.session_state.tasks_json
-            )
-                        
-            #create a dataframe with all the projects
-            #dataframes columns: "Project Name", "Area Related", "Area Type", "Project ID", "Area ID", "Project Description"
-            st.session_state.projects_dataframe = create_project_table(st,
-                st.session_state.areas_json,
-                st.session_state.projects_json
-            )
-
-            #create a dataframe with all the notes
-            #dataframes columns: "Note Name", "Note URL", "Note Content", "Note ID"
-            st.session_state.notes_dataframe = create_note_table(
-                st,
-                notionClass,
-                st.session_state.new_notes_json,
-                only_one_note=True
-            )
-            st.write("- Notion data retrieved and dataframes created successfully")
-
-            #embed all the tasks from the dataframe
-            full_tasks_vectors = create_full_task_vector(st.session_state.tasks_dataframe, openAiClass)
-            
-            #deleting all vectors in the namespace
-            response = pineconeClass.delete_all("fulltasks")
-            #st.write("response from pinecone:")
-            #st.json(response, expanded=False)
-
-            #upload the tasks to pinecone
-            vectors_upserted = pineconeClass.upsert(full_tasks_vectors, "fulltasks")
-            st.write(f"- Number of tasks upserted: {(vectors_upserted)}")
-
-            #extract a note from the note dataframe
-            st.session_state.note_in_analysis= st.session_state.notes_dataframe.iloc[0]
-
-            #create new note inbox vector and embed it
-            note_inbox_vector = [
-                create_new_note_vector(
-                    st.session_state.note_in_analysis["Note ID"],
-                    st.session_state.note_in_analysis["Note Name"],
-                    st.session_state.note_in_analysis["Note URL"],
-                    st.session_state.note_in_analysis["Note Content"],
-                    openAiClass
-                )
-            ]
-
-            #extract the relevant docs of the note from Pinecone
-            relevant_docs = pineconeClass.query(note_inbox_vector[0]["values"], topK=20, namespace="fulltasks", include_metadata=True)
-
-            st.write("Extracted relevant docs from Pinecone")
-
-            #create a dictonary with the relevant docs
-            relevant_tasks = []
-            for doc in relevant_docs["matches"]:
-                relevant_tasks.append([
-                    doc["metadata"]["Task Name"] if "Task Name" in doc["metadata"] else None,
-                    doc["metadata"]["Project Related"] if "Project Related" in doc["metadata"] else None,
-                    doc["metadata"]["Area Related"] if "Area Related" in doc["metadata"] else None,
-                    doc["metadata"]["Area Type"] if "Area Type" in doc["metadata"] else None,
-                    doc["metadata"]["Task ID"] if "Task ID" in doc["metadata"] else None,
-                    doc["metadata"]["Project ID"] if "Project ID" in doc["metadata"] else None,
-                    doc["metadata"]["Area ID"] if "Area ID" in doc["metadata"] else None,
-                    doc["metadata"]["Task Description"] if "Task Description" in doc["metadata"] else None
-                ])
-            
-            relevant_tasks_df = pd.DataFrame(relevant_tasks, columns=["Task Name", "Project Related", "Area Related", "Area Type", "Task ID", "Project ID", "Area ID", "Task Description"])
-            #st.write("relevant docs dataframe: ")
-            #st.dataframe(relevant_tasks_df)
-
-            #create a dictonary with all the projects
-            # dataframes columns: "Project Name", "Area Related", "Area Type", "Project ID", "Area ID", "Project Description"
-            all_projects = []
-            for _,doc in st.session_state.projects_dataframe.iterrows():
-                all_projects.append([
-                    doc["Project Name"] if "Project Name" in doc else None,
-                    doc["Area Related"] if "Area Related" in doc else None,
-                    doc["Area Type"] if "Area Type" in doc else None,
-                    doc["Project ID"] if "Project ID" in doc else None,
-                    doc["Area ID"] if "Area ID" in doc else None,
-                    doc["Project Description"] if "Project Description" in doc else None
-                ])
-
-            #prepare the message
-            #the prompt and examples (new task dataframe)
-            messages = []
-            messages.append(prompt.task_extraction_from_note_inbox_system)
-
-            # note, relevant docs and projects
-            messages.append({
-                "role": "user",
-                "content":
-                    f"""
-All Projects for context: columns: ["Project Name", "Area Related", "Area Type", "Project ID", "Area ID", "Project Description"] {all_projects}
-            """})
-
-            messages.append(prompt.task_extraction_from_note_inbox_example_request)
-            messages.append(prompt.task_extraction_from_note_inbox_example_assistant)
-            messages.append(prompt.task_extraction_from_note_inbox_example_request_2)
-            messages.append(prompt.task_extraction_from_note_inbox_example_assistant_2)
-
-            messages.append({
-                "role": "user",
-                "content": 
-                    f"""
-Note Name: {st.session_state.note_in_analysis["Note Name"]}\n
-Note URL: {st.session_state.note_in_analysis["Note URL"]}\n
-Note Content: {st.session_state.note_in_analysis["Note Content"]}\n
-Relevant tasks: columns:["Task Name", "Project Related", "Area Related", "Area Type", "Task ID", "Project ID", "Area ID", "Task Description"] {relevant_tasks}
-"""})
-
-            st.write(" messages: ")
-            st.json(messages, expanded=False)
-
-            #send to open AI
-            response = openAiClass.generate_text_completion(
-                model="gpt-3.5-turbo-1106",
-                messages=messages,
-                max_tokens=400,
-                temperature=0.5
-            )
-
-            st.write("response from openAi completition:")
-            st.json(response, expanded=False)
-
-            st.session_state.new_task_draft = json.loads(response["choices"][0]["message"]["content"])
-
-        except Exception as e:
-            st.error (f"Error while extracting everything from Notion: {e}")
+    new_task_draft()
 
 # Visualize the draft and the note inbox
 
@@ -713,8 +724,6 @@ if st.button("upload a new task"):
         # Handle other exceptions, possibly API related
         st.error(f"General exception - upload a new task: {e}")
 
-
-
 if st.button("delete all vector in a namespace"):
     try:
         with st.spinner('deleting all vectors in a namespace'):
@@ -725,3 +734,7 @@ if st.button("delete all vector in a namespace"):
     except Exception as e:
         # Handle other exceptions, possibly API related
         st.error(f"General exception - delete all vector in a namespace: {e}")
+
+
+
+
