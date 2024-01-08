@@ -67,6 +67,11 @@ def new_task_draft():
                 only_one_note=False
             )
 
+            #the note inbox to be analyzed are the one tagged "New". 
+            #extract the first note with status "New" from the note dataframe
+            #st.session_state.note_in_analysis= st.session_state.notes_dataframe[st.session_state.notes_dataframe["Note Name"] == "New"].iloc[0]
+            st.write("st.session_state.notes_dataframe: ")
+            st.dataframe(st.session_state.notes_dataframe)
             #extract a note from the note dataframe
             st.session_state.note_in_analysis= st.session_state.notes_dataframe.iloc[0]
 
@@ -300,39 +305,19 @@ st.session_state.db_id_tasks = "72c034d6343f4d1e926048b7dcbcbc2b"
 st.session_state.db_id_note_inbox = "50d49cabe62146689b61932004d5687c"
 
 
-#add the management of the note to analyze with a button to discard the note input and set it with Status "Deleted";
-#the note inbox to be analyzed are the one tagged "New". 
+
 #every time that there is no note inbox imported, start the script of the button "Create a new task draft from a note in the inbox" 
 
-st.write("st.session_state.note_in_analysis: ")
-st.write(st.session_state.note_in_analysis)
-st.write(st.session_state.note_in_analysis.get("Note Name") is not None)
 
-#add the management of the note to analyze with a button to discard the note input and set it with Status "Deleted";
-if st.button("Discard the note input and set it with Status 'Deleted'"):
-    with st.spinner('Discarding the note input and set it with Status "Deleted"'):
-        try:
-            response = notionClass.update_page(
-                st.session_state.note_in_analysis["Note ID"],
-                {
-                    "Task Status": {
-                        "status": {
-                            "name": "Deleted"
-                        }
-                    }
-                }
-            )
-            st.write("response from notion update_page: ")
-            st.json(response, expanded=False)
-            st.session_state.note_in_analysis = {}
-            st.success("Note discarded")
-        except Exception as e:
-            st.error (f"Error while discarding the note: {e}")
 
 prompt = Prompts()
 #if st.button(" Create a new task draft from a note in the inbox "):
 if st.session_state.note_in_analysis.get("Note Name") is None and st.session_state.note_in_analysis.get("Note URL") is None and st.session_state.note_in_analysis.get("Note Content") is None:
     new_task_draft()
+
+#st.write("st.session_state.note_in_analysis: ")
+#st.write(st.session_state.note_in_analysis)
+#st.write(st.session_state.note_in_analysis.get("Note Name") is not None)
 
 # Visualize the draft and the note inbox
 
@@ -421,7 +406,26 @@ if st.button("Accept and load the task to notion"):
         except Exception as e:
             st.error (f"Error while loading new task to Notion: {e}")
 
-
+#add the management of the note to analyze with a button to discard the note input and set it with Status "Deleted";
+if st.button("Discard the note input and set it with Status 'Deleted'"):
+    with st.spinner('Discarding the note input and set it with Status "Deleted"'):
+        try:
+            response = notionClass.update_page(
+                st.session_state.note_in_analysis["Note ID"],
+                {
+                    "Task Status": {
+                        "status": {
+                            "name": "Deleted"
+                        }
+                    }
+                }
+            )
+            st.write("response from notion update_page: ")
+            st.json(response, expanded=False)
+            st.session_state.note_in_analysis = {}
+            st.success("Note discarded")
+        except Exception as e:
+            st.error (f"Error while discarding the note: {e}")
 
 
 # add space in the UI
