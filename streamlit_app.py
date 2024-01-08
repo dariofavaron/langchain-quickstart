@@ -69,19 +69,19 @@ def new_task_draft():
                 only_one_note=False
             )
 
-            #the note inbox to be analyzed are the one tagged "New". 
-            st.write("st.session_state.notes_dataframe: ")
-            st.dataframe(st.session_state.notes_dataframe)
-            st.json(st.session_state.notes_dataframe.to_json(), expanded=False)
-            st.write(st.session_state.notes_dataframe.loc[st.session_state.notes_dataframe["Note Status"] == "New"] )
+            
+            #st.write("st.session_state.notes_dataframe: ")
+            #st.dataframe(st.session_state.notes_dataframe)
+            #st.json(st.session_state.notes_dataframe.to_json(), expanded=False)
+            #st.write(st.session_state.notes_dataframe.loc[st.session_state.notes_dataframe["Note Status"] == "New"] )
 
             #extract a note from the note dataframe
             #st.session_state.note_in_analysis = st.session_state.notes_dataframe.iloc[0]
 
             #extract the first note with status "New" from the note dataframe
             st.session_state.note_in_analysis = st.session_state.notes_dataframe[st.session_state.notes_dataframe["Note Status"] == "New"].iloc[0]
-            st.write("st.session_state.note_in_analysis: ")
-            st.write(st.session_state.note_in_analysis)
+            #st.write("st.session_state.note_in_analysis: ")
+            #st.write(st.session_state.note_in_analysis)
 
             st.write("- Notion data retrieved and dataframes created successfully")
 
@@ -179,7 +179,8 @@ Relevant tasks: columns:["Task Name", "Project Related", "Area Related", "Area T
 
             #send to open AI
             response = openAiClass.generate_text_completion(
-                model="gpt-3.5-turbo-1106",
+                #model="gpt-3.5-turbo-1106",
+                model="gpt-4",
                 messages=messages,
                 max_tokens=400,
                 temperature=0.5
