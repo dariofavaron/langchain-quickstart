@@ -97,4 +97,4 @@ class OpenAiAPI:
         
         except Exception as e:
             print(f"An error occurred generate_text_completion: {e}")
-            return None
+            return e

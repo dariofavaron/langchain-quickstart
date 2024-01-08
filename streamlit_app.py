@@ -189,8 +189,8 @@ Relevant tasks: columns:["Task Name", "Project Related", "Area Related", "Area T
         try:
 
             #send to open AI
-            response = openAiClass.generate_text_completion(
                 #model="gpt-3.5-turbo-1106",
+            response = openAiClass.generate_text_completion(
                 model="gpt-4",
                 messages=messages,
                 max_tokens=400,
@@ -450,6 +450,14 @@ if st.button("Discard the note input and set it with Status 'Deleted'"):
         except Exception as e:
             st.error (f"Error while discarding the note: {e}")
 
+#button to reftresh the note inbox and task draft
+if st.button("Refresh the note inbox and task draft"):
+    with st.spinner('Refreshing the note inbox and task draft'):
+        try:
+            st.session_state.note_in_analysis = {}
+            st.success("Note inbox and task draft refreshed")
+        except Exception as e:
+            st.error (f"Error while refreshing the note inbox and task draft: {e}")
 
 # add space in the UI
 st.text("")
