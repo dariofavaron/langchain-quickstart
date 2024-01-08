@@ -304,8 +304,9 @@ st.session_state.db_id_note_inbox = "50d49cabe62146689b61932004d5687c"
 #the note inbox to be analyzed are the one tagged "New". 
 #every time that there is no note inbox imported, start the script of the button "Create a new task draft from a note in the inbox" 
 
-st.write("st.session_state.note_in_analysis.empty: ")
-st.write(len(st.session_state.note_in_analysis))
+st.write("st.session_state.note_in_analysis: ")
+st.write(st.session_state.note_in_analysis)
+st.write(st.session_state.note_in_analysis.get("Note Name") is not None)
 
 
 prompt = Prompts()
