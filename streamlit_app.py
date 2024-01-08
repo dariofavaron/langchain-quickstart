@@ -68,13 +68,16 @@ def new_task_draft():
             )
 
             #the note inbox to be analyzed are the one tagged "New". 
-            #extract the first note with status "New" from the note dataframe
-            #st.session_state.note_in_analysis= st.session_state.notes_dataframe[st.session_state.notes_dataframe["Note Name"] == "New"].iloc[0]
             st.write("st.session_state.notes_dataframe: ")
             st.dataframe(st.session_state.notes_dataframe)
+            st.json(st.session_state.notes_dataframe, expanded=False)
             #extract a note from the note dataframe
             st.session_state.note_in_analysis= st.session_state.notes_dataframe.iloc[0]
 
+            #extract the first note with status "New" from the note dataframe
+            #st.session_state.note_in_analysis= st.session_state.notes_dataframe[st.session_state.notes_dataframe["Note Name"] == "New"].iloc[0]
+
+            
             st.write("- Notion data retrieved and dataframes created successfully")
 
 

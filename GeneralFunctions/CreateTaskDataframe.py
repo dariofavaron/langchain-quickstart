@@ -137,18 +137,19 @@ def create_note_table(st, notionClass, note_json, only_one_note):
         note_id = note_item["id"]
         note_name = note_item["properties"]["Name"]["title"][0]["plain_text"]
         note_url = note_item["properties"]["URL"]["url"] if "URL" in note_item["properties"] else None
+        note_status = note_item["properties"]["Status"]["status"]["name"] if "Status" in note_item["properties"] else None
 
         # Extract note content
         note_content = notionClass.get_page_content(st, note_id)
         #note_content = note_item["properties"]["Content"]["rich_text"][0]["plain_text"] if "Content" in note_item["properties"] and note_item["properties"]["Content"]["rich_text"] else "No Content"
         
         # Append to the final data
-        final_data.append([note_name, note_url, note_content, note_id])
+        final_data.append([note_name, note_url, note_content, note_status, note_id])
         if only_one_note:
             break
 
     # Create DataFrame
-    df = pd.DataFrame(final_data, columns=["Note Name", "Note URL", "Note Content", "Note ID"])
+    df = pd.DataFrame(final_data, columns=["Note Name", "Note URL", "Note Content","Note Status" , "Note ID"])
     #st.dataframe(df)
     return df
 
