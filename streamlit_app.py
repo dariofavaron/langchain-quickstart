@@ -40,9 +40,11 @@ def new_task_draft():
             st.session_state.projects_json = notionClass.query_database(0, st.session_state.only_4, st.session_state.db_id_projects)
             st.session_state.tasks_json = notionClass.query_database(0, st.session_state.only_4, st.session_state.db_id_tasks)
             st.session_state.new_notes_json = notionClass.query_database(0, st.session_state.only_4, st.session_state.db_id_note_inbox)
-
+        except Exception as e:
+            st.error (f"Error while retrieving notion: {e}")
+    with st.spinner('creating dataframes'):
+        try:
             #create Dataframes
-
             #create a dataframe with all the tasks
             #TASKS dataframe columns: "Task Name", "Project Related", "Area Related", "Area Type", "Task ID", "Project ID", "Area ID", "Task Description"
             st.session_state.tasks_dataframe = create_task_table(st,
@@ -68,14 +70,13 @@ def new_task_draft():
                 st.session_state.new_notes_json,
                 only_one_note=False
             )
+        except Exception as e:
+            st.error (f"Error while creating dataframes: {e}")
 
-            
-            #st.write("st.session_state.notes_dataframe: ")
-            #st.dataframe(st.session_state.notes_dataframe)
-            #st.json(st.session_state.notes_dataframe.to_json(), expanded=False)
-            #st.write(st.session_state.notes_dataframe.loc[st.session_state.notes_dataframe["Note Status"] == "New"] )
+    with st.spinner('embedding tasks'):
+        try:
 
-            #extract a note from the note dataframe
+            #extract a single note from the note dataframe
             #st.session_state.note_in_analysis = st.session_state.notes_dataframe.iloc[0]
 
             #extract the first note with status "New" from the note dataframe
@@ -83,8 +84,7 @@ def new_task_draft():
             #st.write("st.session_state.note_in_analysis: ")
             #st.write(st.session_state.note_in_analysis)
 
-            st.write("- Notion data retrieved and dataframes created successfully")
-
+            #st.write("- Notion data retrieved and dataframes created successfully")
 
 
             #embed all the tasks from the dataframe
@@ -114,6 +114,11 @@ def new_task_draft():
             relevant_docs = pineconeClass.query(note_inbox_vector[0]["values"], topK=20, namespace="fulltasks", include_metadata=True)
 
             st.write("Extracted relevant docs from Pinecone")
+        except Exception as e:
+            st.error (f"Error while creating embedding tasks: {e}")
+
+    with st.spinner('Extract relevant docs and create prompt for OpenAI'):
+        try:
 
             #create a dictonary with the relevant docs
             relevant_tasks = []
@@ -129,7 +134,7 @@ def new_task_draft():
                     doc["metadata"]["Task Description"] if "Task Description" in doc["metadata"] else None
                 ])
             
-            relevant_tasks_df = pd.DataFrame(relevant_tasks, columns=["Task Name", "Project Related", "Area Related", "Area Type", "Task ID", "Project ID", "Area ID", "Task Description"])
+            #relevant_tasks_df = pd.DataFrame(relevant_tasks, columns=["Task Name", "Project Related", "Area Related", "Area Type", "Task ID", "Project ID", "Area ID", "Task Description"])
             #st.write("relevant docs dataframe: ")
             #st.dataframe(relevant_tasks_df)
 
@@ -177,6 +182,12 @@ Relevant tasks: columns:["Task Name", "Project Related", "Area Related", "Area T
             st.write(" messages: ")
             st.json(messages, expanded=False)
 
+        except Exception as e:
+            st.error (f"Error while Extract relevant docs and create prompt for OpenAI: {e}")
+
+    with st.spinner('Send to OpenAI'):
+        try:
+
             #send to open AI
             response = openAiClass.generate_text_completion(
                 #model="gpt-3.5-turbo-1106",
@@ -192,7 +203,7 @@ Relevant tasks: columns:["Task Name", "Project Related", "Area Related", "Area T
             st.session_state.new_task_draft = json.loads(response["choices"][0]["message"]["content"])
 
         except Exception as e:
-            st.error (f"Error while extracting everything from Notion: {e}")
+            st.error (f"Error while sending to OpenAI: {e}")
 
 
 # Set page title and favicon.
