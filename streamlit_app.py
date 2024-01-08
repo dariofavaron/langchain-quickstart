@@ -58,6 +58,8 @@ def new_task_draft():
                 st.session_state.projects_json
             )
 
+            st.json(st.session_state.new_notes_json, expanded=False)
+
             #create a dataframe with all the notes
             #dataframes columns: "Note Name", "Note URL", "Note Content", "Note ID"
             st.session_state.notes_dataframe = create_note_table(
@@ -77,7 +79,7 @@ def new_task_draft():
             #extract the first note with status "New" from the note dataframe
             #st.session_state.note_in_analysis= st.session_state.notes_dataframe[st.session_state.notes_dataframe["Note Name"] == "New"].iloc[0]
 
-            
+
             st.write("- Notion data retrieved and dataframes created successfully")
 
 
