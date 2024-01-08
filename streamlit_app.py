@@ -61,7 +61,7 @@ def new_task_draft():
             st.json(st.session_state.new_notes_json, expanded=False)
 
             #create a dataframe with all the notes
-            #dataframes columns: "Note Name", "Note URL", "Note Content", "Note ID"
+            #dataframes columns: "Note Name", "Note URL", "Note Content", "Note Status" "Note ID"
             st.session_state.notes_dataframe = create_note_table(
                 st,
                 notionClass,
@@ -72,7 +72,7 @@ def new_task_draft():
             #the note inbox to be analyzed are the one tagged "New". 
             st.write("st.session_state.notes_dataframe: ")
             st.dataframe(st.session_state.notes_dataframe)
-            st.write(st.session_state.notes_dataframe.loc[st.session_state.notes_dataframe['note_status'] == "new"] )
+            st.write(st.session_state.notes_dataframe.loc[st.session_state.notes_dataframe["Note Status"] == "New"] )
             #extract a note from the note dataframe
             st.session_state.note_in_analysis = st.session_state.notes_dataframe.iloc[0]
 
