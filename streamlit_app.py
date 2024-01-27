@@ -190,8 +190,10 @@ Relevant tasks: columns:["Task Name", "Project Related", "Area Related", "Area T
 
             #send to open AI
                 #model="gpt-3.5-turbo-1106",
+                #model="gpt-4",
             response = openAiClass.generate_text_completion(
-                model="gpt-4",
+                #model="gpt-4",
+                model="gpt-3.5-turbo-1106",
                 messages=messages,
                 max_tokens=400,
                 temperature=0.5
