@@ -16,23 +16,14 @@ from API.NotionAPI import NotionAPI
 from API.OpenAiAPI import OpenAiAPI
 from API.PineconeAPI import PineconeAPI
 
-def new_task_draft():
+def refresh_databases():
     """
-    Get Data from Notion and save them in a dataframe. one line per Task, 
-    upsert in Pinecone, 
-    extract the notes and save them in a dataframe,
-    extract the projects and save them in a dataframe,
-    For each note of the dataframe,
-        embed it in OpenAI,
-        extract from Pinecone the most relevant docs
-        send to open AI function 
-            the prompt and examples (new task dataframe)
-            the note and the relevant docs
-            the full list of projects with related areas and type, as a dataframe
-        extract the answer as a dataframe
-        load the dataframe to Notion as a new task
+    import notion databases
+    creates dataframes
+    embed them
+    upsert tasks in pinecone
     """
-        
+
     with st.spinner('retrieving notion'):
         try:
             #Retrieve Databases of areas, projects, tasks, and notes
@@ -75,18 +66,6 @@ def new_task_draft():
 
     with st.spinner('embedding tasks'):
         try:
-
-            #extract a single note from the note dataframe
-            #st.session_state.note_in_analysis = st.session_state.notes_dataframe.iloc[0]
-
-            #extract the first note with status "New" from the note dataframe
-            st.session_state.note_in_analysis = st.session_state.notes_dataframe[st.session_state.notes_dataframe["Note Status"] == "New"].iloc[0]
-            #st.write("st.session_state.note_in_analysis: ")
-            #st.write(st.session_state.note_in_analysis)
-
-            #st.write("- Notion data retrieved and dataframes created successfully")
-
-
             #embed all the tasks from the dataframe
             full_tasks_vectors = create_full_task_vector(st.session_state.tasks_dataframe, openAiClass)
             
@@ -98,6 +77,35 @@ def new_task_draft():
             #upload the tasks to pinecone
             vectors_upserted = pineconeClass.upsert(full_tasks_vectors, "fulltasks")
             st.write(f"- Number of tasks upserted: {(vectors_upserted)}")
+        except Exception as e:
+            st.error (f"Error while creating embedding tasks: {e}")
+
+
+def new_task_draft():
+    """
+    Get Data from Notion and save them in a dataframe. one line per Task, 
+    upsert in Pinecone, 
+    extract the notes and save them in a dataframe,
+    extract the projects and save them in a dataframe,
+    For each note of the dataframe,
+        embed it in OpenAI,
+        extract from Pinecone the most relevant docs
+        send to open AI function 
+            the prompt and examples (new task dataframe)
+            the note and the relevant docs
+            the full list of projects with related areas and type, as a dataframe
+        extract the answer as a dataframe
+        load the dataframe to Notion as a new task
+    """
+
+    with st.spinner('embedding notes'):
+        try:
+
+            #extract a single note from the note dataframe
+            #st.session_state.note_in_analysis = st.session_state.notes_dataframe.iloc[0]
+
+            #extract the first note with status "New" from the note dataframe
+            st.session_state.note_in_analysis = st.session_state.notes_dataframe[st.session_state.notes_dataframe["Note Status"] == "New"].iloc[0]
 
             #create new note inbox vector and embed it
             note_inbox_vector = [
@@ -115,7 +123,7 @@ def new_task_draft():
 
             st.write("Extracted relevant docs from Pinecone")
         except Exception as e:
-            st.error (f"Error while creating embedding tasks: {e}")
+            st.error (f"Error while embedding notes inbox: {e}")
 
     with st.spinner('Extract relevant docs and create prompt for OpenAI'):
         try:
@@ -189,8 +197,6 @@ Relevant tasks: columns:["Task Name", "Project Related", "Area Related", "Area T
         try:
 
             #send to open AI
-                #model="gpt-3.5-turbo-1106",
-                #model="gpt-4",
             response = openAiClass.generate_text_completion(
                 #model="gpt-4",
                 model="gpt-3.5-turbo-1106",
@@ -334,13 +340,20 @@ st.session_state.note_in_analysis = {}
 
 
 prompt = Prompts()
-#if st.button(" Create a new task draft from a note in the inbox "):
-if st.session_state.note_in_analysis.get("Note Name") is None and st.session_state.note_in_analysis.get("Note URL") is None and st.session_state.note_in_analysis.get("Note Content") is None:
+
+#here we should always retrieve first the databases from notion and create the dataframes
+if st.button("Retrieve databases from Notion and create the dataframes"):
+    refresh_databases()
+
+#then we can analyze one note at the time without the need to retrieve the databases every time
+
+if st.button(" Create a new task draft from a note in the inbox "):
+#if st.session_state.note_in_analysis.get("Note Name") is None and st.session_state.note_in_analysis.get("Note URL") is None and st.session_state.note_in_analysis.get("Note Content") is None:
     new_task_draft()
 
-#st.write("st.session_state.note_in_analysis: ")
-#st.write(st.session_state.note_in_analysis)
-#st.write(st.session_state.note_in_analysis.get("Note Name") is not None)
+
+
+
 
 
 
