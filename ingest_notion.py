@@ -25,7 +25,6 @@ def extract_dataframe_structure(structure_json):
         https://developers.notion.com/reference/property-object
     """
 
-    
     dataframe_structure = []
 
     # Extract the main properties that are not in the "properties" key
@@ -34,11 +33,11 @@ def extract_dataframe_structure(structure_json):
             dataframe_structure.append([main_prop_name, 'created_time', main_prop_details])
         elif main_prop_name == 'last_edited_time':
             dataframe_structure.append([main_prop_name, 'last_edited_time', main_prop_details])
-        elif main_prop_name == 'created_by':
-            dataframe_structure.append([main_prop_name, 'created_by', main_prop_details['object']])
-        elif main_prop_name == 'last_edited_by':
-            dataframe_structure.append([main_prop_name, 'last_edited_by', main_prop_details['object']])
-
+        #elif main_prop_name == 'created_by':
+        #    dataframe_structure.append([main_prop_name, 'created_by', main_prop_details['object']])
+        #elif main_prop_name == 'last_edited_by':
+        #    dataframe_structure.append([main_prop_name, 'last_edited_by', main_prop_details['object']])
+        
         # Extract the properties from the properties key
         elif main_prop_name == 'properties':
             
@@ -76,9 +75,9 @@ def extract_dataframe_structure(structure_json):
                 
                 # Add property details to dataframe structure
                 dataframe_structure.append([prop_name, prop_type, prop_options])
-        else:
+        #else:
             # For other properties
-            dataframe_structure.append([main_prop_name, 'other', main_prop_details])
+            #dataframe_structure.append([main_prop_name, 'other', main_prop_details])
         
     # Create the dataframe
     dataframe_structure = pd.DataFrame(dataframe_structure, columns=['Property name', 'Property type', 'Property options'])
