@@ -219,122 +219,122 @@ st.set_page_config(page_title="Home", page_icon="🦜️🔗")
 st.title('Notion Database Explorer')
 
 # Initialize session state variables and API classes
-def init_session():
-    # Initialize session state variables
-    if 'openai_api_key' not in st.session_state:
-        st.session_state.openai_api_key = ""
-    if 'pinecone_api_key' not in st.session_state:
-        st.session_state.pinecone_api_key = ""
-    if 'pinecone_env' not in st.session_state:
-        st.session_state.pinecone_env = ""
-    if 'pinecone_project_id' not in st.session_state:
-        st.session_state.pinecone_project_id = ""
-    if 'pinecone_index' not in st.session_state:
-        st.session_state.pinecone_index = ""
-    if 'notion_api_key' not in st.session_state:
-        st.session_state.notion_api_key = ""
+#def init_session():
+# Initialize session state variables
+if 'openai_api_key' not in st.session_state:
+    st.session_state.openai_api_key = ""
+if 'pinecone_api_key' not in st.session_state:
+    st.session_state.pinecone_api_key = ""
+if 'pinecone_env' not in st.session_state:
+    st.session_state.pinecone_env = ""
+if 'pinecone_project_id' not in st.session_state:
+    st.session_state.pinecone_project_id = ""
+if 'pinecone_index' not in st.session_state:
+    st.session_state.pinecone_index = ""
+if 'notion_api_key' not in st.session_state:
+    st.session_state.notion_api_key = ""
 
-    #get secret keys
-    with st.sidebar:
-        # Get API keys
-        all_keys_str = st.text_input("All Keys in json format", type="password")
+#get secret keys
+with st.sidebar:
+    # Get API keys
+    all_keys_str = st.text_input("All Keys in json format", type="password")
 
-        if all_keys_str:
-            all_keys = json.loads(all_keys_str)
-            st.session_state.openai_api_key = all_keys['OPENAI_API_KEY']
-            st.session_state.pinecone_api_key = all_keys['PINECONE_API_KEY']
-            st.session_state.pinecone_env = all_keys['PINECONE_ENV']
-            st.session_state.pinecone_index = all_keys['PINECONE_INDEX_NAME']
-            st.session_state.pinecone_project_id = all_keys['PINECONE_PROJECT_ID']
-            st.session_state.notion_api_key = all_keys['NOTION_API_KEY']
+    if all_keys_str:
+        all_keys = json.loads(all_keys_str)
+        st.session_state.openai_api_key = all_keys['OPENAI_API_KEY']
+        st.session_state.pinecone_api_key = all_keys['PINECONE_API_KEY']
+        st.session_state.pinecone_env = all_keys['PINECONE_ENV']
+        st.session_state.pinecone_index = all_keys['PINECONE_INDEX_NAME']
+        st.session_state.pinecone_project_id = all_keys['PINECONE_PROJECT_ID']
+        st.session_state.notion_api_key = all_keys['NOTION_API_KEY']
 
-    #initailize Notion class
-    if st.session_state.notion_api_key:
-        try:
-            with st.spinner('Initializing connection...'):
-                notionClass = NotionAPI(st.session_state.notion_api_key)
-                st.write("- Notion API connection established")
-        except Exception as e:
-            st.error(f"Failed to connect to Notion: {e}")
-    else:
-        st.warning("Notion API key not provided.")
+#initailize Notion class
+if st.session_state.notion_api_key:
+    try:
+        with st.spinner('Initializing connection...'):
+            notionClass = NotionAPI(st.session_state.notion_api_key)
+            st.write("- Notion API connection established")
+    except Exception as e:
+        st.error(f"Failed to connect to Notion: {e}")
+else:
+    st.warning("Notion API key not provided.")
 
-    #Initialize OpenAI API if API key is provided
-    if st.session_state.openai_api_key:
-        try:
-            with st.spinner('Initializing Embedding data with OpenAI...'):
-                openAiClass = OpenAiAPI(st.session_state.openai_api_key)
-                st.write("- OpenAI API connection established")
-        except Exception as e:
-            st.error(f"Failed to connect to OpenAI: {e}")
-    else:
-        st.warning("OpenAI API key not provided.")
+#Initialize OpenAI API if API key is provided
+if st.session_state.openai_api_key:
+    try:
+        with st.spinner('Initializing Embedding data with OpenAI...'):
+            openAiClass = OpenAiAPI(st.session_state.openai_api_key)
+            st.write("- OpenAI API connection established")
+    except Exception as e:
+        st.error(f"Failed to connect to OpenAI: {e}")
+else:
+    st.warning("OpenAI API key not provided.")
 
-    # Initialize Pinecone API if API key is provided
-    if st.session_state.pinecone_api_key:
-        try:
-            with st.spinner('inizializing index in Pinecone...'):
-                pineconeClass = PineconeAPI(
-                    st.session_state.pinecone_api_key,
-                    st.session_state.pinecone_index,
-                    st.session_state.pinecone_project_id,
-                    st.session_state.pinecone_env
-                    )
-                index_stats = pineconeClass.DescribeIndexStats()
-                st.write(f"- Pinecone Index Stats: {(index_stats)}")
-        
-        except Exception as e:
-            st.error(f"Failed to retrieve Pinecone index stats: {e}")
-    else:
-        st.warning("Pinecone API key not provided. Please enter the API key to check index stats.")
-
-
-    # Global Variables
-
-    if 'only_areas' not in st.session_state:
-        st.session_state.only_areas = ""
-    if 'only_4' not in st.session_state:
-        st.session_state.only_4 = ""
-    if 'db_id_areas' not in st.session_state:
-        st.session_state.db_id_areas = ""
-    if 'db_id_projects' not in st.session_state:
-        st.session_state.db_id_projects = ""
-    if 'db_id_tasks' not in st.session_state:
-        st.session_state.db_id_tasks = ""
-    if 'db_id_note_inbox' not in st.session_state:
-        st.session_state.db_id_note_inbox = ""
-    if 'note_inbox_extracted' not in st.session_state:
-        st.session_state.note_inbox_extracted = {}
-    if 'first_prompt' not in st.session_state:
-        st.session_state.first_prompt = []
-
-    if 'areas_json' not in st.session_state:
-        st.session_state.areas_json = {}
-    if 'projects_json' not in st.session_state:
-        st.session_state.projects_json = {}
-    if 'tasks_json' not in st.session_state:
-        st.session_state.tasks_json = {}
-    if 'new_notes_json' not in st.session_state:
-        st.session_state.new_notes_json = {}
-    if 'tasks_dataframe' not in st.session_state:
-        st.session_state.tasks_dataframe = {}
-    if 'projects_dataframe' not in st.session_state:
-        st.session_state.projects_dataframe = {}
-    if 'new_task_draft' not in st.session_state:
-        st.session_state.new_task_draft = {}
-    if 'note_in_analysis' not in st.session_state:
-        st.session_state.note_in_analysis = {}
+# Initialize Pinecone API if API key is provided
+if st.session_state.pinecone_api_key:
+    try:
+        with st.spinner('inizializing index in Pinecone...'):
+            pineconeClass = PineconeAPI(
+                st.session_state.pinecone_api_key,
+                st.session_state.pinecone_index,
+                st.session_state.pinecone_project_id,
+                st.session_state.pinecone_env
+                )
+            index_stats = pineconeClass.DescribeIndexStats()
+            st.write(f"- Pinecone Index Stats: {(index_stats)}")
+    
+    except Exception as e:
+        st.error(f"Failed to retrieve Pinecone index stats: {e}")
+else:
+    st.warning("Pinecone API key not provided. Please enter the API key to check index stats.")
 
 
-    st.session_state.only_areas = st.checkbox("Only Areas")
-    st.session_state.only_4 = st.checkbox("Only 4")
+# Global Variables
 
-    st.session_state.db_id_areas = "c5fd05abfaca44f99b4e90358c3ed701"
-    st.session_state.db_id_projects = "c20d87c181634f18bcd14c2649ba6e06"
-    st.session_state.db_id_tasks = "72c034d6343f4d1e926048b7dcbcbc2b"
-    st.session_state.db_id_note_inbox = "50d49cabe62146689b61932004d5687c"
+if 'only_areas' not in st.session_state:
+    st.session_state.only_areas = ""
+if 'only_4' not in st.session_state:
+    st.session_state.only_4 = ""
+if 'db_id_areas' not in st.session_state:
+    st.session_state.db_id_areas = ""
+if 'db_id_projects' not in st.session_state:
+    st.session_state.db_id_projects = ""
+if 'db_id_tasks' not in st.session_state:
+    st.session_state.db_id_tasks = ""
+if 'db_id_note_inbox' not in st.session_state:
+    st.session_state.db_id_note_inbox = ""
+if 'note_inbox_extracted' not in st.session_state:
+    st.session_state.note_inbox_extracted = {}
+if 'first_prompt' not in st.session_state:
+    st.session_state.first_prompt = []
 
-init_session()
+if 'areas_json' not in st.session_state:
+    st.session_state.areas_json = {}
+if 'projects_json' not in st.session_state:
+    st.session_state.projects_json = {}
+if 'tasks_json' not in st.session_state:
+    st.session_state.tasks_json = {}
+if 'new_notes_json' not in st.session_state:
+    st.session_state.new_notes_json = {}
+if 'tasks_dataframe' not in st.session_state:
+    st.session_state.tasks_dataframe = {}
+if 'projects_dataframe' not in st.session_state:
+    st.session_state.projects_dataframe = {}
+if 'new_task_draft' not in st.session_state:
+    st.session_state.new_task_draft = {}
+if 'note_in_analysis' not in st.session_state:
+    st.session_state.note_in_analysis = {}
+
+
+st.session_state.only_areas = st.checkbox("Only Areas")
+st.session_state.only_4 = st.checkbox("Only 4")
+
+st.session_state.db_id_areas = "c5fd05abfaca44f99b4e90358c3ed701"
+st.session_state.db_id_projects = "c20d87c181634f18bcd14c2649ba6e06"
+st.session_state.db_id_tasks = "72c034d6343f4d1e926048b7dcbcbc2b"
+st.session_state.db_id_note_inbox = "50d49cabe62146689b61932004d5687c"
+
+
 
 #every time that there is no note inbox imported, start the script of the button "Create a new task draft from a note in the inbox"
 st.session_state.note_in_analysis = {}
